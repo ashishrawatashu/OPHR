@@ -155,6 +155,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
     RelativeLayout view_profile_RL;
     JsonArray myCustomArray;
                      Calendar cldr = Calendar.getInstance();
+    static long MinimunDate=0;
 
     private DatePicker datepicker;
     String report_id = "", visitIdString = "", pet_age = "", strNatureOfVist = "", appointment_ID = "0", pet_DOB = "", pet_encrypted_id = "", strDocumentUrl = "", visitId = "", natureOfVisit = "", pet_id = "",
@@ -716,7 +717,13 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                Calendar minDate=Calendar.getInstance();
                                 clinicCalenderTextViewVisitDt.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+
+                               Config.day= dayOfMonth;
+                               Config.month=monthOfYear;
+                               MinimunDate=minDate.getTimeInMillis();
+
 
                             }
                         }, year, month, day);
@@ -773,7 +780,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
 
             case R.id.folow_up_dt_view:
-                Log.d("PreviousDate", "onClick: "+cldr.get(6));
+//                Log.d("PreviousDate", "onClick: "+cldr.get(6));
 //                String prevDate = String.valueOf(clinicCalenderTextViewVisitDt.getText().toString().trim());
 //                String mydate=prevDate.substring(0,2);
 //                String myMonth=prevDate.substring(3,4);
@@ -783,7 +790,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 //                int a=Integer.parseInt(mydate);
 //                int b=Integer.parseInt(myMonth);
 //                final Calendar cldrNext = Calendar.getInstance();
-                Calendar minDate=Calendar.getInstance();
+
 
                 int dayNext = cldr.get(Calendar.DAY_OF_MONTH);
                 int monthNext = cldr.get(Calendar.MONTH);
@@ -796,36 +803,42 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
 //-------------------------------------------------------------------------------------------
 //
-//                picker = new DatePickerDialog(this,
-//                        new DatePickerDialog.OnDateSetListener() {
-//                            @Override
+                picker = new DatePickerDialog(this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                folow_up_dt_view.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+
+                            }
+                        }, yearNext, monthNext, dayNext);
+//                --------------------------------------------------------------------------------
+//                dialogPicker=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+//                    @Override
 //                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 //                                folow_up_dt_view.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+////                                cldr.set(Calendar.YEAR,year);
+////                                cldr.set(Calendar.MONTH,monthOfYear);
+////                                 cldr.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 //
 //                            }
 //                        }, yearNext, monthNext, dayNext);
-//                --------------------------------------------------------------------------------
-                dialogPicker=new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                folow_up_dt_view.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                            }
-                        }, yearNext, monthNext, dayNext);
+//
+//                cldr.set(yearNext,monthNext,Config.day);
+                picker.updateDate(yearNext,Config.month,Config.day);
+//                picker.getDatePicker().getDayOfMonth();
+////                dialogPicker.getDatePicker().setMinDate();
+////                picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
+////                  picker.getDatePicker().setMinDate();
+//                dialogPicker.updateDate(yearNext,monthNext,dayNext);
+////                cldrNext.set(yearNext,b-1,a);
+//                cldr.set(Calendar.DAY_OF_MONTH,Config.day);
 
+                int anb=picker.getDatePicker().getDayOfMonth();
+//                picker.
 
-
-
-                dialogPicker.getDatePicker().setMinDate(minDate.get(1));
-
-
-
-//                picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
-//                  picker.getDatePicker().setMinDate(nd);
-
-//                picker.updateDate(yearNext,b-1,a);
-//                cldrNext.set(yearNext,b-1,a);
-
-
+                Log.d("GETDAYOFMONTH", "onClick: "+picker);
+//                picker.getDatePicker().setMinDate(picker.getDatePicker().getDayOfMonth()+1);
+//                picker.getDatePicker().setMinDate();
                 picker.show();
                 break;
             case R.id.save_clinic_data:

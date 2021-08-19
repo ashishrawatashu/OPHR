@@ -522,15 +522,16 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                         requestPendingData.remove(position);
                         requestPendingAdapter.notifyItemChanged(position);
                         requestPendingAdapter.notifyDataSetChanged();
                         approve_reject = "reject";
                         approveAndReject("false");
                         dialog.dismiss();
-
 //                        AddUpdateAppointmentActivity addUpdateAppointmentActivity = new AddUpdateAppointmentActivity();
 //                        addUpdateAppointmentActivity.re_schedule_BT;
+//                        pendingAppointment();
 
                     }
 
