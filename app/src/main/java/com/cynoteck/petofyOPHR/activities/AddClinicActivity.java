@@ -149,39 +149,42 @@ import okhttp3.RequestBody;
 import retrofit2.Response;
 
 public class AddClinicActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse, ImmunizationOnclickListener, TextWatcher {
-    boolean nextDewormerSelected = false;
-    ConstraintLayout vaccine_layout;
-    ProgressBar horizontal_progress_bar;
-    RelativeLayout view_profile_RL;
-    JsonArray myCustomArray;
-                     Calendar cldr = Calendar.getInstance();
-    static long MinimunDate=0;
+    boolean                     nextDewormerSelected = false;
+    ConstraintLayout            vaccine_layout;
+    ProgressBar                 horizontal_progress_bar;
+    RelativeLayout              view_profile_RL;
+    JsonArray                   myCustomArray;
+    Calendar                    cldr = Calendar.getInstance();
+    static long                 MinimunDate=0;
 
-    private DatePicker datepicker;
-    String report_id = "", visitIdString = "", pet_age = "", strNatureOfVist = "", appointment_ID = "0", pet_DOB = "", pet_encrypted_id = "", strDocumentUrl = "", visitId = "", natureOfVisit = "", pet_id = "",
-            pet_name = "", pet_owner_name = "", pet_sex = "", pet_unique_id = "", veterian_name = "", descrisption = "", strPetAge = "", getStrVaccineType = "", getStrVaccineName = "",
-            Remarks = "", visitDate = "", history = "", remarks = "", dtOfOnset = "", flowUpDt = "", weight = "", temparature = "", diagnosis = "", strNextVisitDate = "",
-            strVacine = "", strDewormerName = "", strDewormerDose = "", strToolbarName = "", PetCategoryId = "", cocatVal = null, nextVaccineName = null, nextVaccineType = null,
-            valueConcat = null, dewormerName = null, dewormerDose = null, strVaccineType = "", strVaccineName = "", strNextDewormer = "", pet_cat_id = "";
-    Bundle data = new Bundle();
-    TextView add_immunization_data, folow_up_dt_view, ilness_onset, next_visit, Dewormer_name_ET, Dewormer_name_TV, Dewormer_ET, Dewormer_TV, clinic_head_line, add_immunization_data_added,
-            clinicCalenderTextViewVisitDt, clinicIlness_onset, date_of_illness_TV, follow_up_dt, nextImmunizationDate,
-            clinic_peto_edit_reg_number_dialog, next_vaccine_TV, next_vaccine_type_TV, history_TV,
-            next_dewormer_TV, pet_nameTV, pet_idTV, pet_genderTV, pet_ageTV, pet_breadTV, pet_typeTV;
-    ImageView document_name, back_arrow_IV;
-    LinearLayout add_immunization_data_LL, addPrescriptionButton, diagnosis_Layout, deworming_name_Layout, deworming_dose_Layout/*, imaunizatioHeader*/;
-    EditText clinicVeterian_name_ET, clinicCescription_ET, remaks_ET, next_vaccine_ET, history_ET, diagnosis_result, remarks_ET,
-            weight_ET, clinicTemparature_ET;
+    private DatePicker          datepicker;
+    String                      report_id = "", visitIdString = "", pet_age = "", strNatureOfVist = "", appointment_ID = "0", pet_DOB = "",
+                                pet_encrypted_id = "", strDocumentUrl = "", visitId = "", natureOfVisit = "", pet_id = "",
+                                pet_name = "", pet_owner_name = "", pet_sex = "", pet_unique_id = "", veterian_name = "", descrisption = "",
+                                strPetAge = "", getStrVaccineType = "", getStrVaccineName = "", Remarks = "", visitDate = "", history = "",
+                                remarks = "", dtOfOnset = "", flowUpDt = "", weight = "", temparature = "", diagnosis = "", strNextVisitDate = "",
+                                strVacine = "", strDewormerName = "", strDewormerDose = "", strToolbarName = "", PetCategoryId = "", cocatVal = null,
+                                nextVaccineName = null, nextVaccineType = null, valueConcat = null, dewormerName = null, dewormerDose = null,
+                                strVaccineType = "", strVaccineName = "", strNextDewormer = "", pet_cat_id = "";
+    Bundle                      data = new Bundle();
+    TextView                    add_immunization_data, folow_up_dt_view, ilness_onset, next_visit, Dewormer_name_ET, Dewormer_name_TV, Dewormer_ET,
+                                Dewormer_TV, clinic_head_line, add_immunization_data_added, clinicCalenderTextViewVisitDt, clinicIlness_onset,
+                                date_of_illness_TV, follow_up_dt, nextImmunizationDate, clinic_peto_edit_reg_number_dialog, next_vaccine_TV,
+                                next_vaccine_type_TV, history_TV, next_dewormer_TV, pet_nameTV, pet_idTV, pet_genderTV, pet_ageTV, pet_breadTV, pet_typeTV;
+    ImageView                   document_name, back_arrow_IV;
+    LinearLayout                add_immunization_data_LL, addPrescriptionButton, diagnosis_Layout, deworming_name_Layout, deworming_dose_Layout/*, imaunizatioHeader*/;
+    EditText                    clinicVeterian_name_ET, clinicCescription_ET, remaks_ET, next_vaccine_ET, history_ET, diagnosis_result, remarks_ET,
+                                weight_ET, clinicTemparature_ET;
 
-    MultiAutoCompleteTextView clinicTreatment_remarks_MT, clinicDiagnosis_ET, deworming_AC, deworming_dose_AC;
-    AppCompatSpinner clinicNature_of_visit_spinner, clinicNext_visit_spinner, vaccine_type, vaccine_name,
-            next_vaccine_type_spinner, next_dewormer_spinner;
-    LinearLayout clinicDocument_layout, treatment_remarks_LL;
-    Button clinicSave_clinic_data;
-    WebView webview;
+    MultiAutoCompleteTextView   clinicTreatment_remarks_MT, clinicDiagnosis_ET, deworming_AC, deworming_dose_AC;
+    AppCompatSpinner            clinicNature_of_visit_spinner, clinicNext_visit_spinner, vaccine_type, vaccine_name,
+                                next_vaccine_type_spinner, next_dewormer_spinner;
+    LinearLayout                clinicDocument_layout, treatment_remarks_LL;
+    Button                      clinicSave_clinic_data;
+    WebView                     webview;
 
-    Methods methods;
-    RecyclerView immunization_data;
+    Methods                     methods;
+    RecyclerView                immunization_data;
     ArrayList<String> nextVisitList;
     ArrayList<String> natureOfVisitList;
     ArrayList<String> vaccineTypeList;
