@@ -223,15 +223,17 @@
     <string name="general_deatils">General Details</string>
     <string name="immunization_master">Immunization Master</string>
     <string name="logout">Logout</string>
-    <string name="privacy">Privacy</string>
+    <string name="settings">Settings</string>
     <string name="have_a_nice_day">Have a nice day at work</string>
     <string name="Mypets">My Pets</string>
-    <string name="medical_history">Medical History</string>
+    <string name="records">Records</string>
     <string name="upcoming">Upcoming</string>
     <string name="requestingPending">Request pending</string>
     <string name="reSchedule">Re-schedule</string>
     <string name="join">Join</string>
     <string name="registerPets">Registered Pets</string>
     <string name="clinicVisit">Clinic Visit</string>
+    <string name="subscription">Subscription</string>
+
     <string name="clinicVisitHeadline">Choose the type of visit</string>
 </resources>

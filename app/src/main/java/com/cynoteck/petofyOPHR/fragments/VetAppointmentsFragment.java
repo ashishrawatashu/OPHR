@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -90,12 +91,8 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_vet_appointments, container, false);
-
         initialization();
-
         pendingAppointment();
-
-
         return view;
 
     }
@@ -131,16 +128,12 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
         pending_visit_empty_TV = view.findViewById(R.id.pending_visit_empty_TV);
         upcoming_visit_SFL = view.findViewById(R.id.upcoming_visit_SFL);
         pending_visit_SFL = view.findViewById(R.id.pending_visit_SFL);
-
         horizontalCalendarView = view.findViewById(R.id.horizontalCalendarView);
-
         edit_appointment_charge_RL = view.findViewById(R.id.edit_appointment_charge_RL);
         add_appointment_RL = view.findViewById(R.id.add_appointment_RL);
-
         horizontalCalendarView.setContext(this);
         add_appointment_RL.setOnClickListener(this);
         edit_appointment_charge_RL.setOnClickListener(this);
-
         appointment_charge_TV.setText("₹ " + Config.onlineConsultationCharges);
 
 
@@ -266,7 +259,6 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
                     e.printStackTrace();
                 }
 
-
                 break;
 
             case "GetPendingAppointments":
@@ -366,19 +358,20 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
                 }
 
                 break;
-
-
             case "Status":
                 try {
+
                     Log.d("appointmentstaus", response.body().toString());
                     JsonObject appointmentstaus = (JsonObject) response.body();
                     Log.d("appointmentstaus", appointmentstaus.toString());
+//                    approveAndReject("true");
                     JsonObject responseStaus = appointmentstaus.getAsJsonObject("response");
                     Log.d("hhshshhs", "" + response);
                     int responseCode = Integer.parseInt(String.valueOf(responseStaus.get("responseCode")));
                     if (responseCode == 109) {
-                        Toast.makeText(getContext(), "Status Changes Successfully", Toast.LENGTH_SHORT).show();
 
+                        pendingAppointment();
+                        Toast.makeText(getContext(), "Status Changes Successfully Status", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
@@ -479,14 +472,19 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        requestPendingData.get(position).setIsApproved("true");
-                        requestPendingAdapter.notifyItemChanged(position);
-                        requestPendingAdapter.notifyDataSetChanged();
-//                        requestPendingData.get(position).
-                        approve_reject = "approve";
 
-                        approveAndReject("true");
-                        dialog.dismiss();
+                            requestPendingData.get(position).setIsApproved("true");
+                            requestPendingAdapter.notifyItemChanged(position);
+                            requestPendingAdapter.notifyDataSetChanged();
+//                        requestPendingData.get(position).
+                            approve_reject = "approve";
+                            approveAndReject("true");
+                            dialog.dismiss();
+
+
+
+
+
                     }
                 });
 
@@ -518,20 +516,27 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
     @Override
     public void onCancelClick(final int position, final ArrayList<RequestPendingData> requestPendingData) {
         mettingId = requestPendingData.get(position).getId();
+        Log.e("MEETINGid", "onCancelClick: "+mettingId);
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setMessage("Do you want to reject this appointment?");
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                         requestPendingData.remove(position);
                         requestPendingAdapter.notifyItemChanged(position);
                         requestPendingAdapter.notifyDataSetChanged();
                         approve_reject = "reject";
                         approveAndReject("false");
                         dialog.dismiss();
+//                        AddUpdateAppointmentActivity addUpdateAppointmentActivity = new AddUpdateAppointmentActivity();
+//                        addUpdateAppointmentActivity.re_schedule_BT;
+//                        pendingAppointment();
 
                     }
+
                 });
+//        approveAndReject("false");
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -564,11 +569,13 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
         } else if (userTYpe.equals("Veterinarian")) {
             Intent intent = new Intent(getContext(), AddUpdateAppointmentActivity.class);
             intent.putExtra("type", "update");
-            intent.putExtra("purpose", appointmentLists.get(position).getSubject());
-            intent.putExtra("id", appointmentLists.get(position).getId());
-            intent.putExtra("pet_id", appointmentLists.get(position).getPetId());
-            intent.putExtra("petParent", appointmentLists.get(position).getPetUniqueId());
-            startActivityForResult(intent, 100);
+               intent.putExtra("purpose", appointmentLists.get(position).getSubject());
+               intent.putExtra("id", appointmentLists.get(position).getId());
+               intent.putExtra("pet_id", appointmentLists.get(position).getPetId());
+               intent.putExtra("petParent", appointmentLists.get(position).getPetUniqueId());
+               startActivityForResult(intent, 100);
+
+
         }
     }
 

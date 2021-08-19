@@ -48,7 +48,7 @@ public class GetBanksAccountsAdapter extends RecyclerView.Adapter<GetBanksAccoun
         TextView name_TV, ifsc_TV,account_number_TV,account_type_TV;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            name_TV = itemView.findViewById(R.id.account_type_TV);
+            name_TV = itemView.findViewById(R.id.name_TV);
             ifsc_TV = itemView.findViewById(R.id.ifsc_TV);
             account_number_TV = itemView.findViewById(R.id.account_number_TV);
             account_type_TV = itemView.findViewById(R.id.account_type_TV);

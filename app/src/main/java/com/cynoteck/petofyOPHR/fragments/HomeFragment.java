@@ -188,8 +188,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
                 break;
 
             case R.id.reports_CV:
-//                ReportSelectionFragment reportSelectionFragment = new ReportSelectionFragment();
-//                replaceFragment(reportSelectionFragment);
                 Intent medicalHisroryIntent = new Intent(getContext(), MedicalHistoryActivity.class);
                 startActivity(medicalHisroryIntent);
                 break;

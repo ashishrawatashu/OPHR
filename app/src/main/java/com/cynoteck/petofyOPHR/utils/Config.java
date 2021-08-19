@@ -31,12 +31,18 @@ public class Config {
     public static String user_Veterian_id="";
     public static String user_Veterian_online="";
     public static String user_Veterian_url="";
+    public static String coverimage="";
     public static String onlineConsultationCharges="";
     public static String user_Veterian_details="";
     public static String two_fact_auth_status="";
+    public static String prescription_Settings="";
+
     public static String pet_type_for_immue="";
     public static String user_type="";
     public static String user_verterian_reg_no="";
+
+    public static Integer day;
+    public static Integer month;
 
     public static String type="";
     public static String backCall="";

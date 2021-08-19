@@ -25,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,6 +49,7 @@ import com.cynoteck.petofyOPHR.utils.AllVisitsDateWieseOnClick;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
 import org.json.JSONArray;
 
@@ -74,6 +76,7 @@ public class AllVisitsActivity extends AppCompatActivity implements ApiResponse,
     GetMyVisitPetRecordResponse getMyVisitPetRecordResponse;
     String petNameImmun="",petSeximmun="",petAgeImmun="",petParentImmun="";
     WebView webview;
+    int dd;
 
 
     @Override
@@ -108,6 +111,7 @@ public class AllVisitsActivity extends AppCompatActivity implements ApiResponse,
         nextVisitDt.setOnClickListener(this);
 
 
+
     }
 
     private void getVisitTypes() {
@@ -116,6 +120,7 @@ public class AllVisitsActivity extends AppCompatActivity implements ApiResponse,
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
 
@@ -132,8 +137,31 @@ public class AllVisitsActivity extends AppCompatActivity implements ApiResponse,
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 String displayValue = dayOfMonth + "/" + (monthOfYear+1) + "/" + year;
                                 lastVisitDt.setText(Config.changeDateFormat(displayValue));
+
                             }
                         }, year, month, day);
+
+//                picker.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker view, int nyear, int nmonth, int nday) {
+//                         dd=nday;
+//                        lastVisitDt.setText(dd);
+//                        Toast.makeText(getApplicationContext(),""+dd,Toast.LENGTH_SHORT).show();
+//
+//
+//                    }
+//                });
+//                Toast.makeText(this,""+dd,Toast.LENGTH_SHORT).show();
+//                DatePicker p1;
+//                int abc =cldr.get(Calendar.DAY_OF_MONTH);
+//                MaterialDatePicker.Builder<Pair<Long,Long>> builder=MaterialDatePicker.Builder.dateRangePicker();
+//                builder.setTitleText("Select Date");
+//                MaterialDatePicker materialDatePicker=builder.build();
+//                materialDatePicker.show(getSupportFragmentManager(),"DAte");
+                picker.getDatePicker().setMaxDate(cldr.getTimeInMillis());
+//                int mm=picker.getDatePicker();
+
+
                 picker.show();
                 break;
             case R.id.nextVisitDt:
@@ -152,12 +180,18 @@ public class AllVisitsActivity extends AppCompatActivity implements ApiResponse,
                                 nextVisitDt.setText(Config.changeDateFormat(displayValue));
                             }
                         }, yearForNext, monthForNext, dayForNext);
+
+//                cldrForNext.set(Calendar.DAY_OF_MONTH,);
+
+
+                picker.getDatePicker().setMaxDate(cldrForNext.getTimeInMillis());
                 picker.show();
                 break;
 
 
             case R.id.search_visits_IV:
                 lastDate = lastVisitDt.getText().toString().trim();
+//                lastDate= String.valueOf(dd);
                 nextDate = nextVisitDt.getText().toString().trim();
                 if (natureOfVisit.equals("Select Visit")){
                     Toast.makeText(this, "Select Visit Type", Toast.LENGTH_SHORT).show();

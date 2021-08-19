@@ -116,11 +116,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
+
                         android:layout_weight="1"
                         android:fontFamily="@font/nunito"
                         android:text="@string/accountNumber"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
 
@@ -128,7 +129,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.4"
-                        android:paddingLeft="2dp"
                         android:fontFamily="@font/nunito"
                         android:gravity="start"
                         android:text=":"
@@ -141,8 +141,8 @@
                         android:id="@+id/account_number_TV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:padding="8dp"
+                        android:layout_weight="0.6"
+
                         android:textColor="@color/grayColorCode"
                         android:textSize="15sp" />
 
@@ -153,6 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+
                     android:weightSum="3">
 
                     <TextView
@@ -172,7 +173,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.4"
                         android:fontFamily="@font/nunito"
-                        android:padding="2dp"
                         android:gravity="start"
                         android:text=":"
                         android:textColor="@color/gray_1"
@@ -184,8 +184,8 @@
                         android:id="@+id/account_type_TV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:layout_weight="0.7"
+                          android:layout_weight="0.6"
+                        android:layout_marginLeft="0dp"
                         android:textColor="@color/grayColorCode"
                         android:textSize="15sp" />
 

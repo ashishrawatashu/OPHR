@@ -74,12 +74,12 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
     AppCompatSpinner age_wise, parent_address, add_pet_type, add_pet_age_dialog, add_pet_breed_dialog, add_pet_color_dialog;
     EditText pet_name_ET, age_neumeric;
     Button save_BT;
-    TextView peto_reg_number_dialog, calenderTextView_dialog, ageViewTv;
+    TextView peto_reg_number_dialog, calenderTextView_dialog, ageViewTv,pet_color_TV;
     CheckBox convert_yr_to_age;
     AutoCompleteTextView pet_parent_name_ET, pet_contact_number_ET;
     LinearLayout day_and_age_layout;
     String from = "", petUniqueId = "", getStrSpnerItemPetNmId = "", strSpnrBreedId = "", strSpnrAgeId = "", strSpnrColorId = "", strAgeCount = "",
-            strSpneSizeId = "", strSpnrSexId = "", strSpnerItemPetType = "", strSpnrBreed = "", strSpnrAge = "", strSpnrSex = "",
+            strSpneSizeId = "", strSpnrSexId = "", strSpnerItemPetType = "", strSpnrBreed = "", strSpnrAge = "", strSpnrSex = "",strSpnrColor="",
             currentDateandTime = "", strSexType = "", strResponseOtp = "", petId = "", petParentContactNumber = "", type = "";
     RelativeLayout back_arrow_RL;
     DatePickerDialog picker;
@@ -149,6 +149,8 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
         maleRB = findViewById(R.id.maleRB);
         genderRG = findViewById(R.id.genderRG);
         femaleRB = findViewById(R.id.femaleRB);
+
+        pet_color_TV=findViewById(R.id.pet_color_TV);
 
         peto_reg_number_dialog = findViewById(R.id.peto_reg_number_dialog);
         calenderTextView_dialog = findViewById(R.id.calenderTextView_dialog);
@@ -337,6 +339,7 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                 String strPetParentName = pet_parent_name_ET.getText().toString().trim();
                 String strPetContactNumber = pet_contact_number_ET.getText().toString().trim();
                 String strPetBirthDay = calenderTextView_dialog.getText().toString().trim();
+
                 if (maleRB.isChecked()) {
                     strSpnrSexId = "1";
                 } else if (femaleRB.isChecked()) {
@@ -354,15 +357,25 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                     pet_parent_name_ET.setError(null);
                     pet_contact_number_ET.setError(null);
                     calenderTextView_dialog.setError(null);
-                } else if (strPetBirthDay.isEmpty()) {
-                    Toast.makeText(this, "Set Pet DOB", Toast.LENGTH_SHORT).show();
-                    pet_name_ET.setError(null);
-                    pet_parent_name_ET.setError(null);
-                    pet_contact_number_ET.setError(null);
-                    calenderTextView_dialog.setError("Pet DOB");
-                } else if (strSpnrColorId.isEmpty()) {
+                }
+                else if (strPetBirthDay.equals("") && strPetBirthDay.isEmpty()) {
+                        Toast.makeText(this, "Set valid Pet DOB", Toast.LENGTH_SHORT).show();
+                        pet_name_ET.setError(null);
+                        pet_parent_name_ET.setError(null);
+                        pet_contact_number_ET.setError(null);
+                        calenderTextView_dialog.setError("Pet DOB");
+
+                }
+
+
+                else if(strSpnrColor.isEmpty() || strSpnrColor.equals(null) || strSpnrColor.equals("") || strSpnrColor.equals("Pet Color"))
+            {
                     Toast.makeText(this, "Select pet color !", Toast.LENGTH_SHORT).show();
-                } else if (strPetParentName.isEmpty()) {
+                }
+
+
+
+                else if (strPetParentName.isEmpty()) {
                     Toast.makeText(this, "Enter Parent Name", Toast.LENGTH_SHORT).show();
                     pet_name_ET.setError(null);
                     pet_parent_name_ET.setError("Enter Parent Name");
@@ -379,8 +392,8 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                     pet_parent_name_ET.setError(null);
                     pet_contact_number_ET.setError(null);
                     calenderTextView_dialog.setError(null);
-                    Log.d("hahahah", "" + getStrSpnerItemPetNmId + " " + strSpnrSexId + " " + strSpnrAgeId + " " + strSpneSizeId +
-                            " " + strSpnrColorId + " " + strSpnrBreedId + " " + strPetName + " " + strPetBirthDay + " " + currentDateandTime);
+                    Log.d("Else PArt log", "" + getStrSpnerItemPetNmId +"\n" + " " + strSpnrSexId + " " + strSpnrAgeId + " " + strSpneSizeId +
+                            "\n color" + strSpnrColorId + " " + strSpnrBreedId + " " + strPetName + " " + strPetBirthDay + " " + currentDateandTime);
                     AddPetRequset addPetRequset = new AddPetRequset();
                     AddPetParams data = new AddPetParams();
                     data.setPetUniqueId(petUniqueId);
@@ -403,8 +416,8 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                     addPetRequset.setAddPetParams(data);
                     if (methods.isInternetOn()) {
                         peto_reg_number_dialog.setText("PETO-XYZ");
-                        pet_contact_number_ET.getText().clear();
-                        pet_parent_name_ET.getText().clear();
+//                        pet_contact_number_ET.getText().clear();
+//                        pet_parent_name_ET.getText().clear();
 
                         addPetData(addPetRequset);
                     } else {
@@ -693,7 +706,7 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                             petAge.add(petAgeValueResponse.getData().get(i).getAge());
                             petAgeHashMap.put(petAgeValueResponse.getData().get(i).getAge(), petAgeValueResponse.getData().get(i).getId());
                         }
-                        setPetAgeSpinner();
+//                        setPetAgeSpinner();
 
                     } else if (responseCode == 614) {
                         Toast.makeText(this, petAgeValueResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -716,11 +729,13 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                         petColor.add("Pet Color");
                         Log.d("lalal", "" + petColorValueResponse.getData().size());
                         for (int i = 0; i < petColorValueResponse.getData().size(); i++) {
-                            Log.d("petttt", "" + petColorValueResponse.getData().get(i).getColor());
+                            Log.d("mycolor", "" + petColorValueResponse.getData().get(i).getColor());
+//                            Log.d("petcolor", "" + petColorValueResponse.getData().get(i).getId());
                             petColor.add(petColorValueResponse.getData().get(i).getColor());
                             petColorHashMap.put(petColorValueResponse.getData().get(i).getColor(), petColorValueResponse.getData().get(i).getId());
                         }
                         setPetColorSpinner();
+
                     } else if (responseCode == 614) {
                         Toast.makeText(this, petColorValueResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
@@ -786,6 +801,7 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                             data.putString("pet_id", addPetValueResponse.getData().getId().toString());
                             data.putString("pet_name", addPetValueResponse.getData().getPetName());
                             data.putString("pet_parent", addPetValueResponse.getData().getPetParentName());
+                            data.putString("contact_no",addPetValueResponse.getData().getContactNumber());
                             if (addPetValueResponse.getData().getPetSexId().equals("2.0"))
                                 strSexType = "Female";
                             else
@@ -883,8 +899,11 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 // Showing selected spinner item
-                Log.d("spnerType", "" + item);
+                Log.e("spnerType", "" + item);
+                strSpnrColor=item;
                 strSpnrColorId = petColorHashMap.get(item);
+//                strSpnrColorId=petColor.get(Integer.parseInt(item));
+                Log.d("Color", "" + strSpnrColorId);
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -892,24 +911,6 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
         });
     }
 
-    private void setPetAgeSpinner() {
-        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, petAge);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        add_pet_age_dialog.setAdapter(aa);
-        add_pet_age_dialog.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-                // Showing selected spinner item
-                Log.d("spnerType", "" + item);
-                strSpnrAge = item;
-                strSpnrAgeId = petAgeHashMap.get(item);
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-    }
 
     private void setPetBreeSpinner() {
         ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, petBreed);
@@ -920,7 +921,7 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 // Showing selected spinner item
-                Log.d("spnerType", "" + item);
+                Log.d("breedspinner", "" + item);
                 strSpnrBreed = item;
                 strSpnrBreedId = petBreedHashMap.get(item);
             }
@@ -929,6 +930,31 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
             }
         });
     }
+
+    //----------------------------------------------------------------------------------------------------------
+//    private void setPetAgeSpinner() {
+//        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, petAge);
+//        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        //Setting the ArrayAdapter data on the Spinner
+//        add_pet_age_dialog.setAdapter(aa);
+//        add_pet_age_dialog.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String item = parent.getItemAtPosition(position).toString();
+//                // Showing selected spinner item
+//                Log.d("spnerType", "" + item);
+//                strSpnrAge = item;
+//                strSpnrAgeId = petAgeHashMap.get(item);
+//            }
+//
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
+//    }
+//    --------------------------------------------------------------------------------------------------------
+
+
+
+
 
     private void setPetTypeSpinner() {
         ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, petType);
@@ -1080,7 +1106,7 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
         methods.showCustomProgressBarDialog(this);
         ApiService<AddPetValueResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().addNewPet(Config.token, addPetRequset), "AddPet");
-        Log.e("DATALOG", "check1=> " + addPetRequset);
+        Log.e("addPetRequset", "check1=> " + methods.getRequestJson(addPetRequset));
 
     }
 

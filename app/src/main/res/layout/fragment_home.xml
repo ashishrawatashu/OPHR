@@ -415,7 +415,7 @@
                         android:layout_weight="0.9"
                         android:fontFamily="@font/nunito"
                         android:gravity="center"
-                        android:text="@string/medical_history"
+                        android:text="@string/records"
                         android:textSize="15sp" />
 
                     <LinearLayout

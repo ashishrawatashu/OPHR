@@ -1,6 +1,7 @@
 package com.cynoteck.petofyOPHR.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,9 +52,19 @@ public class RequestPendingAdapter extends RecyclerView.Adapter<RequestPendingAd
         holder.visit_type_TV.setText(requestPendingData.get(position).getSubject());
         holder.appointment_timing_TV.setText(requestPendingData.get(position).getStartDateString()+"-"+requestPendingData.get(position).getEndDateString());
 
+
+
         if (requestPendingData.get(position).getIsApproved().equals("false")){
            holder.confirm_BT.setVisibility(View.VISIBLE);
            holder.payment_pending_LL.setVisibility(View.GONE);
+
+
+//           holder.confirm_BT.setText("Booked");
+//           holder.re_schedule_BT.setEnabled(false);
+//           holder.confirm_BT.setEnabled(false);
+
+
+
         }else {
             holder.confirm_BT.setVisibility(View.GONE);
             holder.payment_pending_LL.setVisibility(View.VISIBLE);
@@ -83,14 +95,20 @@ public class RequestPendingAdapter extends RecyclerView.Adapter<RequestPendingAd
             cancel_appointment_RL=itemView.findViewById(R.id.cancel_appointment_RL);
             payment_pending_LL = itemView.findViewById(R.id.payment_pending_LL);
 
+//if(requestPendingData==null){
+//    Log.d("TAG", "MyViewHolder: null");
+//
+//}
             confirm_BT.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (appointmentsClickListener!=null){
                         appointmentsClickListener.onConfirmClick(getAdapterPosition(),requestPendingData);
                     }
+
                 }
             });
+
 
             re_schedule_BT.setOnClickListener(new View.OnClickListener() {
                 @Override

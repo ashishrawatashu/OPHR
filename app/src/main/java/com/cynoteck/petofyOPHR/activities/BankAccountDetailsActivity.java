@@ -1,7 +1,10 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -16,20 +19,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.cynoteck.petofyOPHR.R;
+import com.cynoteck.petofyOPHR.adapters.GetBanksAccountsAdapter;
 import com.cynoteck.petofyOPHR.api.ApiClient;
 import com.cynoteck.petofyOPHR.api.ApiResponse;
 import com.cynoteck.petofyOPHR.api.ApiService;
+import com.cynoteck.petofyOPHR.fragments.HomeFragment;
+import com.cynoteck.petofyOPHR.fragments.ProfileFragment;
 import com.cynoteck.petofyOPHR.params.addBankAccountParams.AddBankAccountParams;
 import com.cynoteck.petofyOPHR.params.addBankAccountParams.AddBankAccountRequest;
 import com.cynoteck.petofyOPHR.params.addBankAccountParams.ValidateIfscParams;
 import com.cynoteck.petofyOPHR.params.addBankAccountParams.ValidateIfscRequest;
 import com.cynoteck.petofyOPHR.response.bankAccountResponse.AddBankAccountResponse;
+import com.cynoteck.petofyOPHR.response.bankAccountResponse.GetBankAccoutsResponse;
 import com.cynoteck.petofyOPHR.response.bankAccountResponse.ValidateIfscCodeResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
 import com.google.android.material.card.MaterialCardView;
+
+import java.util.List;
 
 import retrofit2.Response;
 
@@ -37,18 +49,24 @@ public class BankAccountDetailsActivity extends AppCompatActivity implements Api
     EditText name_for_bank_ET, email_for_bank_ET, contact_for_bank_ET, ifsc_for_bank_ET, account_for_bank_ET,confirm_account_for_bank_ET;
     TextView ifsc_for_bank_details_TV;
     Button add_account_BT;
+
+    GetAllBankAccountsActivity getAllBankAccountsActivity;
     MaterialCardView back_arrow_CV;
     ProgressBar progressBar;
     String name_for_bank_str, email_for_bank_str, contact_for_bank_str,account_no_str, confirm_account_no_str, ifsc_str;
     String finalIfsc="";
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     Methods methods;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bank_account_details);
         initization();
         methods = new Methods(this);
+//        ifsc_for_bank_ET.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+
 
         ifsc_for_bank_ET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -89,7 +107,7 @@ public class BankAccountDetailsActivity extends AppCompatActivity implements Api
 
         ApiService<ValidateIfscCodeResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().validateIfscCode(Config.token, validateIfscRequest), "ValidateIfsc");
-        Log.d("ifscCode", "parameter" + validateIfscRequest);
+        Log.d( "validateIfscCode: ","teting");
 
 
     }
@@ -145,23 +163,34 @@ public class BankAccountDetailsActivity extends AppCompatActivity implements Api
 
             case "AddAccount":
                 try {
+
                     methods.customProgressDismiss();
                     AddBankAccountResponse addBankAccountResponse   = (AddBankAccountResponse) arg0.body();
                     Log.d("addAccount", addBankAccountResponse.toString());
                     int responseCode = Integer.parseInt(addBankAccountResponse.getResponse().getResponseCode());
+                    Log.d("AAddAccount", "onResponse: "+responseCode);
+
                     if (responseCode == 109) {
                         Intent intent = new Intent();
                         setResult(RESULT_OK, intent);
                         finish();
+
                         Toast.makeText(this, "Account Added Succesfully ", Toast.LENGTH_SHORT).show();
+
                     } else {
                         Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+//                        Log.d("ADD account", "onResponse: "+responseCode);
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
+
+
+
+
+
         }
 
     }
@@ -171,11 +200,34 @@ public class BankAccountDetailsActivity extends AppCompatActivity implements Api
 
     }
 
+
+    public void checkGetAllBankAccountsisEmpty()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("responseCode", MODE_PRIVATE);
+        int resCode=sharedPreferences.getInt("responseCode",0);
+        if(resCode==109){
+            onBackPressed();
+        }
+        else{
+
+            finish();
+
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back_arrow_CV:
+//                ProfileFragment profileFragment = new ProfileFragment();
+//                FragmentTransaction ftProfile = getSupportFragmentManager().beginTransaction();
+//                ftProfile.replace(R.id.content_frame, profileFragment);
+//                ftProfile.commit();
+
                 onBackPressed();
+//                finish();
+//                checkGetAllBankAccountsisEmpty();
                 break;
 
             case R.id.add_account_BT:
@@ -291,12 +343,15 @@ public class BankAccountDetailsActivity extends AppCompatActivity implements Api
 
                     ApiService<AddBankAccountResponse> service = new ApiService<>();
                     service.get(this, ApiClient.getApiInterface().addBankAccount(Config.token, addBankAccountRequest), "AddAccount");
-                    Log.d("AddAccount", "parameter" + addBankAccountRequest);
+                    Log.d("AddAccount", "parameter " + addBankAccountRequest);
 
                 }
 
                 break;
         }
+
+
+
 
 
     }

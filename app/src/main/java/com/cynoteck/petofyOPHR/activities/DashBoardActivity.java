@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -71,6 +72,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         init();
         methods = new Methods(this);
         getCurrentVersion();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Config.tabPosition = 1;
         sharedPreferences = getSharedPreferences("userdetails", 0);
@@ -143,7 +145,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             try {
 //It retrieves the latest version by scraping the content of current version from play store at runtime
 
-                Document doc = Jsoup.connect("https://play.google.com/store/apps/details?id=com.cynoteck.petofyvet").get();
+                Document doc = Jsoup.connect("https://play.google.com/store/apps/details?id=com.cynoteck.petofyOPHR").get();
                 latestVersion = doc.getElementsByClass("htlgb").get(6).text();
 
                 //latestVersion = "1.0.1";
@@ -181,10 +183,10 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                         Intent intent;
                         intent = new Intent(Intent.ACTION_VIEW);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setData(Uri.parse("market://details?id=" + "com.cynoteck.petofyvet"));
+                        intent.setData(Uri.parse("market://details?id=" + "com.cynoteck.petofyOPHR"));
                         startActivity(intent);
                     } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.cynoteck.petofyvet")));
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.cynoteck.petofyOPHR")));
                     }
                     dialog.dismiss();
                 }
@@ -332,7 +334,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 break;
 
         }

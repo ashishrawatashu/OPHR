@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.adapters.PetTypeListAdapter;
 import com.cynoteck.petofyOPHR.adapters.ServiceTypeListAdpater;
@@ -80,7 +81,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
 
     TextView vet_name_TV, vet_degree_TV, vet_phone_TV, vet_email_TV, vet_category_TV, vet_address_TV;
     RecyclerView vet_service_type_RV;
-    ImageView edit_profile_image_IV, edit_profile_IV, back_arrow_IV, vet_image_TV;
+    ImageView edit_profile_image_IV, edit_profile_IV, back_arrow_IV, vet_image_TV,cover_image;
     MaterialCardView image_edit_CV;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor login_editor;
@@ -115,12 +116,19 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                 .load(Config.user_Veterian_url)
                 .placeholder(R.drawable.empty_vet_image)
                 .into(vet_image_TV);
+//        Glide.with(this)
+//                .load(Config.coverimage)
+//                .placeholder(R.drawable.empty_vet_image)
+//                .into(cover_image);
+
+
         vet_name_TV.setText(Config.user_Veterian_name);
         if (methods.isInternetOn()) {
             getUserDetails();
         } else {
             methods.DialogInternet();
         }
+        Log.d("TAG", "onCreate: ");
 
     }
 
@@ -170,7 +178,6 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     private void takePhotoFromCamera() {
 
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
         startActivityForResult(intent, CAMERA);
 
     }
@@ -189,14 +196,12 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                 Uri contentURI = data.getData();
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-
                     vet_image_TV.setImageBitmap(bitmap);
                     saveImage(bitmap);
 
 
                 } catch (IOException e) {
                     e.printStackTrace();
-
                     Toast.makeText(ViewFullProfileVetActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -317,6 +322,11 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                 .load(Config.user_Veterian_url)
                 .placeholder(R.drawable.empty_vet_image)
                 .into(vet_image_TV);
+//        Glide.with(this)
+//                .load(Config.coverimage)
+//                .placeholder(R.drawable.empty_vet_image)
+//                .into(cover_image);
+
         vet_name_TV.setText(Config.user_Veterian_name);
         vet_email_TV.setText(Config.user_Veterian_emial);
         vet_degree_TV.setText(Config.user_Veterian_study);
@@ -330,11 +340,12 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         vet_profile_shimmer.startShimmerAnimation();
         ApiService<UserResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().getUserDetailsApi(Config.token), "GetUserDetails");
-        Log.d("request", "getDeatisl");
+        Log.d("request", "getdetails");
     }
 
     private void inilization() {
         image_edit_CV = findViewById(R.id.image_edit_CV);
+//        cover_image=findViewById(R.id.cover_image);
         vet_full_details_SV = findViewById(R.id.vet_full_details_SV);
         vet_profile_shimmer = findViewById(R.id.vet_profile_shimmer);
         vet_service_type_RV = findViewById(R.id.vet_service_type_RV);
@@ -360,6 +371,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     @SuppressLint("NewApi")
     @Override
     public void onResponse(Response response, String key) {
+        Log.d("ND", "onResponse: "+key);
         switch (key) {
             case "GetUserDetails":
                 try {
@@ -387,11 +399,14 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                         login_editor.putString("lastName", userResponse.getData().getLastName());
                         login_editor.putString("address", userResponse.getData().getAddress());
                         login_editor.putString("profilePic", userResponse.getData().getProfileImageUrl());
+                        login_editor.putString("coverimge",userResponse.getData().getCoverImageUrl());
+
                         login_editor.putString("vetid", userResponse.getData().getVetRegistrationNumber());
                         login_editor.putString("twoFactAuth", userResponse.getData().getEnableTwoStepVerification());
                         login_editor.putString("study", userResponse.getData().getVetQualifications());
 
                         login_editor.commit();
+                        Config.coverimage=sharedPreferences.getString("coverimge","");
                         Config.user_id = sharedPreferences.getString("userId", "");
                         Config.user_Veterian_phone = sharedPreferences.getString("phoneNumber", "");
                         Config.user_Veterian_emial = sharedPreferences.getString("email", "");
@@ -437,17 +452,28 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                             }
                         }
                         setInfo();
-                        if (!userResponse.getData().getProfileImageUrl().equals(null)) {
+
+//                        String my_url= "https://www.petofy.com/"+userResponse.getData().getCoverImageUrl();
+//                        cover_image.setClipToOutline(true);
+//                        Glide.with(this)
+//                                .load(my_url)
+//                                .into(cover_image);
+//
+                        if (!userResponse.getData().getProfileImageUrl().equals(null) ) {
+
                             Log.e("url", userResponse.getData().getProfileImageUrl());
+                            Log.e("CoverImage", userResponse.getData().getCoverImageUrl());
                             Glide.with(this)
                                     .load(new URL(userResponse.getData().getProfileImageUrl()))
                                     .into(vet_image_TV);
                         }
+
                     } else if (responseCode == 614) {
                         Toast.makeText(this, userResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Please Try Again GetUserDetails !", Toast.LENGTH_SHORT).show();
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -469,11 +495,14 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                         ApiService<JsonObject> service = new ApiService<>();
                         service.get(this, ApiClient.getApiInterface().updateProfileImage(Config.token, uploadVetProfileImageData), "UpdateProfileImage");
                         Log.d("UpdateProfileImage", uploadVetProfileImageData.toString());
+                        Log.d("UpdateProfileImage ","upload document");
+
+                        Toast.makeText(this, "Success in uploading", Toast.LENGTH_SHORT).show();
 
                     } else if (responseCode == 614) {
                         Toast.makeText(this, imageResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Please Try Again UploadDocument !", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -484,18 +513,19 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
             case "UpdateProfileImage":
                 try {
                     methods.customProgressDismiss();
-                    Log.d("UploadDocument", response.body().toString());
+//                    Log.d("UploadDocument", response.body().toString());
                     JsonObject jsonObject = new JsonObject();
                     jsonObject = (JsonObject) response.body();
                     int responseCode = Integer.parseInt(String.valueOf(jsonObject.getAsJsonObject("response").get("responseCode")));
                     if (responseCode == 109) {
+//                        Log.d("UploadDocument ","Update prfile img");
+//                        getUserDetails();
 
-                        getUserDetails();
-                        Toast.makeText(this, jsonObject.getAsJsonObject("response").get("responseMessage").toString(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this," Update profile image response code 109 "+ jsonObject.getAsJsonObject("response").get("responseMessage").toString(), Toast.LENGTH_SHORT).show();
                     } else if (responseCode == 614) {
-                        Toast.makeText(this, jsonObject.getAsJsonObject("response").get("responseMessage").toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,"response code 614"+ jsonObject.getAsJsonObject("response").get("responseMessage").toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Please Try Again UpdateProfileImage!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

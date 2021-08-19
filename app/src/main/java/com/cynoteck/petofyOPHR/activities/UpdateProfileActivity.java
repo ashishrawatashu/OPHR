@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -119,6 +120,9 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_update_profile);
         methods = new Methods(this);
 
+
+
+
         Intent intent = getIntent();
         activityType = intent.getStringExtra("activityName");
         id = intent.getStringExtra("id");
@@ -194,6 +198,26 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         }
 
     }
+//    -----------------------------------------------------------------------------------------------------------------
+//    private void content()
+//    {
+//        refresh(50);
+//    }
+
+//    private void refresh(int mill)
+//    {
+//        Handler handler=new Handler();
+//        final Runnable runnable=new Runnable() {
+//            @Override
+//            public void run() {
+//                content();
+//
+//            }
+//        };
+//
+//    }
+//
+//--------------------------------------------------------------------------------------------------------------
     private void getState() {
         methods.showCustomProgressBarDialog(this);
         ApiService<StateResponse> service = new ApiService<>();
@@ -895,7 +919,10 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         methods.showCustomProgressBarDialog(this);
         ApiService<UpdateVetResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().updateUser(Config.token, updateRequest), "UpdateVeterinarian");
+//        content();
+
         Log.e("DATALOG", "checkUpdate=> " + methods.getRequestJson(updateRequest));
+//        Log.e("DATALOG", "checkUpdate=> " + methods);
 
     }
 
@@ -925,7 +952,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     } else if (responseCode == 614) {
                         Toast.makeText(this, userResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Please Try Again  GetUserDetails!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -949,7 +976,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     } else if (responseCode == 614) {
                         Toast.makeText(UpdateProfileActivity.this, stateResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again GetState!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -974,7 +1001,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     } else if (responseCode == 614) {
                         Toast.makeText(UpdateProfileActivity.this, stateResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again GetCountry!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -999,7 +1026,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     } else if (responseCode == 614) {
                         Toast.makeText(UpdateProfileActivity.this, cityResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again Get City!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1027,7 +1054,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     } else if (responseCode == 614) {
                         Toast.makeText(UpdateProfileActivity.this, petTypeResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again GetPetTypes!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1053,18 +1080,19 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     } else if (responseCode == 614) {
                         Toast.makeText(UpdateProfileActivity.this, petServiceResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again Get Servicecstypes!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
-
+//----------------------------------------------------------------------------------------------------------------
             case "UpdateVeterinarian":
                 try {
-                    Log.e("update", String.valueOf(response.code()));
-                    Log.e("ttttt", response.body().toString());
+                    Log.d("UpdateVeterinarian", String.valueOf(response.code()));
+//                    Log.d("ttttt", response.body().toString());
                     UpdateVetResponse userResponse = (UpdateVetResponse) response.body();
+//                    Log.d("updateCode", String.valueOf(userResponse));
                     int responseCode = Integer.parseInt(userResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
                         Toast.makeText(UpdateProfileActivity.this, "Updated", Toast.LENGTH_SHORT).show();
@@ -1078,16 +1106,16 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     } else if (responseCode == 614) {
                         Toast.makeText(UpdateProfileActivity.this, userResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateProfileActivity.this, "Please Try Again  UpdateVeterinarian!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("error", e.getMessage());
+                    Log.d("error", e.getMessage());
                     Log.e("error", e.getLocalizedMessage());
 
                 }
                 break;
-
+//-----------------------------------------------------------------------------------------------------------------
 //            case "UploadDocument":
 //                try {
 //                    methods.customProgressDismiss();
@@ -1141,8 +1169,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onError(Throwable t, String key) {
         methods.customProgressDismiss();
-        Log.e("error", t.getLocalizedMessage());
-        Toast.makeText(this, "Please try again!", Toast.LENGTH_SHORT).show();
+        Log.e("error", t.getMessage());
+        Toast.makeText(this, "Please try again Error function! "+key, Toast.LENGTH_SHORT).show();
     }
 
     private void setCountrySpinner() {

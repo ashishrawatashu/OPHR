@@ -623,7 +623,7 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
         methods.showCustomProgressBarDialog(this);
         ApiService<CreateAppointmentResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().updateAppointment(Config.token, updateAppointmentRequest), "UpdateAppointment");
-        Log.e("UpdateAppointment", methods.getRequestJson(updateAppointmentRequest));
+        Log.e("UpdateAppointmentabc", methods.getRequestJson(updateAppointmentRequest));
     }
 
     private void createUpdateAppointment(CreateAppointRequest createAppointRequest) {
@@ -860,7 +860,7 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
                     int responseCode = Integer.parseInt(appointmentDetailsResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
                         userID = appointmentDetailsResponse.getData().getUserId();
-//                        pet_parent_ET.setText(appointmentDetailsResponse.getData().getPetParent().getFullName());
+                        pet_parent_ET.setText(appointmentDetailsResponse.getData().getPetParent().getFullName());
                         title_ET.setText(appointmentDetailsResponse.getData().getTitle());
                         dateString = appointmentDetailsResponse.getData().getEventStartDate().substring(0, 10);
                         Log.d("time", dateString);

@@ -94,57 +94,72 @@
         android:src="@drawable/empty_vet_image"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    <ImageView-->
+<!--        android:id="@+id/cover_image"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:scaleType="fitXY"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/materialCardView3"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.807"-->
+<!--        android:background="@drawable/round_shape"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/toolbar"-->
+<!--        app:layout_constraintVertical_bias="1.0"/>-->
+    <!--        android:src="@drawable/round_shape"-->
+
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView3"
         style="@style/CustomCardViewStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="250dp"
         android:background="@color/whiteColor"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
         app:cardElevation="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
             <TextView
-                android:visibility="visible"
                 android:id="@+id/vet_name_TV"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginLeft="20dp"
                 android:fontFamily="@font/nunito_bold"
-                android:text="Ashish Rawat"
                 android:gravity="center_vertical"
+                android:text="Ashish Rawat"
                 android:textColor="@color/gray_1"
                 android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@id/edit_profile_IV"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/edit_profile_IV" />
 
             <ImageView
                 android:id="@+id/edit_profile_IV"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="15dp"
                 android:src="@drawable/profile_edit_icon"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ScrollView
                 android:id="@+id/vet_full_details_SV"
-                android:visibility="gone"
-                android:layout_marginTop="15dp"
                 android:layout_width="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="15dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vet_name_TV"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/vet_name_TV"
-                android:layout_height="0dp">
+                app:layout_constraintTop_toBottomOf="@id/vet_name_TV">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -155,193 +170,190 @@
                         android:id="@+id/vet_degree_IV"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
                         android:src="@drawable/degree_icon"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/education_TV"
                         android:layout_width="0dp"
-                        android:text="Education"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Education"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/vet_degree_IV"
                         app:layout_constraintStart_toEndOf="@id/vet_degree_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/vet_degree_IV" />
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/vet_degree_TV"
-                        app:layout_constraintTop_toBottomOf="@+id/education_TV"
-                        app:layout_constraintStart_toStartOf="@id/education_TV"
-                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/education_TV"
+                        app:layout_constraintTop_toBottomOf="@+id/education_TV" />
 
 
                     <ImageView
-                        android:layout_marginTop="15dp"
                         android:id="@+id/vet_phone_IV"
-                        android:src="@drawable/phone_no_icon"
-                        android:visibility="visible"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
-                        app:layout_constraintTop_toBottomOf="@id/vet_degree_TV"
-                        app:layout_constraintStart_toStartOf="parent"/>
+                        android:layout_marginTop="15dp"
+                        android:src="@drawable/phone_no_icon"
+                        android:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/vet_degree_TV" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/phone_TV"
                         android:layout_width="0dp"
-                        android:text="Contact"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Contact"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/vet_phone_IV"
                         app:layout_constraintStart_toEndOf="@id/vet_phone_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/vet_phone_IV" />
 
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/vet_phone_TV"
-                        app:layout_constraintTop_toBottomOf="@id/phone_TV"
-                        app:layout_constraintStart_toStartOf="@id/education_TV"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/vet_phone_IV"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
-
-
-
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/vet_phone_IV"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/education_TV"
+                        app:layout_constraintTop_toBottomOf="@id/phone_TV" />
 
 
                     <ImageView
                         android:id="@+id/vet_mail_IV"
-                        android:layout_marginTop="15dp"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
+                        android:layout_marginTop="15dp"
                         android:src="@drawable/email_icon"
                         android:visibility="visible"
-                        app:layout_constraintTop_toBottomOf="@id/vet_phone_TV"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/vet_phone_TV" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/email_TV"
                         android:layout_width="0dp"
-                        android:text="Mail"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Mail"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/vet_mail_IV"
                         app:layout_constraintStart_toEndOf="@id/vet_mail_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/vet_mail_IV" />
 
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/vet_email_TV"
-                        app:layout_constraintStart_toStartOf="@id/email_TV"
-                        app:layout_constraintTop_toBottomOf="@id/email_TV"
-                        app:layout_constraintStart_toEndOf="@id/vet_mail_IV"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/vet_mail_IV"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/vet_mail_IV"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/vet_mail_IV"
+                        app:layout_constraintStart_toStartOf="@id/email_TV"
+                        app:layout_constraintTop_toBottomOf="@id/email_TV" />
 
 
                     <ImageView
                         android:id="@+id/vet_address_IV"
-                        android:layout_marginTop="15dp"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
+                        android:layout_marginTop="15dp"
                         android:src="@drawable/location_icon"
                         android:visibility="visible"
-                        app:layout_constraintTop_toBottomOf="@id/vet_email_TV"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/vet_email_TV" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/address_TV"
                         android:layout_width="0dp"
-                        android:text="Address"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Address"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/vet_address_IV"
                         app:layout_constraintStart_toEndOf="@id/vet_address_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/vet_address_IV" />
 
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/vet_address_TV"
-                        app:layout_constraintStart_toStartOf="@id/address_TV"
-                        app:layout_constraintTop_toBottomOf="@id/address_TV"
-                        app:layout_constraintStart_toEndOf="@id/vet_address_IV"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/vet_address_IV"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/vet_address_IV"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/vet_address_IV"
+                        app:layout_constraintStart_toStartOf="@id/address_TV"
+                        app:layout_constraintTop_toBottomOf="@id/address_TV" />
 
 
                     <ImageView
                         android:id="@+id/vet_category_IV"
-                        android:layout_marginTop="15dp"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
+                        android:layout_marginTop="15dp"
                         android:src="@drawable/category_icon"
                         android:visibility="visible"
-                        app:layout_constraintTop_toBottomOf="@id/vet_address_TV"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/vet_address_TV" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/category_TV"
                         android:layout_width="0dp"
-                        android:text="Category"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Category"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/vet_category_IV"
                         app:layout_constraintStart_toEndOf="@id/vet_category_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/vet_category_IV" />
 
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/vet_category_TV"
-                        app:layout_constraintStart_toStartOf="@id/email_TV"
-                        app:layout_constraintTop_toBottomOf="@id/category_TV"
-                        app:layout_constraintStart_toEndOf="@id/vet_mail_IV"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/vet_category_IV"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/vet_category_IV"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/vet_mail_IV"
+                        app:layout_constraintStart_toStartOf="@id/email_TV"
+                        app:layout_constraintTop_toBottomOf="@id/category_TV" />
 
                     <TextView
                         android:id="@+id/vet_pet_services_TV"
@@ -349,41 +361,38 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/nunito_bold"
+                        android:text="Pet Services"
                         android:textColor="@color/gray_1"
                         android:textSize="24sp"
-                        android:text="Pet Services"
                         app:layout_constraintStart_toStartOf="@id/vet_category_IV"
-                        app:layout_constraintTop_toBottomOf="@id/vet_category_IV"/>
+                        app:layout_constraintTop_toBottomOf="@id/vet_category_IV" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        tools:listitem="@layout/service_type_date"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp"
                         android:id="@+id/vet_service_type_RV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginTop="8dp"
                         android:clipToPadding="true"
                         android:nestedScrollingEnabled="false"
-                        app:layout_constraintTop_toBottomOf="@+id/vet_pet_services_TV" />
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/vet_pet_services_TV"
+                        tools:listitem="@layout/service_type_date" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
 
             </ScrollView>
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/vet_profile_shimmer"
-                android:visibility="visible"
-                android:layout_marginTop="15dp"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/vet_name_TV"
                 app:layout_constraintStart_toStartOf="@id/vet_name_TV"
-                android:layout_height="wrap_content">
+                app:layout_constraintTop_toBottomOf="@id/vet_name_TV">
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -395,193 +404,190 @@
                         android:id="@+id/shimmer_vet_degree_IV"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
                         android:src="@drawable/degree_icon"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/shimmer_education_TV"
                         android:layout_width="0dp"
-                        android:text="Education"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Education"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_degree_IV"
                         app:layout_constraintStart_toEndOf="@id/shimmer_vet_degree_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_degree_IV" />
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/shimmer_vet_degree_TV"
-                        app:layout_constraintTop_toBottomOf="@+id/shimmer_education_TV"
-                        app:layout_constraintStart_toStartOf="@id/shimmer_education_TV"
-                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/shimmer_education_TV"
+                        app:layout_constraintTop_toBottomOf="@+id/shimmer_education_TV" />
 
 
                     <ImageView
-                        android:layout_marginTop="15dp"
                         android:id="@+id/shimmer_vet_phone_IV"
-                        android:src="@drawable/phone_no_icon"
-                        android:visibility="visible"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_degree_TV"
-                        app:layout_constraintStart_toStartOf="parent"/>
+                        android:layout_marginTop="15dp"
+                        android:src="@drawable/phone_no_icon"
+                        android:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_degree_TV" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/shimmer_phone_TV"
                         android:layout_width="0dp"
-                        android:text="Contact"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Contact"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_phone_IV"
                         app:layout_constraintStart_toEndOf="@id/shimmer_vet_phone_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_phone_IV" />
 
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/shimmer_vet_phone_TV"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_phone_TV"
-                        app:layout_constraintStart_toStartOf="@id/shimmer_education_TV"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/shimmer_vet_phone_IV"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
-
-
-
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/shimmer_vet_phone_IV"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/shimmer_education_TV"
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_phone_TV" />
 
 
                     <ImageView
                         android:id="@+id/shimmer_vet_mail_IV"
-                        android:layout_marginTop="15dp"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
+                        android:layout_marginTop="15dp"
                         android:src="@drawable/email_icon"
                         android:visibility="visible"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_phone_TV"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_phone_TV" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/shimmer_email_TV"
                         android:layout_width="0dp"
-                        android:text="Mail"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Mail"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_mail_IV"
                         app:layout_constraintStart_toEndOf="@id/shimmer_vet_mail_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_mail_IV" />
 
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/shimmer_vet_email_TV"
-                        app:layout_constraintStart_toStartOf="@id/shimmer_email_TV"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_email_TV"
-                        app:layout_constraintStart_toEndOf="@id/shimmer_vet_mail_IV"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/shimmer_vet_mail_IV"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/shimmer_vet_mail_IV"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/shimmer_vet_mail_IV"
+                        app:layout_constraintStart_toStartOf="@id/shimmer_email_TV"
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_email_TV" />
 
 
                     <ImageView
                         android:id="@+id/shimmer_vet_address_IV"
-                        android:layout_marginTop="15dp"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
+                        android:layout_marginTop="15dp"
                         android:src="@drawable/location_icon"
                         android:visibility="visible"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_email_TV"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_email_TV" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/shimmer_address_TV"
                         android:layout_width="0dp"
-                        android:text="Address"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Address"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_address_IV"
                         app:layout_constraintStart_toEndOf="@id/shimmer_vet_address_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_address_IV" />
 
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/shimmer_vet_address_TV"
-                        app:layout_constraintStart_toStartOf="@id/shimmer_address_TV"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_address_TV"
-                        app:layout_constraintStart_toEndOf="@id/shimmer_vet_address_IV"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/shimmer_vet_address_IV"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/shimmer_vet_address_IV"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/shimmer_vet_address_IV"
+                        app:layout_constraintStart_toStartOf="@id/shimmer_address_TV"
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_address_TV" />
 
 
                     <ImageView
                         android:id="@+id/shimmer_vet_category_IV"
-                        android:layout_marginTop="15dp"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
+                        android:layout_marginTop="15dp"
                         android:src="@drawable/category_icon"
                         android:visibility="visible"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_address_TV"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_address_TV" />
 
                     <TextView
-                        android:layout_marginLeft="15dp"
                         android:id="@+id/shimmer_category_TV"
                         android:layout_width="0dp"
-                        android:text="Category"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:fontFamily="@font/nunito"
-                        android:textSize="14sp"
+                        android:text="Category"
                         android:textColor="@color/gray_3"
+                        android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_category_IV"
                         app:layout_constraintStart_toEndOf="@id/shimmer_vet_category_IV"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintTop_toTopOf="@id/shimmer_vet_category_IV" />
 
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/shimmer_vet_category_TV"
-                        app:layout_constraintStart_toStartOf="@id/shimmer_email_TV"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_category_TV"
-                        app:layout_constraintStart_toEndOf="@id/shimmer_vet_mail_IV"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@id/shimmer_vet_category_IV"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:fontFamily="@font/nunito"
+                        android:gravity="center_vertical"
                         android:textColor="@color/gray_1"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="@id/shimmer_vet_category_IV"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/shimmer_vet_mail_IV"
+                        app:layout_constraintStart_toStartOf="@id/shimmer_email_TV"
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_category_TV" />
 
                     <TextView
                         android:id="@+id/shimmer_vet_pet_services_TV"
@@ -589,11 +595,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/nunito_bold"
+                        android:text="Pet Services"
                         android:textColor="@color/gray_1"
                         android:textSize="24sp"
-                        android:text="Pet Services"
                         app:layout_constraintStart_toStartOf="@id/shimmer_vet_category_IV"
-                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_category_IV"/>
+                        app:layout_constraintTop_toBottomOf="@id/shimmer_vet_category_IV" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -601,15 +607,7 @@
             </com.facebook.shimmer.ShimmerFrameLayout>
 
 
-
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
 
 
     </com.google.android.material.card.MaterialCardView>

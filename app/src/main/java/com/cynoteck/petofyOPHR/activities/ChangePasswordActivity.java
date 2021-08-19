@@ -149,7 +149,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements ApiResp
                     }else if (responseCode==614){
                         Toast.makeText(this, passwordResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     }else {
-                        Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Your Current password is not valid !", Toast.LENGTH_SHORT).show();
                     }
 
                 }

@@ -1,7 +1,9 @@
 package com.cynoteck.petofyOPHR.fragments;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -75,6 +77,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         view = inflater.inflate(R.layout.vet_profile_fragment, container, false);
         sharedPreferences = getActivity().getSharedPreferences("userdetails", 0);
         methods = new Methods(context);
+
+
 
         initialize();
         getVetInfo();
@@ -202,6 +206,35 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                 break;
 
             case R.id.logout_CL:
+                Mydialog();
+                break;
+
+
+
+
+
+        }
+    }
+
+ public void Mydialog()
+    {
+        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+        builder.setMessage("Do you really want to Logout");
+        builder.setTitle("Alert Box");
+        builder.setCancelable(false);
+
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+
+            }
+        });
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
                 SharedPreferences preferences =getActivity().getSharedPreferences("userdetails",0);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.clear();
@@ -209,10 +242,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                 Config.logoutFromAccount = true;
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
-                break;
 
-        }
+
+            }
+        });
+
+
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
+
     }
+
+
+
 
     @Override
     public void onResume() {

@@ -510,6 +510,12 @@ public interface ApiInterface {
     Call<OnlineAppointmentResponse> enableDisableTowFactorAuth(@Header("Authorization") String auth,
                                                                @Body GetPetListRequest addPetRequset);
 
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("user/EnableTwoStepAuthentication")
+    Call<OnlineAppointmentResponse> enableDiasbleSharePrescription(@Header("Authorization") String auth,
+                                                               @Body GetPetListRequest addPetRequset);
+
     //TODO=================GET OPERATING HOURS===========================
 
     @Headers({ "Content-Type: application/json;charset=UTF-8"})

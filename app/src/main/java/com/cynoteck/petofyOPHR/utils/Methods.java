@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -30,6 +31,7 @@ public class Methods {
     private SweetAlertDialog informationDialog;*/
     ArrayList<String> cars = new ArrayList<>();
     JSONArray jsonArray;
+    boolean flag = false;
 
 
 
@@ -99,6 +101,21 @@ public class Methods {
         }
     }
 
+//--------------------------------------------------------------------------------------------------------------------
+//    private  void showNoConnectionSnackBar(String message, boolean isConnected) {
+//
+//        if (isConnected){
+//            flag = true;
+//
+//
+//        }else{
+//            Toast.makeText(c.getApplicationContext(), "Internet is creating Issue", Toast.LENGTH_SHORT).show();
+//            DialogInternet();
+//
+//                }
+//            }
+
+//-------------------------------------------------------------------------------------------------------
     public void customProgressDismiss() {
         progressBarDialog.dismiss();
     }

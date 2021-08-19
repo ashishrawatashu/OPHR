@@ -44,7 +44,11 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity android:name=".activities.AllVisitsActivity" />
         <activity android:name=".activities.UpcomingVisitsActivity" />
-        <activity android:name=".activities.GetAllBankAccountsActivity" />
+        <activity android:name=".activities.GetAllBankAccountsActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="orientation|screenSize"
+
+            />
         <activity android:name=".activities.BankAccountDetailsActivity" />
         <activity android:name=".activities.AddEditImmunizationActivity" />
         <activity android:name=".activities.ImmunizationChartActivity" />

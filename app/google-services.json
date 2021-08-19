@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:839322253402:android:5e89f52cfece3a40df0063",
         "android_client_info": {
-          "package_name": "com.cynoteck.petofyvet"
+          "package_name": "com.cynoteck.petofyOPHR"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "839322253402-gnvh21fbmv29aq7m5vbj7hhvtn1nigjk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.cynoteck.petofyvet",
+            "package_name": "com.cynoteck.petofyOPHR",
             "certificate_hash": "4cea8d27b022077b4d15e8161db8a70d31186a81"
           }
         },
