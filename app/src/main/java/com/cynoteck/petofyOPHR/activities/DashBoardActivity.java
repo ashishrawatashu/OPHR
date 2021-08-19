@@ -143,7 +143,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         @Override
         protected JSONObject doInBackground(String... params) {
             try {
-//It retrieves the latest version by scraping the content of current version from play store at runtime
+            //It retrieves the latest version by scraping the content of current version from play store at runtime
 
                 Document doc = Jsoup.connect("https://play.google.com/store/apps/details?id=com.cynoteck.petofyOPHR").get();
                 latestVersion = doc.getElementsByClass("htlgb").get(6).text();
