@@ -41,4 +41,9 @@
 
     <color name="dark_green">#04E762</color>
 
+    <color name="light_pink">#FFB6C1</color>
+    <color name="light_grey">#f2f2f2</color>
+
+
+
 </resources>

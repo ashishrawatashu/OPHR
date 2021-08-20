@@ -41,4 +41,33 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
+
+
+<!--for date picker dialog-->
+<!--    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">-->
+<!--        <item name="colorAccent">@android:color/holo_green_dark</item>-->
+<!--    </style>-->
+<!--    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">-->
+<!--        <item name="android:calendarViewStyle">@style/Widget.CalendarView.Custom</item>-->
+<!--    </style>-->
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+<!--        <item name="android:calendarViewStyle">android:Widget.CalendarView</item>-->
+     \
+
+        <!--        <item name="android:">@color/whiteColor</item>-->
+<!--        <item name="android:colorControlActivated">@color/light_grey</item>-->
+<!--        <item name="android:minDate">@color/light_grey</item>-->
+<!--        <item name="android:datePickerStyle">@color/light_grey</item>-->
+<!--        <item name="colorAccent">@color/light_grey</item>-->
+<!--        <item name="android:textColorPrimaryInverse">@color/light_grey</item>-->
+
+        <!--        <item name="android:weekNumberColor">@color/red</item>-->
+<!--        <item name="android:weekDayTextAppearance">@style/TextAppearance.Medium</item>-->
+<!--        <item name="android:dateTextAppearance">@style/TextAppearance.Medium</item>-->
+    </style>
+
+
+
+
 </resources>

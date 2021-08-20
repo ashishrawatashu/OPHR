@@ -163,7 +163,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
     static long MinimunDate=0;
 
 
-    private DatePicker datepicker;
+//    private DatePicker datepicker;
     String report_id = "", visitIdString = "", pet_age = "", strNatureOfVist = "", appointment_ID = "0", pet_DOB = "", pet_encrypted_id = "", strDocumentUrl = "", visitId = "", natureOfVisit = "", pet_id = "",
             pet_name = "", pet_owner_name = "", pet_sex = "", pet_unique_id = "", veterian_name = "", descrisption = "", strPetAge = "", getStrVaccineType = "", getStrVaccineName = "",
             Remarks = "", visitDate = "", history = "", remarks = "", dtOfOnset = "", flowUpDt = "", weight = "", temparature = "", diagnosis = "", strNextVisitDate = "",
@@ -762,13 +762,18 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
 
             case R.id.folow_up_dt_view:
+               try
+                {
+//                    Toast.makeText(this, "this is if conditon", Toast.LENGTH_SHORT).show();
+
                 final Calendar cldrNext = Calendar.getInstance();
+//                cldr.
                 int dayNext = cldrNext.get(Calendar.DAY_OF_MONTH);
                 int monthNext = cldrNext.get(Calendar.MONTH);
                 int yearNext = cldrNext.get(Calendar.YEAR);
                 folow_up_dt_view.setText(Config.day + "/" + (Config.month + 1) + "/" + yearNext);
 
-                picker = new DatePickerDialog(this,
+                picker = new DatePickerDialog(this,R.style.DialogTheme,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -776,15 +781,41 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
                             }
                         }, yearNext, monthNext, dayNext);
-//                --------------------------------------------------------------------------------
-
-
-
                 picker.updateDate(yearNext,Config.month,Config.day);
                 cldrNext.set(yearNext,Config.month,Config.day);
 //                Log.d("GETDAYOFMONTH", "onClick: "+cldr.getTimeInMillis());
                 picker.getDatePicker().setMinDate(cldrNext.getTimeInMillis());
                 picker.show();
+
+                }
+                catch(NullPointerException e) {
+                    Toast.makeText(this, "Please select the Visit Date", Toast.LENGTH_SHORT).show();
+
+
+                }
+//                final Calendar cldrNext = Calendar.getInstance();
+//                int dayNext = cldrNext.get(Calendar.DAY_OF_MONTH);
+//                int monthNext = cldrNext.get(Calendar.MONTH);
+//                int yearNext = cldrNext.get(Calendar.YEAR);
+//                folow_up_dt_view.setText(Config.day + "/" + (Config.month + 1) + "/" + yearNext);
+//
+//                picker = new DatePickerDialog(this,
+//                        new DatePickerDialog.OnDateSetListener() {
+//                            @Override
+//                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                                folow_up_dt_view.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+//
+//                            }
+//                        }, yearNext, monthNext, dayNext);
+////                --------------------------------------------------------------------------------
+//
+//
+//
+//                picker.updateDate(yearNext,Config.month,Config.day);
+//                cldrNext.set(yearNext,Config.month,Config.day);
+////                Log.d("GETDAYOFMONTH", "onClick: "+cldr.getTimeInMillis());
+//                picker.getDatePicker().setMinDate(cldrNext.getTimeInMillis());
+//                picker.show();
 //                --------------------------------------------------------------------------
 
                 break;
