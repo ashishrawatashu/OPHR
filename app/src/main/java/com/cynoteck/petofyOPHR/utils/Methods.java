@@ -6,13 +6,17 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.cynoteck.petofyOPHR.R;
+import com.cynoteck.petofyOPHR.activities.DashBoardActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -26,13 +30,13 @@ import java.util.Date;
 
 public class Methods {
     private Context c;
-    private Dialog progressBarDialog;
+    private Dialog progressBarDialog,internetDialog;
     /*public static SweetAlertDialog errorMsgDialog;
     private SweetAlertDialog informationDialog;*/
     ArrayList<String> cars = new ArrayList<>();
     JSONArray jsonArray;
-    boolean flag = false;
 
+    DashBoardActivity dashBoardActivity=new DashBoardActivity();
 
 
     public String  addMonths(String dateAsString, int nbMonths) throws ParseException {
@@ -50,6 +54,10 @@ public class Methods {
         this.c = c;
     }
 
+
+
+//    -----------------------------------------------------------------------------------------------------
+
     public final boolean isInternetOn() {
         boolean flag = false;
         ConnectivityManager connec = (ConnectivityManager) c.getSystemService(c.CONNECTIVITY_SERVICE);
@@ -60,27 +68,90 @@ public class Methods {
             flag = true;
 
 
-        } else if (connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.DISCONNECTED ||
-                connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.DISCONNECTED) {
-            flag = false;
+        } else if(connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.DISCONNECTED ||
+                connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.DISCONNECTED)
+       {
+        flag = false;
         }
         return flag;
     }
 
-    public void DialogInternet() {
 
-        AlertDialog.Builder ad = new AlertDialog.Builder(c);
-        ad.setMessage(R.string.CheckInternet);
-        ad.setCancelable(true);
-        ad.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    public void DialogInternet() {
+//        AlertDialog.Builder ad = new AlertDialog.Builder(c);
+////        AlertDialog ad = new AlertDialog(c);
+////         AlertDialog d = ad.show();
+//        ad.setMessage(R.string.CheckInternet);
+//        ad.setCancelable(true);
+//        ad.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        ad.show();
+        internetDialog = new Dialog(c);
+        internetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        internetDialog.setCancelable(false);
+        internetDialog.setCanceledOnTouchOutside(true);
+        internetDialog.setContentView(R.layout.checkinternet);
+        internetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Button grant_permission_BT = internetDialog.findViewById(R.id.grant_permission_BT);
+        internetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        grant_permission_BT.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onClick(View v) {
+               boolean check= isInternetOn();
+               if (check==true)
+               {
+                   internetDialog.dismiss();
+//                   dashBoardActivity.upadetStateConnection();
+               }
+               else{
+                   isInternetOn();
+               }
+
             }
         });
 
-        ad.show();
+        internetDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = internetDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
     }
+
+    //        View layout_dialog = LayoutInflater.from(c).inflate(R.layout.checkinternet, null);
+//        ad.setView(layout_dialog);
+//        ad.setCancelable(false);
+//        Button btnRetry=(Button) layout_dialog.findViewById(R.id.checkbtn);
+//        boolean check=isInternetOn();
+//
+//        btnRetry.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(check==true)
+//                {
+//                    d.dismiss();
+//                    Toast.makeText(c.getApplicationContext(),"If condition",Toast.LENGTH_SHORT ).show();
+//
+//                }
+//                else
+//                {
+//                    Toast.makeText(c.getApplicationContext(),"else condition",Toast.LENGTH_SHORT ).show();
+//                    isInternetOn();
+//                }
+////
+//            }
+//        });
+
+
+
+
+
 
     public void showCustomProgressBarDialog(Context context) {
         try {

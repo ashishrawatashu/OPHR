@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.cynoteck.petofyvet", appContext.getPackageName());
+        assertEquals("com.cynoteck.petofyOPHR", appContext.getPackageName());
     }
 }
