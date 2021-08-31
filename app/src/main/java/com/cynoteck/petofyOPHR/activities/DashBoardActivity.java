@@ -2,11 +2,14 @@ package com.cynoteck.petofyOPHR.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -64,11 +68,15 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
     SharedPreferences.Editor login_editor;
     private int USER_UPDATION_FIRST_TIME = 1;
     String userTYpe = "", permissionId = "";
+    BroadcastReceiver broadcastReceiver=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+        broadcastReceiver =new checkIntetnetConnectivity();
+        registerBroadcast();
+
         init();
         methods = new Methods(this);
         getCurrentVersion();
@@ -92,7 +100,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         Config.vet_last_name = sharedPreferences.getString("last_name", "");
         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
 
-        Log.d("TOKEN",Config.token);
+
         if (Config.user_type.equals("Veterinarian")) {
             if (methods.isInternetOn()) {
                 getUserDetails();
@@ -131,6 +139,55 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    protected void registerBroadcast() {
+//        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+//        unregisterReceiver(broadcastReceiver);
+    }
+    public  void dialog(boolean value) {
+        if (value) {
+            Log.e("Connected", "Yes");
+            Handler handler = new Handler();
+            Runnable delayrunnable = new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("Connected", "Yes inside handler ");
+                }
+            };
+            handler.postDelayed(delayrunnable, 300);
+        }
+        else {
+            Log.e("Connected", "NO");
+        }
+    }
+
+
+
+//    public void upadetStateConnection() {
+//        Intent intent = new Intent(th);///null
+//        Log.e("upadetStateConnection", "upadetStateConnection: "+intent);
+//        finish();
+//        startActivity(intent);
+//    }
+
+
+
     private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
 
         private ProgressDialog progressDialog;
@@ -143,8 +200,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         @Override
         protected JSONObject doInBackground(String... params) {
             try {
-            //It retrieves the latest version by scraping the content of current version from play store at runtime
-
+//It retrieves the latest version by scraping the content of current version from play store at runtime
                 Document doc = Jsoup.connect("https://play.google.com/store/apps/details?id=com.cynoteck.petofyOPHR").get();
                 latestVersion = doc.getElementsByClass("htlgb").get(6).text();
 
@@ -225,7 +281,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void getUserDetails() {
+    public void getUserDetails() {
         methods.showCustomProgressBarDialog(this);
         ApiService<UserResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().getUserDetailsApi(Config.token), "GetUserDetails");
@@ -402,13 +458,14 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             icPetRegister.setImageResource(R.drawable.pet_inactive);
             icAppointment.setImageResource(R.drawable.appointment_inactive);
         }
+
+        Log.e("OnResume", "onResume function is called : ");
+
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
-
             case R.id.homeRL:
                 Config.count = 1;
                 Config.tabPosition = 1;

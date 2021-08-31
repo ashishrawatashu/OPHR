@@ -1,6 +1,9 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +23,8 @@ import retrofit2.Response;
 public class UpcomingVisitsActivity extends AppCompatActivity implements ApiResponse, View.OnClickListener {
 
 
+//    checkIntetnetConnectivity checkIntetnetConnectivity=new checkIntetnetConnectivity();
+
 
     Methods methods;
     TabLayout tabLayout;
@@ -35,10 +40,16 @@ public class UpcomingVisitsActivity extends AppCompatActivity implements ApiResp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upcoming_visits);
         methods = new Methods(this);
-        
         initization();
 
     }
+//    public  void start(){
+//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+//        registerReceiver(checkIntetnetConnectivity,filter);
+//
+////        finish();
+//    }
+
 
     private void initization() {
        /* progressBar = findViewById(R.id.progressBar);
