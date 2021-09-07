@@ -467,6 +467,7 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
                                 calenderTextViewDetails.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year, month, day);
+                picker.getDatePicker().setMaxDate(cldr.getTimeInMillis());
                 picker.show();
                 break;
             case R.id.pet_Details_profile_image:

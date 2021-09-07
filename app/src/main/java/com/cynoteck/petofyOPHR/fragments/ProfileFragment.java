@@ -2,11 +2,16 @@ package com.cynoteck.petofyOPHR.fragments;
 
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +34,7 @@ import com.cynoteck.petofyOPHR.activities.LoginActivity;
 import com.cynoteck.petofyOPHR.activities.SettingActivity;
 import com.cynoteck.petofyOPHR.activities.VetOperatingHoursActivity;
 import com.cynoteck.petofyOPHR.activities.ViewFullProfileVetActivity;
+import com.cynoteck.petofyOPHR.activities.checkIntetnetConnectivity;
 import com.cynoteck.petofyOPHR.api.ApiClient;
 import com.cynoteck.petofyOPHR.api.ApiResponse;
 import com.cynoteck.petofyOPHR.api.ApiService;
@@ -131,8 +137,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
     public  void initialize()
     {
-
-
         vet_name_TV = view.findViewById(R.id.vet_name_TV);
         vet_study_TV = view.findViewById(R.id.vet_study_TV);
         vet_profile_pic = view.findViewById(R.id.vet_profile_pic);
@@ -337,4 +341,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     public void onError(Throwable t, String key) {
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
