@@ -19,24 +19,30 @@
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_all_visits.xml" value="0.19746376811594202" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_bank_account_details.xml" value="0.18070652173913043" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_change_password.xml" value="0.12239583333333333" />
+        <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_dash_board.xml" value="0.11354166666666667" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_get_all_bank_accounts.xml" value="0.1" />
+        <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_get_pet_details.xml" value="0.18704710144927536" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_immunization_chart.xml" value="0.18020833333333333" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_login.xml" value="0.18854166666666666" />
+        <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_pet_details.xml" value="0.18704710144927536" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_reports_common.xml" value="0.1" />
+        <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_search.xml" value="0.13072916666666667" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_setting.xml" value="0.25" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_splash_screen.xml" value="0.18854166666666666" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_upcoming_visits.xml" value="0.19746376811594202" />
+        <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_update_profile.xml" value="0.18704710144927536" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_vet_operating_hours.xml" value="0.12239583333333333" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/activity_view_full_profile_vet.xml" value="0.17617753623188406" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/add_new_entrys.xml" value="0.1" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/checkinternet.xml" value="0.18297101449275363" />
-        <entry key="..\:/petofy_ophr/app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="..\:/petofy_ophr/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/fragment_online_visit.xml" value="0.1933876811594203" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/fragment_pet_register.xml" value="0.1" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/fragment_report_list.xml" value="0.1933876811594203" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/fragment_reports.xml" value="0.19746376811594202" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/fragment_vet_appointments.xml" value="0.1" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/immunization_chart_list.xml" value="0.18020833333333333" />
+        <entry key="..\:/petofy_ophr/app/src/main/res/layout/nointernetconnection.xml" value="0.13624338624338625" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/request_pending_list_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/vet_profile_fragment.xml" value="0.1" />
       </map>
