@@ -279,6 +279,13 @@ public interface ApiInterface {
     Call<GetReportsTypeResponse> getReportsType(@Header("Authorization") String auth);
 
     //GetRecomender Vaccine
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("user/GetImmunizationMasterStatus")
+    Call<JsonObject> getImmunizationMasterStatus(@Header("Authorization") String auth);
+
+
+
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @POST("immunization/GetRecommendedVaccine")
     Call<ImmunizationVaccineResponse> getRecommendedVaccine(@Header("Authorization") String auth, @Body ImmunizationRequestt immunizationRequestt);
