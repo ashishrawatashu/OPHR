@@ -112,7 +112,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         Config.vet_last_name = sharedPreferences.getString("last_name", "");
         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
 
-        Log.d("TOKEN",Config.token);
+
         if (Config.user_type.equals("Veterinarian")) {
             if (methods.isInternetOn()) {
                 getUserDetails();
@@ -145,7 +145,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         new GetLatestVersion().execute();
 
     }
-//
+
     protected void registerBroadcast() {
 //        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -187,8 +187,8 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-// -----------------------------------------------------------------------------------------------------------
-private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
+    // -----------------------------------------------------------------------------------------------------------
+    private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
         private ProgressDialog progressDialog;
         @Override
         protected void onPreExecute() {
@@ -435,7 +435,6 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
     @Override
     protected void onResume() {
         super.onResume();
-//        checks();
         if (Config.tabPosition == 1) {
             icHome.setImageResource(R.drawable.home_active);
             icProfile.setImageResource(R.drawable.profile_inactive);
@@ -458,7 +457,6 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
             icAppointment.setImageResource(R.drawable.appointment_inactive);
         }
 //        Log.e("OnResume", "onResume function is called : ");
-
     }
 
     @Override
@@ -556,8 +554,68 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
                 {
                     something_wrong_LL.setVisibility(View.GONE);
                     content_frame.setVisibility(View.VISIBLE);
-                    getCurrentVersion();
-                    getUserDetails();
+//                    getUserDetails();
+//                    Toast.makeText(getApplicationContext(), ""+Config.tabPosition, Toast.LENGTH_SHORT).show();
+                        if(Config.tabPosition==3)
+                             {
+                                userTYpe = sharedPreferences.getString("user_type", "");
+                                if (userTYpe.equals("Vet Staff"))
+                                {
+                                    Gson gson = new Gson();
+                                    String json = sharedPreferences.getString("userPermission", null);
+                                    Type type = new TypeToken<ArrayList<UserPermissionMasterList>>() {
+                                    }.getType();
+                                    ArrayList<UserPermissionMasterList> arrayList = gson.fromJson(json, type);
+                                    Log.e("ArrayList", arrayList.toString());
+                                    Log.d("UserType", userTYpe);
+                                    permissionId = "16";
+                                    methods.showCustomProgressBarDialog(this);
+                                    String url = "user/CheckStaffPermission/" + permissionId;
+                                    Log.e("URL", url);
+                                    ApiService<CheckStaffPermissionResponse> service = new ApiService<>();
+                                    service.get(this, ApiClient.getApiInterface().getCheckStaffPermission(Config.token, url), "CheckPermission");
+                                }else if (userTYpe.equals("Veterinarian")) {
+                                    icHome.setImageResource(R.drawable.home_inactive);
+                                    icProfile.setImageResource(R.drawable.profile_inactive);
+                                    icPetRegister.setImageResource(R.drawable.pet_inactive);
+                                    icAppointment.setImageResource(R.drawable.appointment_active);
+                                    VetAppointmentsFragment VetAppointmentsFragment = new VetAppointmentsFragment();
+                                    FragmentTransaction ftAppointment = getSupportFragmentManager().beginTransaction();
+                                    ftAppointment.replace(R.id.content_frame, VetAppointmentsFragment);
+                                    ftAppointment.commit();
+                                }
+                             }
+
+                  else if(Config.tabPosition==2)
+                    {
+                        userTYpe = sharedPreferences.getString("user_type", "");
+                        if (userTYpe.equals("Vet Staff")) {
+                            Gson gson = new Gson();
+                            String json = sharedPreferences.getString("userPermission", null);
+                            Type type = new TypeToken<ArrayList<UserPermissionMasterList>>() {
+                            }.getType();
+                            ArrayList<UserPermissionMasterList> arrayList = gson.fromJson(json, type);
+                            Log.e("ArrayList", arrayList.toString());
+                            Log.d("UserType", userTYpe);
+                            permissionId = "9";
+                            methods.showCustomProgressBarDialog(this);
+                            String url = "user/CheckStaffPermission/" + permissionId;
+                            Log.e("URL", url);
+                            ApiService<CheckStaffPermissionResponse> service = new ApiService<>();
+                            service.get(this, ApiClient.getApiInterface().getCheckStaffPermission(Config.token, url), "CheckPermission");
+                        } else if (userTYpe.equals("Veterinarian")) {
+                            icHome.setImageResource(R.drawable.home_inactive);
+                            icProfile.setImageResource(R.drawable.profile_inactive);
+                            icPetRegister.setImageResource(R.drawable.pet_active);
+                            icAppointment.setImageResource(R.drawable.appointment_inactive);
+                            PetRegisterFragment petRegisterFragment = new PetRegisterFragment();
+                            FragmentTransaction ftPetRegister = getSupportFragmentManager().beginTransaction();
+                            ftPetRegister.replace(R.id.content_frame, petRegisterFragment);
+                            ftPetRegister.commit();
+                        }
+
+                    }
+
                 }
                 else
                 {

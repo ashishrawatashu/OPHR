@@ -136,7 +136,6 @@ public class PetRegisterFragment extends Fragment implements ApiResponse, ViewDe
         Log.e("DATALOG", "check1=> " + getPetDataRequest);
 
     }
-
     private void init() {
         methods = new Methods(context);
         mShimmerViewContainer = view.findViewById(R.id.shimmer_view_container);

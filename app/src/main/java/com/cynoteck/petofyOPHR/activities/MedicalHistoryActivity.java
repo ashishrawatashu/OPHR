@@ -92,10 +92,10 @@ public class MedicalHistoryActivity extends AppCompatActivity implements ApiResp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_reports);
         receiverMedicalHistory=new checkIntetnetConnectivity();
-        if(Config.report==true)
-        {
+//        if(Config.report==true)
+//        {
+//        }
             registerBroadcast();
-        }
 
 
         sharedPreferences = getSharedPreferences("userdetails", 0);
@@ -534,7 +534,6 @@ public class MedicalHistoryActivity extends AppCompatActivity implements ApiResp
     }
 
     private static void show() {
-
         something_wrong_FR.setVisibility(View.VISIBLE);
         nested_scroll_view.setVisibility(View.GONE);
         mShimmerViewContainer.setVisibility(View.GONE);
