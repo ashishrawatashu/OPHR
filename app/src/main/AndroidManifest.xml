@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -36,6 +38,13 @@
         <activity android:name=".activities.InstructionActivity" />
         <activity android:name=".activities.StaffDetailsActivity" />
         <activity android:name=".activities.AddUpdateStaffActivity" />
+
+        <receiver android:name=".activities.checkIntetnetConnectivity" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".activities.PdfViewerActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />

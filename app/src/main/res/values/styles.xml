@@ -4,12 +4,13 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark"
-            >@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorPrimary</item>
+
         <item name="colorSecondary">@color/colorPrimary</item>
         <item name="android:statusBarColor">@color/whiteColor</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+
 
 
     </style>
@@ -40,5 +41,31 @@
         <item name="cornerSizeTopLeft">35dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+
+<!--for date picker dialog-->
+<!--    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">-->
+<!--        <item name="colorAccent">@android:color/holo_green_dark</item>-->
+<!--    </style>-->
+<!--    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">-->
+<!--        <item name="android:calendarViewStyle">@style/Widget.CalendarView.Custom</item>-->
+<!--    </style>-->
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/light_grey</item>
+<!--        <item name=""></item>-->
+<!--        <item name="android:selectableItemBackgroundBorderless">@color/colorPrimary</item>-->
+
+
+<!--        <item name="android:minDate">@color/light_grey</item>-->
+<!--        <item name="android:datePickerStyle">@color/blue_50</item>-->
+
+
+
+        <!--        <item name="android:weekNumberColor">@color/red</item>-->
+<!--        <item name="android:weekDayTextAppearance">@style/TextAppearance.Medium</item>-->
+<!--        <item name="android:dateTextAppearance">@style/TextAppearance.Medium</item>-->
     </style>
 </resources>

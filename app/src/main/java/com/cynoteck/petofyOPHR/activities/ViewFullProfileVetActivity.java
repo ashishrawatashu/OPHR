@@ -3,15 +3,19 @@ package com.cynoteck.petofyOPHR.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -100,7 +104,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     ScrollView vet_full_details_SV;
     List<String> petServiceText;
     List<String> petServiceValue;
-
+BroadcastReceiver broadcastReceiver=null;
 
     List<String> petTypeText;
     List<String> petTypeValue;
@@ -109,7 +113,10 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_full_profile_vet);
+        broadcastReceiver =new checkIntetnetConnectivity();
+        registerBroadcast();
         methods = new Methods(this);
+
         requestMultiplePermissions();
         inilization();
         Glide.with(this)
@@ -629,7 +636,43 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
 
         }
     }
+    protected void registerBroadcast() {
+//        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public  void dialog(boolean value) {
+        if (value) {
+            Log.e("VewFullProfileVet", "Yes connected to net");
+//            Handler handler = new Handler();
+//            Runnable delayrunnable = new Runnable() {
+//                @Override
+//                public void run() {
+//                    Log.e("Connected", "Yes inside handler ");
+//                }
+//            };
+//            handler.postDelayed(delayrunnable, 30000);
+        }
+        else {
+
+            Log.e("VewFullProfileVet", "Not Connected to net ");
+        }
+    }
 
     @Override
     protected void onResume() {

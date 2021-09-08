@@ -1,18 +1,24 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,9 +33,12 @@ import java.util.Enumeration;
 public class SplashScreenActivity extends AppCompatActivity {
 
     Animation animation;
-    ImageView splash_logo;
+   static ImageView splash_logo;
     Methods methods;
     int internetChkCode=0;
+    static LinearLayout something_wrong_splash;
+    BroadcastReceiver broadcastReceiver;
+    static boolean checkNet=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +46,29 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         splash_logo= (ImageView) findViewById(R.id.splashlogo);
+        something_wrong_splash=findViewById(R.id.something_wrong_splash);
         methods = new Methods(this);
-
+        Button retr_BT;
 
       /*  ActionBar actionBar=getSupportActionBar();
         actionBar.hide();*/
 
         animation = AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.bounce);
         splash_logo.setAnimation(animation);
+//        retr_BT=findViewById(R.id.rtr_BT);
+//        retr_BT.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(checkNet){
+//                    something_wrong_splash.setVisibility(View.GONE);
+//                    splash_logo.setVisibility(View.VISIBLE);
+//
+//                }
+//                else{
+//                    show();
+//                }
+//            }
+//        });
         NetwordDetect();
         try {
             if (methods.isInternetOn()) {
@@ -58,7 +82,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         }catch(Exception e){
             e.printStackTrace();
         }
-        
     }
 
     private void NetwordDetect() {
@@ -135,6 +158,50 @@ public class SplashScreenActivity extends AppCompatActivity {
         },2500);
     }
 
+//    protected void registerBroadcast() {
+////        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+//        }
+//
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        try {
+//            unregisterReceiver(broadcastReceiver);
+//        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
+//    public  static void isCon(boolean value) {
+//        if (value) {
+//            checkNet=true;
+//            Log.e("Connected", "Yes ");
+//        }
+//        else {
+//            checkNet=false;
+//            show();
+//        }
+//    }
+//
+//    private static void show() {
+//
+//        something_wrong_splash.setVisibility(View.VISIBLE);
+//        splash_logo.setVisibility(View.GONE);
+//
+//    }
+
+
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -142,7 +209,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         {
             try {
                 if (methods.isInternetOn()) {
-
                     updateMethod();
 
                 } else {
