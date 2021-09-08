@@ -92,7 +92,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         Config.vet_last_name = sharedPreferences.getString("last_name", "");
         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
 
-
+        Log.d("TOKEN",Config.token);
         if (Config.user_type.equals("Veterinarian")) {
             if (methods.isInternetOn()) {
                 getUserDetails();

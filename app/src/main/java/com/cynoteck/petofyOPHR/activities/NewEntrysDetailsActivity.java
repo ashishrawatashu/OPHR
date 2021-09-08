@@ -87,7 +87,7 @@ public class NewEntrysDetailsActivity extends AppCompatActivity implements View.
         pet_image_url = extras.getString("pet_image_url");
         pet_unique_id = extras.getString("pet_unique_id");
         button_text = extras.getString("add_button_text");
-        Log.e("PET_DETAILS",""+pet_DOB+" "+pet_encrypted_id+" "+pet_cat_id+" "+pet_name+" "+pet_owner_name+" "+pet_image_url+" "+pet_sex+" "+pet_age+" "+pet_unique_id);
+        Log.e("PET_DETAILS",""+pet_DOB+" "+pet_encrypted_id+" "+"cat_id=>"+pet_cat_id+" "+pet_name+" "+pet_owner_name+" "+pet_image_url+" "+pet_sex+" "+pet_age+" "+pet_unique_id);
 
 
         reports_headline_TV = findViewById(R.id.reports_headline_TV);

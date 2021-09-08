@@ -357,8 +357,11 @@ public class PetRegisterFragment extends Fragment implements ApiResponse, ViewDe
                                 petList.setPetProfileImageUrl(getPetListResponse.getData().getPetList().get(i).getPetProfileImageUrl());
                                 petList.setEncryptedId(getPetListResponse.getData().getPetList().get(i).getEncryptedId());
                                 petList.setId(getPetListResponse.getData().getPetList().get(i).getId());
-                                petList.setPetColor(getPetListResponse.getData().getPetList().get(i).getPetColor());
                                 petList.setPetAge(getPetListResponse.getData().getPetList().get(i).getPetAge());
+                                petList.setPetCategoryId(getPetListResponse.getData().getPetList().get(i).getPetCategoryId());
+                                petList.setLastVisitEncryptedId(getPetListResponse.getData().getPetList().get(i).getLastVisitEncryptedId());
+                                Log.e("LAST_VISIT", getPetListResponse.getData().getPetList().get(i).getLastVisitEncryptedId());
+
                                 profileList.add(petList);
                             }
                             registerPetAdapter = new RegisterPetAdapter(getContext(), profileList, this);
@@ -488,6 +491,7 @@ public class PetRegisterFragment extends Fragment implements ApiResponse, ViewDe
         Log.e("E_ID", profileList.get(position).getEncryptedId());
         Log.e("PET_NAME", profileList.get(position).getPetName());
         Log.e("PET_PARENT", profileList.get(position).getPetParentName());
+        Log.e("PET_CAT_ID", profileList.get(position).getPetCategoryId());
 
         Intent petDetailsIntent = new Intent(getActivity().getApplication(), PetDetailsActivity.class);
         Bundle data = new Bundle();

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cynoteck.petofyOPHR.R;
+import com.cynoteck.petofyOPHR.params.addPetClinicParamRequest.VaccinationModel;
 import com.cynoteck.petofyOPHR.utils.ImmunizationOnclickListener;
 
 import java.util.ArrayList;
@@ -21,12 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ImmunazationVaccineAdopter extends RecyclerView.Adapter<ImmunazationVaccineAdopter.MyViewHolder> {
 
     Context context;
-    ArrayList<String> petHospitalizationsLists;
+    ArrayList<VaccinationModel> vaccinationModelArrayList;
     private ImmunizationOnclickListener immunizationOnclickListener;
 
-    public ImmunazationVaccineAdopter(Context context, ImmunizationOnclickListener immunizationOnclickListener, ArrayList<String> petClinicVisitLists) {
+    public ImmunazationVaccineAdopter(Context context, ImmunizationOnclickListener immunizationOnclickListener, ArrayList<VaccinationModel> petClinicVisitLists) {
         this.context = context;
-        this.petHospitalizationsLists = petClinicVisitLists;
+        this.vaccinationModelArrayList = petClinicVisitLists;
         this.immunizationOnclickListener = immunizationOnclickListener;
     }
 
@@ -40,20 +41,16 @@ public class ImmunazationVaccineAdopter extends RecyclerView.Adapter<Immunazatio
 
     @Override
     public void onBindViewHolder(@NonNull ImmunazationVaccineAdopter.MyViewHolder holder, int position) {
-        StringTokenizer st = new StringTokenizer(petHospitalizationsLists.get(position), ",");
-        String brandType = st.nextToken();
-        String vaccine_name_TV = st.nextToken();
-        String immunization_date = st.nextToken();
-
-        holder.vaccine_brand_type.setText(brandType);
-        holder.vaccine_name_TV.setText(vaccine_name_TV);
-        holder.vaccine_date.setText(immunization_date);
+        
+        holder.vaccine_brand_type.setText(vaccinationModelArrayList.get(position).getVaccineType());
+        holder.vaccine_name_TV.setText(vaccinationModelArrayList.get(position).getVaccine());
+        holder.vaccine_date.setText(vaccinationModelArrayList.get(position).getImmunizationDate());
 
     }
 
     @Override
     public int getItemCount() {
-        return petHospitalizationsLists.size();
+        return vaccinationModelArrayList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
