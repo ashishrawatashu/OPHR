@@ -1,6 +1,5 @@
 package com.cynoteck.petofyOPHR.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -86,11 +85,12 @@ public class HomeFragment<isOnline> extends Fragment implements View.OnClickList
     Button submit_parent_otp,retry_btn;
     SharedPreferences sharedPreferences;
     String userTYpe = "";
-    static  LinearLayout something_wrong_layout;
+    static  LinearLayout something_wrong_layout,below_section;
     static ScrollView scrollViewSection;
+    static TextView select_cat_TV;
     String permissionId = "";
     TextView search_box_TV, total_my_pets_TV, total_appointment_TV, total_staff_TV,help;
-static boolean isOnline=true;
+    static boolean isCon;
     BroadcastReceiver broadcastReceiver;
 
 
@@ -126,6 +126,7 @@ static boolean isOnline=true;
         search_box_TV = view.findViewById(R.id.search_box_TV);
         staff_headline_TV = view.findViewById(R.id.staff_headline_TV);
         addNewEntry = view.findViewById(R.id.addNewEntry);
+        select_cat_TV=view.findViewById(R.id.select_cat_TV);
         reports_CV = view.findViewById(R.id.reports_CV);
 //        help=view.findViewById(R.id.help);
         all_staff_CV = view.findViewById(R.id.staff_CV);
@@ -137,6 +138,8 @@ static boolean isOnline=true;
         total_appointment_TV = view.findViewById(R.id.total_appointment_TV);
 
         something_wrong_layout=view.findViewById(R.id.something_wrong_LL);
+
+        below_section=view.findViewById(R.id.below_section);
         retry_btn=view.findViewById(R.id.retry_btn);
         scrollViewSection=view.findViewById(R.id.scrollView5);
 
@@ -155,7 +158,6 @@ static boolean isOnline=true;
     }
 
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -272,6 +274,22 @@ static boolean isOnline=true;
 
                 break;
 
+
+//            case R.id.retry_btn:
+//                if(isCon)
+//                {
+//                    setTotalDashboardNumber();
+//                    something_wrong_layout.setVisibility(View.GONE);
+//                    scrollViewSection.setVisibility(View.VISIBLE);
+//                    select_cat_TV.setVisibility(View.VISIBLE);
+//                    below_section.setVisibility(View.VISIBLE);
+//
+//                }
+//                else
+//                {
+//                    show();
+//
+//                }
 
 
         }
@@ -515,7 +533,7 @@ static boolean isOnline=true;
 
     }
 
-//
+
 //    @Override
 //    public void onDestroyView() {
 //        super.onDestroyView();
@@ -536,7 +554,26 @@ static boolean isOnline=true;
 //            getActivity().registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 //        }
 //    }
-
+//
+//    public static void isConnected(boolean val) {
+//        if (val) {
+//            isCon = true;
+//
+//        } else {
+//            isCon = false;
+//            show();
+//
+//        }
+//    }
+//
+//   static void show()
+//    {
+//        something_wrong_layout.setVisibility(View.VISIBLE);
+//        scrollViewSection.setVisibility(View.GONE);
+//        select_cat_TV.setVisibility(View.GONE);
+//        below_section.setVisibility(View.GONE);
+//
+//    }
 
 
 

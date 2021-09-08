@@ -1,7 +1,9 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import static com.cynoteck.petofyOPHR.activities.DashBoardActivity.isConnected;
+//import static com.cynoteck.petofyOPHR.activities.MedicalHistoryActivity.isConn;
 import static com.cynoteck.petofyOPHR.activities.MedicalHistoryActivity.isConn;
+//import static com.cynoteck.petofyOPHR.fragments.HomeFragment.isConnected;
 
 
 import android.app.AlertDialog;
@@ -44,18 +46,9 @@ public class checkIntetnetConnectivity extends BroadcastReceiver {
                 isConnected(true);
                 isConn(true);
                 Log.e("checkInternet", "App is back to Online  ");
-//                Toast.makeText(context, "app is online in broadcast receiver class", Toast.LENGTH_SHORT).show();
             } else {
-//                dashBoardActivity.checks();
                 isConnected(false);
                 isConn(false);
-
-
-//                Methods methods=new Methods(context);
-//                Toast.makeText(context, "app is not online in broadcast receiver class", Toast.LENGTH_SHORT).show();
-
-
-//                methods.DialogInternet();
                 Log.e("checkInternet", "Conectivity Failure  !!! ");
             }
         } catch (NullPointerException e) {
@@ -81,22 +74,6 @@ public class checkIntetnetConnectivity extends BroadcastReceiver {
     }
 }
 
-//    public void showView(Context context)
-//    {
-//        {
-//            View noConnection= LayoutInflater.from(context).inflate(R.layout.nointernetconnection,null);
-//            Log.e("TAG", "showView: "+context );
-//            noConnection.setVisibility(View.VISIBLE);
-//            Button retry =noConnection.findViewById(R.id.retry_BT);
-//            retry.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Toast.makeText(context.getApplicationContext(), "Retry button is clicked", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
-//
-//    }
 
 
 
