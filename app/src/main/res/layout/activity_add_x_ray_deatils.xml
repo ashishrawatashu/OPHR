@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main"
     android:background="@color/whiteColor">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,12 +65,12 @@
 
 
     <ScrollView
+        android:id="@+id/scrollView7"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/save_BT"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="10dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -78,15 +78,14 @@
             android:layout_height="wrap_content">
 
 
-
             <TextView
                 android:id="@+id/xray_peto_edit_reg_number_dialog"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
                 android:text="PETO-1138"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -104,7 +103,6 @@
                 app:layout_constraintTop_toBottomOf="@id/xray_peto_edit_reg_number_dialog" />
 
 
-
             <TextView
                 android:id="@+id/nature_of_visit_TV"
                 android:layout_width="0dp"
@@ -112,9 +110,9 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
                 android:text="@string/nature_of_visits"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -126,13 +124,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
-                android:paddingLeft="20dp"
-                android:fontFamily="@font/nunito"
-                android:textColor="@color/gray_1"
-                android:textSize="18sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/spinner_background"
+                android:fontFamily="@font/nunito"
+                android:paddingLeft="20dp"
+                android:textColor="@color/gray_1"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/nature_of_visit_TV" />
@@ -145,9 +143,9 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
                 android:text="@string/testdate"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -162,10 +160,10 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/cal_background"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
                 android:hint="12/05/2020"
                 android:paddingLeft="25dp"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -177,9 +175,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
                 android:text="@string/result"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -188,20 +186,20 @@
 
             <EditText
                 android:id="@+id/description_ET"
-                android:hint="@string/result"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
+                android:background="@drawable/edit_text_background"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
-                android:inputType="text"
+                android:hint="@string/result"
+                android:inputType="textCapWords"
                 android:maxLines="1"
                 android:paddingLeft="25dp"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
-                android:background="@drawable/edit_text_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description_TV" />
@@ -213,9 +211,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
                 android:text="Next Visit"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@id/description_ET"
@@ -228,13 +226,13 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
-                android:paddingLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/spinner_background"
                 android:fontFamily="@font/nunito"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
-                android:background="@drawable/spinner_background"
-                android:gravity="center_vertical"
                 app:layout_constraintEnd_toEndOf="@id/description_ET"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/next_visit" />
@@ -246,13 +244,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
                 android:text="Next Visit Date"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/nature_of_visit_TV"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/next_visit_spinner" />
 
             <TextView
@@ -262,17 +260,17 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
-                android:gravity="center_vertical"
-                android:inputType="text"
                 android:background="@drawable/cal_background"
-                android:hint="Next Visit Date"
-                android:paddingLeft="25dp"
                 android:fontFamily="@font/nunito"
+                android:gravity="center_vertical"
+                android:hint="Next Visit Date"
+                android:inputType="text"
+                android:paddingLeft="25dp"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@id/nature_of_visit_TV"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/follow_up_dt"/>
+                app:layout_constraintTop_toBottomOf="@id/follow_up_dt" />
 
             <TextView
                 android:id="@+id/document_tv"
@@ -280,89 +278,87 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
+                android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
                 android:text="Document"
-                android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/nature_of_visit_TV"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/folow_up_dt_view" />
-
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/document_layout"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:textColor="@color/grey_add_pet"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/grey_add_pet"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/document_tv">
 
-
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/upload_doc_image_CIV"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/upload_doc_icon"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/upload_image_bg"
-                    android:id="@+id/xray_test_upload_documents"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <ImageView
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"
-                    android:id="@+id/xray_document"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RelativeLayout
-                    android:id="@+id/upload_RL"
-                    android:layout_marginLeft="10dp"
-                    android:elevation="1dp"
-                    android:src="@drawable/upload_up_icon"
-                    android:layout_width="50dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:visibility="visible"
-                        android:layout_width="50dp"
-                        android:src="@drawable/white_circle_bg"
-                        android:layout_height="match_parent" />
-                    <ImageView
-                        android:visibility="visible"
-                        android:layout_width="50dp"
-                        android:padding="8dp"
-                        android:src="@drawable/upload_up_icon"
-                        android:layout_height="match_parent" />
-
-                </RelativeLayout>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/upload_doc_image_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/upload_doc"
+                    app:layout_constraintStart_toEndOf="@id/upload_doc_image_CIV"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/upload_doc_image_progress_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="0dp"
-                    android:id="@+id/document_headline_TV"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="40dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="2"
+                    android:progressBackgroundTint="@color/colorPrimaryDark"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintStart_toEndOf="@+id/upload_RL"
-                    android:text="Upload Document"
-                    android:fontFamily="@font/nunito"
-                    android:textColor="@color/gray_1"
-                    android:textSize="20dp"
-                    android:gravity="center"/>
+                    app:layout_constraintStart_toEndOf="@+id/upload_doc_image_CIV"
+                    app:layout_constraintTop_toBottomOf="@id/upload_doc_image_TV" />
+
+                <ImageView
+                    android:id="@+id/upload_doc_image_upload_IV"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/upload_icon"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/upload_doc_image_delete_IV"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="5dp"
+                    android:src="@drawable/delete_icon"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/gray_3" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -370,27 +366,25 @@
 
     </ScrollView>
 
-        <Button
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/save_BT"
-            android:background="@drawable/blue_background_bg"
-            android:fontFamily="@font/nunito"
-            android:textSize="24sp"
-            android:theme="@style/MatButton"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="@string/save"
-            android:layout_width="match_parent"
-            android:textColor="@color/whiteColor"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="MissingConstraints" />
-
-
+    <Button
+        android:id="@+id/save_BT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/blue_background_bg"
+        android:fontFamily="@font/nunito"
+        android:orientation="horizontal"
+        android:text="@string/save"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/whiteColor"
+        android:textSize="24sp"
+        android:theme="@style/MatButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

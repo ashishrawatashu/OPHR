@@ -207,77 +207,77 @@ public class AddPetRegister extends AppCompatActivity implements View.OnClickLis
 
     private void getPetParentname()
     {
-        pet_parent_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                Log.d("dataChange","afterTextChanged"+new String(editable.toString()));
-                String value=editable.toString();
-                SearchPetParentParameter searchPetParentParameter=new SearchPetParentParameter();
-                searchPetParentParameter.setPrefix(value);
-                SearchPetParentRequestData searchPetParentRequestData=new SearchPetParentRequestData();
-                searchPetParentRequestData.setData(searchPetParentParameter);
-                ApiService<GetPetParentResponseData> service = new ApiService<>();
-                service.get( AddPetRegister.this, ApiClient.getApiInterface().searchPetParent(Config.token,searchPetParentRequestData), "SearchPetParent");
-                Log.e("DAILOG","getPetaParentName==>"+searchPetParentRequestData);
-            }
-        });
-
-
-        pet_parent_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String value=pet_parent_name.getText().toString();
-                String[] city_array = value.split("\\(");
-
-                pet_parent_name.setText(city_array[0]);
-                pet_contact_number.setText(city_array[1].substring(0,city_array[1].length()-1).trim());
-            }
-        });
-
-        pet_contact_number.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String value=editable.toString();
-                SearchPetParentParameter searchPetParentParameter=new SearchPetParentParameter();
-                searchPetParentParameter.setPrefix(value);
-                SearchPetParentRequestData searchPetParentRequestData=new SearchPetParentRequestData();
-                searchPetParentRequestData.setData(searchPetParentParameter);
-                ApiService<GetPetParentResponseData> service = new ApiService<>();
-                service.get( AddPetRegister.this, ApiClient.getApiInterface().searchPetParent(Config.token,searchPetParentRequestData), "SearchPetParent");
-                Log.e("DAILOG","getPetaParentName==>"+searchPetParentRequestData);
-
-            }
-        });
-
-        pet_contact_number.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String value=pet_contact_number.getText().toString();
-                String[] city_array = value.split("\\(");
-                pet_parent_name.setText(city_array[0]);
-                pet_contact_number.setText(city_array[1].substring(0,city_array[1].length()-1).trim());
-            }
-        });
+//        pet_parent_name.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                Log.d("dataChange","afterTextChanged"+new String(editable.toString()));
+//                String value=editable.toString();
+//                SearchPetParentParameter searchPetParentParameter=new SearchPetParentParameter();
+//                searchPetParentParameter.setPrefix(value);
+//                SearchPetParentRequestData searchPetParentRequestData=new SearchPetParentRequestData();
+//                searchPetParentRequestData.setData(searchPetParentParameter);
+//                ApiService<GetPetParentResponseData> service = new ApiService<>();
+//                service.get( AddPetRegister.this, ApiClient.getApiInterface().searchPetParent(Config.token,searchPetParentRequestData), "SearchPetParent");
+//                Log.e("DAILOG","getPetaParentName==>"+searchPetParentRequestData);
+//            }
+//        });
+//
+//
+//        pet_parent_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String value=pet_parent_name.getText().toString();
+//                String[] city_array = value.split("\\(");
+//
+//                pet_parent_name.setText(city_array[0]);
+//                pet_contact_number.setText(city_array[1].substring(0,city_array[1].length()-1).trim());
+//            }
+//        });
+//
+//        pet_contact_number.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                String value=editable.toString();
+//                SearchPetParentParameter searchPetParentParameter=new SearchPetParentParameter();
+//                searchPetParentParameter.setPrefix(value);
+//                SearchPetParentRequestData searchPetParentRequestData=new SearchPetParentRequestData();
+//                searchPetParentRequestData.setData(searchPetParentParameter);
+//                ApiService<GetPetParentResponseData> service = new ApiService<>();
+//                service.get( AddPetRegister.this, ApiClient.getApiInterface().searchPetParent(Config.token,searchPetParentRequestData), "SearchPetParent");
+//                Log.e("DAILOG","getPetaParentName==>"+searchPetParentRequestData);
+//
+//            }
+//        });
+//
+//        pet_contact_number.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String value=pet_contact_number.getText().toString();
+//                String[] city_array = value.split("\\(");
+//                pet_parent_name.setText(city_array[0]);
+//                pet_contact_number.setText(city_array[1].substring(0,city_array[1].length()-1).trim());
+//            }
+//        });
 
     }
 

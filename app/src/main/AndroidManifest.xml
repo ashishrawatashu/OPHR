@@ -69,8 +69,7 @@
         <activity android:name=".activities.AddUpdateAppointmentActivity" />
         <activity android:name=".activities.ViewFullProfileVetActivity" />
         <activity android:name=".activities.StaffListActivity" />
-        <activity
-            android:name=".activities.PetIdCardActivity"
+        <activity android:name=".activities.PetIdCardActivity"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity" />
         <activity android:name=".activities.AddNewPetActivity" />

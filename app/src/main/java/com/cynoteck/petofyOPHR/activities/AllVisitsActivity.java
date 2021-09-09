@@ -2,6 +2,7 @@ package com.cynoteck.petofyOPHR.activities;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -286,82 +287,27 @@ public class AllVisitsActivity extends AppCompatActivity implements ApiResponse,
 
             case "GetImmunization":
                 try {
-                    methods.customProgressDismiss();
-                    Log.d("GetImmunization",arg0.body().toString());
+                    Log.d("GetImmunization", arg0.body().toString());
                     PetImmunizationRecordResponse immunizationRecordResponse = (PetImmunizationRecordResponse) arg0.body();
+                    methods.customProgressDismiss();
                     int responseCode = Integer.parseInt(immunizationRecordResponse.getResponse().getResponseCode());
-                    if (responseCode== 109){
-                        if (immunizationRecordResponse.getData().getPetImmunizationDetailModels().isEmpty()){
+                    if (responseCode == 109) {
+                        if (immunizationRecordResponse.getData().equals("")) {
+                            // methods.customProgressDismiss();
                             Toast.makeText(this, "No Record Found !", Toast.LENGTH_SHORT).show();
-                        }else {
-                            ArrayList<String> immunizationDate = new ArrayList<>();
-                            ArrayList<String> vaccineClass = new ArrayList<>();
-                            ArrayList<String> nextDueDate = new ArrayList<>();
-
-                            ArrayList<String> immunizationDatePending = new ArrayList<>();
-                            ArrayList<String> vaccineClassPending = new ArrayList<>();
-                            ArrayList<String> nextDueDatePending = new ArrayList<>();
-
-                            for (int i = 0; i < immunizationRecordResponse.getData().getPetPendingVaccinations().size(); i++) {
-                                if(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getIsVaccinated().equals("true"))
-                                {
-                                    immunizationDate.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccinationDate());
-                                    vaccineClass.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccineName());
-                                    nextDueDate.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getNextVaccinationDate().substring(0, immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getNextVaccinationDate().length() - 9));
-                                }
-                                else
-                                {
-                                    immunizationDatePending.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccinationDate());
-                                    vaccineClassPending.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccineName());
-                                    nextDueDatePending.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getNextVaccinationDate().substring(0, immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getNextVaccinationDate().length() - 9));
-
-                                }
-                            }
-                            final JSONArray date = new JSONArray(immunizationDate);
-                            final JSONArray vaccine = new JSONArray(vaccineClass);
-                            final JSONArray nextDate = new JSONArray(nextDueDate);
-
-
-                            final JSONArray datePending = new JSONArray(immunizationDatePending);
-                            final JSONArray vaccinePending = new JSONArray(vaccineClassPending);
-                            final JSONArray nextDatePending = new JSONArray(nextDueDatePending);
-
-
-                            Log.e("aaaaaa", vaccineClass.toString());
-                            Log.e("aaaaaa", vaccine.toString());
-                            String immunizationSet = methods.immunizationPdfGenarator(petNameImmun, petAgeImmun, petSeximmun, petParentImmun, "4564564644465", date, vaccine, nextDate,datePending, vaccinePending, nextDatePending);
-
-                            webview.loadDataWithBaseURL(null, immunizationSet, "text/html", "utf-8", null);
-                            new Handler().postDelayed(new Runnable() {
-                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                                @Override
-                                public void run() {
-                                    Context context = AllVisitsActivity.this;
-                                    PrintManager printManager = (PrintManager) getSystemService(context.PRINT_SERVICE);
-                                    PrintDocumentAdapter adapter = null;
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                        adapter = webview.createPrintDocumentAdapter();
-                                    }
-                                    String JobName = getString(R.string.app_name) + "Document";
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                        PrintJob printJob = printManager.print(JobName, adapter, new PrintAttributes.Builder().build());
-                                    }
-                                }
-                            }, 3000);
-
+                        } else {
+                            Intent lastPrescriptionIntent = new Intent(this, PdfEditorActivity.class);
+                            lastPrescriptionIntent.putExtra("encryptId",immunizationRecordResponse.getData());
+                            startActivity(lastPrescriptionIntent);
                         }
 
-                    }else if (responseCode==614){
-                        Toast.makeText(this, immunizationRecordResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
                     }
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
-
             case "GetPetClinicVisitDetails":
                 try {
                     Log.d("ResponseClinicVisit", arg0.body().toString());
@@ -556,7 +502,6 @@ public class AllVisitsActivity extends AppCompatActivity implements ApiResponse,
     @Override
     public void onImmunizationButton(int position) {
         methods.showCustomProgressBarDialog(this);
-//        Toast.makeText(this, "Immization", Toast.LENGTH_SHORT).show();
         petNameImmun = getMyVisitPetRecordResponse.getData().getPetClinicVisitList().get(position).getPetName();
         petSeximmun = getMyVisitPetRecordResponse.getData().getPetClinicVisitList().get(position).getPetSex();
         petAgeImmun = getMyVisitPetRecordResponse.getData().getPetClinicVisitList().get(position).getPetAge();
@@ -564,7 +509,6 @@ public class AllVisitsActivity extends AppCompatActivity implements ApiResponse,
 
         ImmunizationParams immunizationParams = new ImmunizationParams();
         immunizationParams.setEncryptedId(getMyVisitPetRecordResponse.getData().getPetClinicVisitList().get(position).getEncryptedId());
-//        immunizationParams.setEncryptedId(getPetListResponse.getData().getPetClinicVisitList().get(position).getEncryptedId());
         ImmunizationRequest immunizationRequest = new ImmunizationRequest();
         immunizationRequest.setData(immunizationParams);
 

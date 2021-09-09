@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cynoteck.petofyOPHR.R;
+import com.cynoteck.petofyOPHR.activities.PdfEditorActivity;
 import com.cynoteck.petofyOPHR.activities.ReportsCommonActivity;
 import com.cynoteck.petofyOPHR.adapters.HospitalizationReportsAdapter;
 import com.cynoteck.petofyOPHR.adapters.LabTestReportsAdapter;
@@ -366,90 +367,25 @@ public class NewEntrysListFragment extends Fragment implements ApiResponse, Regi
 
             case "GetImmunization":
                 try {
-                    Log.d("GetImmunization",response.body().toString());
+                    Log.d("GetImmunization", response.body().toString());
                     PetImmunizationRecordResponse immunizationRecordResponse = (PetImmunizationRecordResponse) response.body();
-//                    methods.customProgressDismiss();
+                    methods.customProgressDismiss();
                     int responseCode = Integer.parseInt(immunizationRecordResponse.getResponse().getResponseCode());
-                    if (responseCode== 109){
-                        if (immunizationRecordResponse.getData().getPetImmunizationDetailModels().isEmpty()){
+                    if (responseCode == 109) {
+                        if (immunizationRecordResponse.getData().equals("")) {
                             // methods.customProgressDismiss();
-                            Toast.makeText(getActivity(), "No Record Found !", Toast.LENGTH_SHORT).show();
-                        }else {
-                            ArrayList<String> immunizationDate = new ArrayList<>();
-                            ArrayList<String> vaccineClass = new ArrayList<>();
-                            ArrayList<String> nextDueDate = new ArrayList<>();
-                            ArrayList<String> vaccineType = new ArrayList<>();
-
-                            ArrayList<String> immunizationDatePending = new ArrayList<>();
-                            ArrayList<String> vaccineClassPending = new ArrayList<>();
-                            ArrayList<String> nextDueDatePending = new ArrayList<>();
-                            ArrayList<String> vaccineTypePending = new ArrayList<>();
-
-                            for (int i = 0; i < immunizationRecordResponse.getData().getPetPendingVaccinations().size(); i++) {
-                                if(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getIsVaccinated().equals("true"))
-                                {
-                                    immunizationDate.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccinationDate());
-                                    vaccineClass.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccineName());
-                                    nextDueDate.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getNextVaccinationDate().substring(0, immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getNextVaccinationDate().length() - 9));
-                                    vaccineType.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccineType());
-
-                                }
-                                else
-                                {
-                                    immunizationDatePending.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccinationDate());
-                                    vaccineClassPending.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccineName());
-                                    nextDueDatePending.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getNextVaccinationDate().substring(0, immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getNextVaccinationDate().length() - 9));
-                                    vaccineTypePending.add(immunizationRecordResponse.getData().getPetPendingVaccinations().get(i).getVaccineType());
-
-                                }
-                            }
-                            final JSONArray date = new JSONArray(immunizationDate);
-                            final JSONArray vaccine = new JSONArray(vaccineClass);
-                            final JSONArray nextDate = new JSONArray(nextDueDate);
-                            final JSONArray vType = new JSONArray(vaccineType);
-
-                            Log.d("jsjsjjsjs",""+date.length());
-
-                            final JSONArray datePending = new JSONArray(immunizationDatePending);
-                            final JSONArray vaccinePending = new JSONArray(vaccineClassPending);
-                            final JSONArray nextDatePending = new JSONArray(nextDueDatePending);
-                            final JSONArray vTypePending = new JSONArray(vaccineTypePending);
-
-                            Log.d("jsjsjjsjs",""+datePending.length());
-
-                            Log.e("aaaaaa", vaccineClass.toString());
-                            Log.e("aaaaaa", vaccine.toString());
-                            String immunizationSet = methods.immunizationPdfGenarator(pet_name, pet_age, pet_sex, pet_owner_name, Config.user_verterian_reg_no, vType, vaccine, nextDate, vTypePending, vaccinePending, nextDatePending);
-                            WebSettings webSettings = webview.getSettings();
-                            webSettings.setJavaScriptEnabled(true);
-                            webview.loadDataWithBaseURL(null, immunizationSet, "text/html", "utf-8", null);
-                            new Handler().postDelayed(new Runnable() {
-                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                                @Override
-                                public void run() {
-                                    methods.customProgressDismiss();
-                                    Context context = getActivity();
-                                    PrintManager printManager = (PrintManager)getActivity().getSystemService(context.PRINT_SERVICE);
-                                    PrintDocumentAdapter adapter = null;
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                        adapter = webview.createPrintDocumentAdapter();
-                                    }
-                                    String JobName = getString(R.string.app_name) + "Document";
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                                        PrintJob printJob = printManager.print(JobName, adapter, new PrintAttributes.Builder().build());
-                                    }
-                                }
-                            }, 1000);
-
+                            Toast.makeText(getContext(), "No Record Found !", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.d("encryptId",immunizationRecordResponse.getData());
+                            Intent lastPrescriptionIntent = new Intent(getContext(), PdfEditorActivity.class);
+                            lastPrescriptionIntent.putExtra("encryptId",immunizationRecordResponse.getData());
+                            startActivity(lastPrescriptionIntent);
                         }
 
-                    }else if (responseCode==614){
-                        Toast.makeText(getActivity(), immunizationRecordResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(getActivity(), "Please Try Again !", Toast.LENGTH_SHORT).show();
+                    }  else {
+                        Toast.makeText(getContext(), "Please Try Again !", Toast.LENGTH_SHORT).show();
                     }
-                }
-                catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;

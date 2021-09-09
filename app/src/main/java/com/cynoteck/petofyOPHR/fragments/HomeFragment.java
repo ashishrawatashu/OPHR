@@ -1,5 +1,6 @@
 package com.cynoteck.petofyOPHR.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -85,7 +86,7 @@ public class HomeFragment<isOnline> extends Fragment implements View.OnClickList
     Button submit_parent_otp,retry_btn;
     SharedPreferences sharedPreferences;
     String userTYpe = "";
-   static  LinearLayout something_wrong_layout;
+    static  LinearLayout something_wrong_layout;
     static ScrollView scrollViewSection;
     String permissionId = "";
     TextView search_box_TV, total_my_pets_TV, total_appointment_TV, total_staff_TV,help;
@@ -154,6 +155,7 @@ static boolean isOnline=true;
     }
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

@@ -1,6 +1,7 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,11 +37,14 @@ import retrofit2.Response;
 
 public class SearchActivity extends AppCompatActivity implements TextWatcher, ApiResponse, SearchInterface {
     EditText searchpet;
-    MaterialCardView back_arrow_CV;
+    MaterialCardView back_arrow_CV,search_pet_MCV;
     ArrayList<PetList> profileList = new ArrayList<>();
     RecyclerView register_pet_RV;
     com.cynoteck.petofyOPHR.adapters.SearchAdapter SearchAdapter;
     Methods methods;
+    ProgressBar search_PB;
+    NestedScrollView nested_scroll_view;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,49 +54,73 @@ public class SearchActivity extends AppCompatActivity implements TextWatcher, Ap
         searchpet =  findViewById(R.id.search_pet);
         back_arrow_CV =  findViewById(R.id.back_arrow_CV);
         register_pet_RV = findViewById(R.id.register_pet_RV);
+        search_pet_MCV = findViewById(R.id.search_pet_MCV);
+        search_PB = findViewById(R.id.search_PB);
+        nested_scroll_view = findViewById(R.id.nested_scroll_view);
+        searchpet.requestFocus();
+
         back_arrow_CV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        searchpet.requestFocus();
-        searchpet.addTextChangedListener(new TextWatcher() {
-            long lastChange = 0;
+
+        search_pet_MCV.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                if (charSequence.length() > 1) {
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            if (System.currentTimeMillis() - lastChange >= 300) {
-                                //send request
-                                if (methods.isInternetOn()) {
-                                    register_pet_RV.setVisibility(View.GONE);
-                                    if (!searchpet.getText().toString().equals("")) {
-                                        petSearchDependsOnPrefix(searchpet.getText().toString());
-                                    }
-                                } else {
-                                    methods.DialogInternet();
-                                }
-                            }
-                        }
-                    }, 300);
-                    lastChange = System.currentTimeMillis();
-
+            public void onClick(View v) {
+                if (methods.isInternetOn()) {
+                    register_pet_RV.setVisibility(View.GONE);
+                    if (!searchpet.getText().toString().equals("")) {
+                        search_PB.setVisibility(View.VISIBLE);
+                        nested_scroll_view.setVisibility(View.GONE);
+                        petSearchDependsOnPrefix(searchpet.getText().toString());
+                    }else {
+                        Toast.makeText(SearchActivity.this, "No Data Found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    methods.DialogInternet();
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String value = s.toString();
-//                petSearchDependsOnPrefix(value);
-            }
         });
+
+//        searchpet.addTextChangedListener(new TextWatcher() {
+//            long lastChange = 0;
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+//                if (charSequence.length() > 1) {
+//                    new Handler().postDelayed(new Runnable() {
+//                        public void run() {
+//                            if (System.currentTimeMillis() - lastChange >= 300) {
+//                                //send request
+//                                if (methods.isInternetOn()) {
+//                                    register_pet_RV.setVisibility(View.GONE);
+//                                    if (!searchpet.getText().toString().equals("")) {
+//                                        petSearchDependsOnPrefix(searchpet.getText().toString());
+//                                    }
+//                                } else {
+//                                    methods.DialogInternet();
+//                                }
+//                            }
+//                        }
+//                    }, 300);
+//                    lastChange = System.currentTimeMillis();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                String value = s.toString();
+//
+//            }
+//        });
+
     }
 
     @Override
@@ -128,6 +156,8 @@ public class SearchActivity extends AppCompatActivity implements TextWatcher, Ap
         switch (key) {
             case "GetPetListBySearch":
                 try {
+                    search_PB.setVisibility(View.GONE);
+                    nested_scroll_view.setVisibility(View.VISIBLE);
                     GetPetListResponse getPetListResponse = (GetPetListResponse) arg0.body();
                     int responseCode = Integer.parseInt(getPetListResponse.getResponse().getResponseCode());
                     profileList.clear();

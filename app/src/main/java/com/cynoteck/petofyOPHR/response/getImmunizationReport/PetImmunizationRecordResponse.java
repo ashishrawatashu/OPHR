@@ -4,18 +4,18 @@ import com.cynoteck.petofyOPHR.response.Header;
 import com.cynoteck.petofyOPHR.response.Response;
 
 public class PetImmunizationRecordResponse {
-    private PetImmunizationData data;
+    private String data;
 
     private Response response;
 
     private Header header;
 
-    public PetImmunizationData getData ()
+    public String getData ()
     {
         return data;
     }
 
-    public void setData (PetImmunizationData data)
+    public void setData (String data)
     {
         this.data = data;
     }

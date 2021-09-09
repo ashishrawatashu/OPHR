@@ -431,20 +431,20 @@
 
 
             <AutoCompleteTextView
+                android:id="@+id/pet_contact_number"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:layout_below="@id/pet_contact_TV"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/edit_text_background"
+                android:gravity="center_vertical"
+                android:hint="@string/phoneNumber"
                 android:inputType="number"
                 android:maxLines="1"
                 android:paddingLeft="25dp"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/pet_contact_number"
-                android:hint="@string/phoneNumber"
-                android:gravity="center_vertical"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/edit_text_background"
-                android:textColor="@color/grey_add_pet"/>
+                android:textColor="@color/grey_add_pet" />
 
             <TextView
                 android:visibility="gone"

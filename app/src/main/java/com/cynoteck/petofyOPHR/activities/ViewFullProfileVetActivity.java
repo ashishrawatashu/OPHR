@@ -54,6 +54,7 @@ import com.cynoteck.petofyOPHR.response.onlineAppointmentOnOff.OnlineAppointment
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.ServiceTypeList;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.UserResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
+import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
@@ -81,7 +82,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class ViewFullProfileVetActivity extends AppCompatActivity implements ApiResponse, View.OnClickListener {
+public class ViewFullProfileVetActivity extends AppCompatActivity implements ApiResponse,MediaUtils.GetImg, View.OnClickListener {
 
     TextView vet_name_TV, vet_degree_TV, vet_phone_TV, vet_email_TV, vet_category_TV, vet_address_TV;
     RecyclerView vet_service_type_RV;
@@ -104,10 +105,12 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     ScrollView vet_full_details_SV;
     List<String> petServiceText;
     List<String> petServiceValue;
-BroadcastReceiver broadcastReceiver=null;
+    BroadcastReceiver broadcastReceiver=null;
 
     List<String> petTypeText;
     List<String> petTypeValue;
+    MediaUtils mediaUtils;
+    String selctProflImage="0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,7 @@ BroadcastReceiver broadcastReceiver=null;
         broadcastReceiver =new checkIntetnetConnectivity();
         registerBroadcast();
         methods = new Methods(this);
+        mediaUtils = new MediaUtils(this);
 
         requestMultiplePermissions();
         inilization();
@@ -152,14 +156,16 @@ BroadcastReceiver broadcastReceiver=null;
         select_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePhotoFromCamera();
+                mediaUtils.openCamera();
+                dialog.dismiss();
             }
         });
 
         select_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                choosePhotoFromGallary();
+                mediaUtils.openGallery();
+                dialog.dismiss();
             }
         });
 
@@ -193,85 +199,39 @@ BroadcastReceiver broadcastReceiver=null;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_CANCELED) {
-            return;
-        }
-        if (requestCode == GALLERY) {
-            if (data != null) {
-                dialog.dismiss();
-                Uri contentURI = data.getData();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-                    vet_image_TV.setImageBitmap(bitmap);
-                    saveImage(bitmap);
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(ViewFullProfileVetActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        } else if (requestCode == CAMERA) {
-            dialog.dismiss();
-            if (data.getData() == null) {
-                thumbnail = (Bitmap) data.getExtras().get("data");
-                Log.e("jghl", "" + thumbnail);
-                vet_image_TV.setImageBitmap(thumbnail);
-
-                saveImage(thumbnail);
-            } else {
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
-                    Glide.with(this)
-                            .load(bitmap)
-                            .into(vet_image_TV);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-            Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show();
-        } else if (requestCode == USERUPDATION) {
-            if (resultCode == RESULT_OK) {
-                setVetInfo();
-                getUserDetails();
-            }
-        }
-        return;
+        mediaUtils.onActivityResult(requestCode, resultCode, data);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            catfile1 = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".png");
-            catfile1.createNewFile();
-            FileOutputStream fo = new FileOutputStream(catfile1);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{catfile1.getPath()},
-                    new String[]{"image/png"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::---&gt;" + catfile1.getAbsolutePath());
-            UploadImages(catfile1);
-            return catfile1.getAbsolutePath();
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.FROYO)
+//    public String saveImage(Bitmap myBitmap) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//        File wallpaperDirectory = new File(
+//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+//        // have the object build the directory structure, if needed.
+//        if (!wallpaperDirectory.exists()) {
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        try {
+//            catfile1 = new File(wallpaperDirectory, Calendar.getInstance()
+//                    .getTimeInMillis() + ".png");
+//            catfile1.createNewFile();
+//            FileOutputStream fo = new FileOutputStream(catfile1);
+//            fo.write(bytes.toByteArray());
+//            MediaScannerConnection.scanFile(this,
+//                    new String[]{catfile1.getPath()},
+//                    new String[]{"image/png"}, null);
+//            fo.close();
+//            Log.d("TAG", "File Saved::---&gt;" + catfile1.getAbsolutePath());
+//            UploadImages(catfile1);
+//            return catfile1.getAbsolutePath();
+//
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
+//        return "";
+//    }
 
     private void UploadImages(File absolutePath) {
         methods.showCustomProgressBarDialog(this);
@@ -488,23 +448,23 @@ BroadcastReceiver broadcastReceiver=null;
                 break;
             case "UploadDocument":
                 try {
-                    methods.customProgressDismiss();
+//                    methods.customProgressDismiss();
                     Log.e("UploadDocument", response.body().toString());
                     ImageResponse imageResponse = (ImageResponse) response.body();
                     int responseCode = Integer.parseInt(imageResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
                         //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         Config.user_Veterian_url = imageResponse.getData().getDocumentUrl();
+                        Glide.with(this)
+                                .load(Config.user_Veterian_url)
+                                .placeholder(R.drawable.empty_vet_image)
+                                .into(vet_image_TV);
                         UploadProfileImageParams uploadProfileImageParams = new UploadProfileImageParams();
                         uploadProfileImageParams.setProfileImageUrl(imageResponse.getData().getDocumentUrl());
                         UploadVetProfileImageData uploadVetProfileImageData = new UploadVetProfileImageData();
                         uploadVetProfileImageData.setData(uploadProfileImageParams);
                         ApiService<JsonObject> service = new ApiService<>();
                         service.get(this, ApiClient.getApiInterface().updateProfileImage(Config.token, uploadVetProfileImageData), "UpdateProfileImage");
-                        Log.d("UpdateProfileImage", uploadVetProfileImageData.toString());
-                        Log.d("UpdateProfileImage ","upload document");
-
-                        Toast.makeText(this, "Success in uploading", Toast.LENGTH_SHORT).show();
 
                     } else if (responseCode == 614) {
                         Toast.makeText(this, imageResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -520,15 +480,12 @@ BroadcastReceiver broadcastReceiver=null;
             case "UpdateProfileImage":
                 try {
                     methods.customProgressDismiss();
-//                    Log.d("UploadDocument", response.body().toString());
                     JsonObject jsonObject = new JsonObject();
                     jsonObject = (JsonObject) response.body();
                     int responseCode = Integer.parseInt(String.valueOf(jsonObject.getAsJsonObject("response").get("responseCode")));
                     if (responseCode == 109) {
-//                        Log.d("UploadDocument ","Update prfile img");
-//                        getUserDetails();
 
-//                        Toast.makeText(this," Update profile image response code 109 "+ jsonObject.getAsJsonObject("response").get("responseMessage").toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Profile Image is Uploaded", Toast.LENGTH_SHORT).show();
                     } else if (responseCode == 614) {
                         Toast.makeText(this,"response code 614"+ jsonObject.getAsJsonObject("response").get("responseMessage").toString(), Toast.LENGTH_SHORT).show();
                     } else {
@@ -678,5 +635,14 @@ BroadcastReceiver broadcastReceiver=null;
     protected void onResume() {
         super.onResume();
 
+    }
+
+    @Override
+    public void imgdata(String imgPath) {
+        Log.d ("imgdata123" , imgPath.toString());
+        Uri selectedImageURI = null;
+        File imgFile = new File(imgPath);
+        Log.d ("imgdata: " , imgFile.toString());
+        UploadImages(imgFile);
     }
 }
