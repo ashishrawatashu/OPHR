@@ -152,6 +152,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/onle_appoint_TV"
             app:track="@drawable/operating_hours_radio_track" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -184,7 +185,7 @@
                     android:layout_margin="10dp"
                     android:elevation="10dp"
                     app:cardCornerRadius="6dp"
-                    app:cardElevation="6dp"
+                    app:cardElevation="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -225,6 +226,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
                 android:id="@+id/operating_hours_CL"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -237,7 +239,7 @@
                     android:layout_margin="10dp"
                     android:elevation="1dp"
                     app:cardCornerRadius="6dp"
-                    app:cardElevation="6dp"
+                    app:cardElevation="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -290,7 +292,7 @@
                     android:layout_margin="10dp"
                     android:elevation="1dp"
                     app:cardCornerRadius="6dp"
-                    app:cardElevation="6dp"
+                    app:cardElevation="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -331,6 +333,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
                 android:id="@+id/immunization_master_CL"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -343,7 +346,7 @@
                     android:layout_margin="10dp"
                     android:elevation="1dp"
                     app:cardCornerRadius="6dp"
-                    app:cardElevation="6dp"
+                    app:cardElevation="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -384,6 +387,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
                 android:id="@+id/bank_account_CL"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -396,7 +400,7 @@
                     android:layout_margin="10dp"
                     android:elevation="1dp"
                     app:cardCornerRadius="6dp"
-                    app:cardElevation="6dp"
+                    app:cardElevation="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -437,6 +441,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
                 android:id="@+id/privacy_CL"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -449,7 +454,7 @@
                     android:layout_margin="10dp"
                     android:elevation="1dp"
                     app:cardCornerRadius="6dp"
-                    app:cardElevation="6dp"
+                    app:cardElevation="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -490,6 +495,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
                 android:id="@+id/subscription_CL"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -502,7 +508,7 @@
                     android:layout_margin="10dp"
                     android:elevation="1dp"
                     app:cardCornerRadius="6dp"
-                    app:cardElevation="6dp"
+                    app:cardElevation="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -558,7 +564,7 @@
                     android:layout_margin="10dp"
                     android:elevation="1dp"
                     app:cardCornerRadius="6dp"
-                    app:cardElevation="6dp"
+                    app:cardElevation="3dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 

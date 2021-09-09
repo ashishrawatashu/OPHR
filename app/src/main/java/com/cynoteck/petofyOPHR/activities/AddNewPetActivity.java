@@ -76,7 +76,7 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
     Button save_BT;
     TextView peto_reg_number_dialog, calenderTextView_dialog, ageViewTv,pet_color_TV;
     CheckBox convert_yr_to_age;
-    AutoCompleteTextView pet_parent_name_ET, pet_contact_number_ET;
+    EditText pet_parent_name_ET, pet_contact_number_ET;
     LinearLayout day_and_age_layout;
     String from = "", petUniqueId = "", getStrSpnerItemPetNmId = "", strSpnrBreedId = "", strSpnrAgeId = "", strSpnrColorId = "", strAgeCount = "",
             strSpneSizeId = "", strSpnrSexId = "", strSpnerItemPetType = "", strSpnrBreed = "", strSpnrAge = "", strSpnrSex = "",strSpnrColor="",
@@ -274,6 +274,7 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -449,77 +450,77 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
     }
 
     private void getPetParentname() {
-        pet_parent_name_ET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                Log.d("dataChange", "afterTextChanged" + new String(editable.toString()));
-                String value = editable.toString();
-                SearchPetParentParameter searchPetParentParameter = new SearchPetParentParameter();
-                searchPetParentParameter.setPrefix(value);
-                SearchPetParentRequestData searchPetParentRequestData = new SearchPetParentRequestData();
-                searchPetParentRequestData.setData(searchPetParentParameter);
-                ApiService<GetPetParentResponseData> service = new ApiService<>();
-                service.get(AddNewPetActivity.this, ApiClient.getApiInterface().searchPetParent(Config.token, searchPetParentRequestData), "SearchPetParent");
-                Log.e("DAILOG", "getPetaParentName==>" + searchPetParentRequestData);
-            }
-        });
-
-
-        pet_parent_name_ET.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String value = pet_parent_name_ET.getText().toString();
-                String[] city_array = value.split("\\(");
-
-                pet_parent_name_ET.setText(city_array[0]);
-                pet_contact_number_ET.setText(city_array[1].substring(0, city_array[1].length() - 1).trim());
-            }
-        });
-
-        pet_contact_number_ET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String value = editable.toString();
-                SearchPetParentParameter searchPetParentParameter = new SearchPetParentParameter();
-                searchPetParentParameter.setPrefix(value);
-                SearchPetParentRequestData searchPetParentRequestData = new SearchPetParentRequestData();
-                searchPetParentRequestData.setData(searchPetParentParameter);
-                ApiService<GetPetParentResponseData> service = new ApiService<>();
-                service.get(AddNewPetActivity.this, ApiClient.getApiInterface().searchPetParent(Config.token, searchPetParentRequestData), "SearchPetParent");
-                Log.e("DAILOG", "getPetaParentName==>" + searchPetParentRequestData);
-
-            }
-        });
-
-        pet_contact_number_ET.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String value = pet_contact_number_ET.getText().toString();
-                String[] city_array = value.split("\\(");
-                pet_parent_name_ET.setText(city_array[0]);
-                pet_contact_number_ET.setText(city_array[1].substring(0, city_array[1].length() - 1).trim());
-            }
-        });
+//        pet_parent_name_ET.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                Log.d("dataChange", "afterTextChanged" + new String(editable.toString()));
+//                String value = editable.toString();
+//                SearchPetParentParameter searchPetParentParameter = new SearchPetParentParameter();
+//                searchPetParentParameter.setPrefix(value);
+//                SearchPetParentRequestData searchPetParentRequestData = new SearchPetParentRequestData();
+//                searchPetParentRequestData.setData(searchPetParentParameter);
+//                ApiService<GetPetParentResponseData> service = new ApiService<>();
+//                service.get(AddNewPetActivity.this, ApiClient.getApiInterface().searchPetParent(Config.token, searchPetParentRequestData), "SearchPetParent");
+//                Log.e("DAILOG", "getPetaParentName==>" + searchPetParentRequestData);
+//            }
+//        });
+//
+//
+//        pet_parent_name_ET.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String value = pet_parent_name_ET.getText().toString();
+//                String[] city_array = value.split("\\(");
+//
+//                pet_parent_name_ET.setText(city_array[0]);
+//                pet_contact_number_ET.setText(city_array[1].substring(0, city_array[1].length() - 1).trim());
+//            }
+//        });
+//
+//        pet_contact_number_ET.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                String value = editable.toString();
+//                SearchPetParentParameter searchPetParentParameter = new SearchPetParentParameter();
+//                searchPetParentParameter.setPrefix(value);
+//                SearchPetParentRequestData searchPetParentRequestData = new SearchPetParentRequestData();
+//                searchPetParentRequestData.setData(searchPetParentParameter);
+//                ApiService<GetPetParentResponseData> service = new ApiService<>();
+//                service.get(AddNewPetActivity.this, ApiClient.getApiInterface().searchPetParent(Config.token, searchPetParentRequestData), "SearchPetParent");
+//                Log.e("DAILOG", "getPetaParentName==>" + searchPetParentRequestData);
+//
+//            }
+//        });
+//
+//        pet_contact_number_ET.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String value = pet_contact_number_ET.getText().toString();
+//                String[] city_array = value.split("\\(");
+//                pet_parent_name_ET.setText(city_array[0]);
+//                pet_contact_number_ET.setText(city_array[1].substring(0, city_array[1].length() - 1).trim());
+//            }
+//        });
 
     }
 
@@ -544,42 +545,42 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                     e.printStackTrace();
                 }
                 break;
-            case "SearchPetParent":
-                try {
-                    Log.d("SearchPetParent", arg0.body().toString());
-                    GetPetParentResponseData getPetParentResponseData = (GetPetParentResponseData) arg0.body();
-                    int responseCode = Integer.parseInt(getPetParentResponseData.getResponse().getResponseCode());
-                    if (responseCode == 109) {
-                        Log.d("SearchPetParent", "" + getPetParentResponseData.getData().size());
-                        ArrayList remarksSearchList = new ArrayList<>();
-                        for (int i = 0; i < getPetParentResponseData.getData().size(); i++) {
-                            remarksSearchList.add(getPetParentResponseData.getData().get(i).getPetParentName()
-                                    + "\n( " + getPetParentResponseData.getData().get(i).getContactNumber() + " )");
-                        }
-
-                        //for parent name
-
-                        ArrayAdapter<String> randomArray = new ArrayAdapter<String>(this,
-                                android.R.layout.simple_list_item_1, remarksSearchList);
-                        pet_parent_name_ET.setAdapter(randomArray);
-                        randomArray.notifyDataSetChanged();
-
-                        //for contact number
-                        ArrayAdapter<String> randomArrayContactNumber = new ArrayAdapter<String>(this,
-                                android.R.layout.simple_list_item_1, remarksSearchList);
-                        pet_contact_number_ET.setAdapter(randomArrayContactNumber);
-                        randomArrayContactNumber.notifyDataSetChanged();
-
-
-                    } else if (responseCode == 614) {
-                        Toast.makeText(this, getPetParentResponseData.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
+//            case "SearchPetParent":
+//                try {
+//                    Log.d("SearchPetParent", arg0.body().toString());
+//                    GetPetParentResponseData getPetParentResponseData = (GetPetParentResponseData) arg0.body();
+//                    int responseCode = Integer.parseInt(getPetParentResponseData.getResponse().getResponseCode());
+//                    if (responseCode == 109) {
+//                        Log.d("SearchPetParent", "" + getPetParentResponseData.getData().size());
+//                        ArrayList remarksSearchList = new ArrayList<>();
+//                        for (int i = 0; i < getPetParentResponseData.getData().size(); i++) {
+//                            remarksSearchList.add(getPetParentResponseData.getData().get(i).getPetParentName()
+//                                    + "\n( " + getPetParentResponseData.getData().get(i).getContactNumber() + " )");
+//                        }
+//
+//                        //for parent name
+//
+//                        ArrayAdapter<String> randomArray = new ArrayAdapter<String>(this,
+//                                android.R.layout.simple_list_item_1, remarksSearchList);
+//                        pet_parent_name_ET.setAdapter(randomArray);
+//                        randomArray.notifyDataSetChanged();
+//
+//                        //for contact number
+//                        ArrayAdapter<String> randomArrayContactNumber = new ArrayAdapter<String>(this,
+//                                android.R.layout.simple_list_item_1, remarksSearchList);
+//                        pet_contact_number_ET.setAdapter(randomArrayContactNumber);
+//                        randomArrayContactNumber.notifyDataSetChanged();
+//
+//
+//                    } else if (responseCode == 614) {
+//                        Toast.makeText(this, getPetParentResponseData.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                break;
             case "GetPetTypes":
                 try {
                     Log.d("GetPetTypes", arg0.body().toString());

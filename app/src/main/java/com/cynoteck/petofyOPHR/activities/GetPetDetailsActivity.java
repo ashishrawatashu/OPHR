@@ -49,6 +49,7 @@ import com.cynoteck.petofyOPHR.response.addPet.uniqueIdResponse.UniqueResponse;
 import com.cynoteck.petofyOPHR.response.getPetDetailsResponse.GetPetResponse;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.PetTypeResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
+import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
 import com.google.android.material.card.MaterialCardView;
 import com.karumi.dexter.Dexter;
@@ -77,7 +78,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class GetPetDetailsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse {
+public class GetPetDetailsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse,MediaUtils.GetImg {
     Methods methods;
     TextView peto_details_reg_number;
     AppCompatSpinner add_details_pet_type,add_details_pet_age,add_details_pet_sex,add_details_pet_breed,add_detils_pet_color,
@@ -116,6 +117,7 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
     File fileImg5 = null;
     Bitmap bitmap, thumbnail;
     String capImage;
+    MediaUtils mediaUtils;
 
     String pet_id = "",currentDateandTime="",strPetCategory="",strPetName="",strPetParentName="",image_url="",
             strPetContactNumber="",strPetDescription="",strPetAdress="",strPetBirthDay="",
@@ -133,6 +135,7 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_pet_details);
         methods = new Methods(this);
+        mediaUtils = new MediaUtils(this);
         currentDateAndTime();
         Bundle extras = getIntent().getExtras();
         init();
@@ -471,7 +474,7 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
                 picker.show();
                 break;
             case R.id.pet_Details_profile_image:
-                selctProflImage="1";
+                selctProflImage = "1";
                 showPictureDialog();
                 break;
             case R.id.service_details_cat_img_one:
@@ -702,27 +705,6 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
                             strProfileImgUrl=imageResponse.getData().getDocumentUrl();
                             selctProflImage="0";
                         }
-                        if(selctImgOne.equals("1")){
-                            strFirstImgUrl=imageResponse.getData().getDocumentUrl();
-                            selctImgOne="0";
-                        }
-                        if(selctImgtwo.equals("1")){
-                            strSecondImgUrl=imageResponse.getData().getDocumentUrl();
-                            selctImgtwo="0";
-                        }
-                        if(slctImgThree.equals("1")){
-                            strThirdImgUrl=imageResponse.getData().getDocumentUrl();
-                            slctImgThree="0";
-                        }
-                        if(slctImgFour.equals("1")){
-                            strFourthImUrl=imageResponse.getData().getDocumentUrl();
-                            slctImgFour="0";
-                        }
-                        if(slctImgFive.equals("1")){
-                            strFifthImgUrl=imageResponse.getData().getDocumentUrl();
-                            slctImgFive="0";
-                        }
-
                     }else if (responseCode==614){
                         Toast.makeText(this, imageResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     }else {
@@ -899,38 +881,22 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
         select_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePhotoFromCamera();
+                mediaUtils.openCamera();
+                dialog.dismiss();
             }
         });
 
         select_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                choosePhotoFromGallary();
+                mediaUtils.openGallery();
+                dialog.dismiss();
             }
         });
 
         cancel_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selctProflImage.equals("1")){
-                    selctProflImage="0";
-                }
-                if(selctImgOne.equals("1")){
-                    selctImgOne="0";
-                }
-                if(selctImgtwo.equals("1")){
-                    selctImgtwo="0";
-                }
-                if(slctImgThree.equals("1")){
-                    slctImgThree="0";
-                }
-                if(slctImgFour.equals("1")){
-                    slctImgFour="0";
-                }
-                if(slctImgFive.equals("1")){
-                    slctImgFive="0";
-                }
                 dialog.dismiss();
             }
         });
@@ -958,260 +924,113 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        dialog.dismiss();
-        if (resultCode == RESULT_CANCELED) {
-            return;
-        }
-        if (requestCode == GALLERY) {
-            if (data != null) {
-
-                Uri contentURI = data.getData();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-
-                    if(selctProflImage.equals("1")){
-                        pet_Details_profile_image.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(selctImgOne.equals("1")){
-                        service_details_cat_img_one.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(selctImgtwo.equals("1")){
-                        service_details_cat_img_two.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(slctImgThree.equals("1")){
-                        service_details_cat_img_three.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(slctImgFour.equals("1")){
-                        service_details_cat_img_four.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(slctImgFive.equals("1")){
-                        service_detils_cat_img_five.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    if(selctProflImage.equals("1")){
-                        selctProflImage="0";
-                    }
-                    if(selctImgOne.equals("1")){
-                        selctImgOne="0";
-                    }
-                    if(selctImgtwo.equals("1")){
-                        selctImgtwo="0";
-                    }
-                    if(slctImgThree.equals("1")){
-                        slctImgThree="0";
-                    }
-                    if(slctImgFour.equals("1")){
-                        slctImgFour="0";
-                    }
-                    if(slctImgFive.equals("1")){
-                        slctImgFive="0";
-                    }
-                    Toast.makeText(GetPetDetailsActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        }
-        else if (requestCode == CAMERA) {
-
-            if (data.getData() == null)
-            {
-                thumbnail = (Bitmap) data.getExtras().get("data");
-                Log.e("jghl",""+thumbnail);
-                if(selctProflImage.equals("1")){
-                    pet_Details_profile_image.setImageBitmap(thumbnail);
-                    saveImage(thumbnail);
-                }
-                if(selctImgOne.equals("1")){
-                    service_details_cat_img_one.setImageBitmap(thumbnail);
-                    saveImage(thumbnail);
-                }
-                if(selctImgtwo.equals("1")){
-                    service_details_cat_img_two.setImageBitmap(thumbnail);
-                    saveImage(thumbnail);
-                }
-                if(slctImgThree.equals("1")){
-                    service_details_cat_img_three.setImageBitmap(thumbnail);
-                    saveImage(thumbnail);
-                }
-                if(slctImgFour.equals("1")){
-                    service_details_cat_img_four.setImageBitmap(thumbnail);
-                    saveImage(thumbnail);
-                }
-                if(slctImgFive.equals("1")){
-                    service_detils_cat_img_five.setImageBitmap(thumbnail);
-                    saveImage(thumbnail);
-                }
-                Toast.makeText(GetPetDetailsActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-            }
-
-            else{
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(GetPetDetailsActivity.this.getContentResolver(), data.getData());
-                    if(selctProflImage.equals("1")){
-                        pet_Details_profile_image.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(selctImgOne.equals("1")){
-                        service_details_cat_img_one.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(selctImgtwo.equals("1")){
-                        service_details_cat_img_two.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(slctImgThree.equals("1")){
-                        service_details_cat_img_three.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(slctImgFour.equals("1")){
-                        service_details_cat_img_four.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    if(slctImgFive.equals("1")){
-                        service_detils_cat_img_five.setImageBitmap(bitmap);
-                        saveImage(bitmap);
-                    }
-                    Toast.makeText(GetPetDetailsActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    if(selctProflImage.equals("1")){
-                        selctProflImage="0";
-                    }
-                    if(selctImgOne.equals("1")){
-                        selctImgOne="0";
-                    }
-                    if(selctImgtwo.equals("1")){
-                        selctImgtwo="0";
-                    }
-                    if(slctImgThree.equals("1")){
-                        slctImgThree="0";
-                    }
-                    if(slctImgFour.equals("1")){
-                        slctImgFour="0";
-                    }
-                    if(slctImgFive.equals("1")){
-                        slctImgFive="0";
-                    }
-                }
-            }
-
-        }
-
-        return;
+        mediaUtils.onActivityResult(requestCode, resultCode, data);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            if(selctProflImage.equals("1")){
-                file = new File(wallpaperDirectory, Calendar.getInstance()
-                        .getTimeInMillis() + ".png");
-                file.createNewFile();
-                FileOutputStream fo = new FileOutputStream(file);
-                fo.write(bytes.toByteArray());
-                MediaScannerConnection.scanFile(this,
-                        new String[]{file.getPath()},
-                        new String[]{"image/png"}, null);
-                fo.close();
-                Log.d("TAG", "File Saved::---&gt;" + file.getAbsolutePath());
-                UploadImages(file);
-                return file.getAbsolutePath();
-            }
-            if(selctImgOne.equals("1")){
-                fileImg1 = new File(wallpaperDirectory, Calendar.getInstance()
-                        .getTimeInMillis() + ".jpg");
-                fileImg1.createNewFile();
-                FileOutputStream fo = new FileOutputStream(fileImg1);
-                fo.write(bytes.toByteArray());
-                MediaScannerConnection.scanFile(this,
-                        new String[]{fileImg1.getPath()},
-                        new String[]{"image/jpeg"}, null);
-                fo.close();
-                Log.d("TAG", "File Saved::---&gt;" + fileImg1.getAbsolutePath());
-                UploadImages(fileImg1);
-                return fileImg1.getAbsolutePath();
-
-            }
-            if(selctImgtwo.equals("1")){
-                fileImg2 = new File(wallpaperDirectory, Calendar.getInstance()
-                        .getTimeInMillis() + ".jpg");
-                fileImg2.createNewFile();
-                FileOutputStream fo = new FileOutputStream(fileImg2);
-                fo.write(bytes.toByteArray());
-                MediaScannerConnection.scanFile(this,
-                        new String[]{fileImg2.getPath()},
-                        new String[]{"image/jpeg"}, null);
-                fo.close();
-                Log.d("TAG", "File Saved::---&gt;" + fileImg2.getAbsolutePath());
-                UploadImages(fileImg2);
-                return fileImg2.getAbsolutePath();
-
-            }
-            if(slctImgThree.equals("1")){
-                fileImg3 = new File(wallpaperDirectory, Calendar.getInstance()
-                        .getTimeInMillis() + ".jpg");
-                fileImg3.createNewFile();
-                FileOutputStream fo = new FileOutputStream(fileImg3);
-                fo.write(bytes.toByteArray());
-                MediaScannerConnection.scanFile(this,
-                        new String[]{fileImg3.getPath()},
-                        new String[]{"image/jpeg"}, null);
-                fo.close();
-                Log.d("TAG", "File Saved::---&gt;" + fileImg3.getAbsolutePath());
-                UploadImages(fileImg3);
-                return fileImg2.getAbsolutePath();
-            }
-            if(slctImgFour.equals("1")){
-                fileImg4 = new File(wallpaperDirectory, Calendar.getInstance()
-                        .getTimeInMillis() + ".jpg");
-                fileImg4.createNewFile();
-                FileOutputStream fo = new FileOutputStream(fileImg4);
-                fo.write(bytes.toByteArray());
-                MediaScannerConnection.scanFile(this,
-                        new String[]{fileImg4.getPath()},
-                        new String[]{"image/jpeg"}, null);
-                fo.close();
-                Log.d("TAG", "File Saved::---&gt;" + fileImg4.getAbsolutePath());
-                UploadImages(fileImg4);
-                return fileImg4.getAbsolutePath();
-            }
-            if(slctImgFive.equals("1")){
-                fileImg5 = new File(wallpaperDirectory, Calendar.getInstance()
-                        .getTimeInMillis() + ".jpg");
-                fileImg5.createNewFile();
-                FileOutputStream fo = new FileOutputStream(fileImg5);
-                fo.write(bytes.toByteArray());
-                MediaScannerConnection.scanFile(this,
-                        new String[]{fileImg5.getPath()},
-                        new String[]{"image/jpeg"}, null);
-                fo.close();
-                Log.d("TAG", "File Saved::---&gt;" + fileImg5.getAbsolutePath());
-                UploadImages(fileImg5);
-                return fileImg5.getAbsolutePath();
-
-            }
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.FROYO)
+//    public String saveImage(Bitmap myBitmap) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//        File wallpaperDirectory = new File(
+//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+//        // have the object build the directory structure, if needed.
+//        if (!wallpaperDirectory.exists()) {
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        try {
+//            if(selctProflImage.equals("1")){
+//                file = new File(wallpaperDirectory, Calendar.getInstance()
+//                        .getTimeInMillis() + ".png");
+//                file.createNewFile();
+//                FileOutputStream fo = new FileOutputStream(file);
+//                fo.write(bytes.toByteArray());
+//                MediaScannerConnection.scanFile(this,
+//                        new String[]{file.getPath()},
+//                        new String[]{"image/png"}, null);
+//                fo.close();
+//                Log.d("TAG", "File Saved::---&gt;" + file.getAbsolutePath());
+//                UploadImages(file);
+//                return file.getAbsolutePath();
+//            }
+//            if(selctImgOne.equals("1")){
+//                fileImg1 = new File(wallpaperDirectory, Calendar.getInstance()
+//                        .getTimeInMillis() + ".jpg");
+//                fileImg1.createNewFile();
+//                FileOutputStream fo = new FileOutputStream(fileImg1);
+//                fo.write(bytes.toByteArray());
+//                MediaScannerConnection.scanFile(this,
+//                        new String[]{fileImg1.getPath()},
+//                        new String[]{"image/jpeg"}, null);
+//                fo.close();
+//                Log.d("TAG", "File Saved::---&gt;" + fileImg1.getAbsolutePath());
+//                UploadImages(fileImg1);
+//                return fileImg1.getAbsolutePath();
+//
+//            }
+//            if(selctImgtwo.equals("1")){
+//                fileImg2 = new File(wallpaperDirectory, Calendar.getInstance()
+//                        .getTimeInMillis() + ".jpg");
+//                fileImg2.createNewFile();
+//                FileOutputStream fo = new FileOutputStream(fileImg2);
+//                fo.write(bytes.toByteArray());
+//                MediaScannerConnection.scanFile(this,
+//                        new String[]{fileImg2.getPath()},
+//                        new String[]{"image/jpeg"}, null);
+//                fo.close();
+//                Log.d("TAG", "File Saved::---&gt;" + fileImg2.getAbsolutePath());
+//                UploadImages(fileImg2);
+//                return fileImg2.getAbsolutePath();
+//
+//            }
+//            if(slctImgThree.equals("1")){
+//                fileImg3 = new File(wallpaperDirectory, Calendar.getInstance()
+//                        .getTimeInMillis() + ".jpg");
+//                fileImg3.createNewFile();
+//                FileOutputStream fo = new FileOutputStream(fileImg3);
+//                fo.write(bytes.toByteArray());
+//                MediaScannerConnection.scanFile(this,
+//                        new String[]{fileImg3.getPath()},
+//                        new String[]{"image/jpeg"}, null);
+//                fo.close();
+//                Log.d("TAG", "File Saved::---&gt;" + fileImg3.getAbsolutePath());
+//                UploadImages(fileImg3);
+//                return fileImg2.getAbsolutePath();
+//            }
+//            if(slctImgFour.equals("1")){
+//                fileImg4 = new File(wallpaperDirectory, Calendar.getInstance()
+//                        .getTimeInMillis() + ".jpg");
+//                fileImg4.createNewFile();
+//                FileOutputStream fo = new FileOutputStream(fileImg4);
+//                fo.write(bytes.toByteArray());
+//                MediaScannerConnection.scanFile(this,
+//                        new String[]{fileImg4.getPath()},
+//                        new String[]{"image/jpeg"}, null);
+//                fo.close();
+//                Log.d("TAG", "File Saved::---&gt;" + fileImg4.getAbsolutePath());
+//                UploadImages(fileImg4);
+//                return fileImg4.getAbsolutePath();
+//            }
+//            if(slctImgFive.equals("1")){
+//                fileImg5 = new File(wallpaperDirectory, Calendar.getInstance()
+//                        .getTimeInMillis() + ".jpg");
+//                fileImg5.createNewFile();
+//                FileOutputStream fo = new FileOutputStream(fileImg5);
+//                fo.write(bytes.toByteArray());
+//                MediaScannerConnection.scanFile(this,
+//                        new String[]{fileImg5.getPath()},
+//                        new String[]{"image/jpeg"}, null);
+//                fo.close();
+//                Log.d("TAG", "File Saved::---&gt;" + fileImg5.getAbsolutePath());
+//                UploadImages(fileImg5);
+//                return fileImg5.getAbsolutePath();
+//
+//            }
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
+//        return "";
+//    }
 
     private void UploadImages(File absolutePath) {
         methods.showCustomProgressBarDialog(this);
@@ -1273,4 +1092,12 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    @Override
+    public void imgdata(String imgPath) {
+        Log.d ("imgdata123" , imgPath.toString());
+        Uri selectedImageURI = null;
+        File imgFile = new File(imgPath);
+        Log.d ("imgdata: " , imgFile.toString());
+        UploadImages(imgFile);
+    }
 }

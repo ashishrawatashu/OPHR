@@ -160,8 +160,16 @@
                     android:id="@+id/new_pet_search"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:padding="13dp"
+                    android:padding="5dp"
                     android:src="@drawable/search_icon"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <ProgressBar
+                    android:id="@+id/search_pet_PB"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"/>
 

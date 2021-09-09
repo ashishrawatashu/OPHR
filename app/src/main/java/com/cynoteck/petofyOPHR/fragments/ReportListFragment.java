@@ -24,6 +24,7 @@ import com.cynoteck.petofyOPHR.activities.AddLabWorkDeatilsActivity;
 import com.cynoteck.petofyOPHR.activities.AddXRayDeatilsActivity;
 import com.cynoteck.petofyOPHR.activities.HospitalizationDetailsActivity;
 import com.cynoteck.petofyOPHR.activities.LabTestReportDeatilsActivity;
+import com.cynoteck.petofyOPHR.activities.PdfEditorActivity;
 import com.cynoteck.petofyOPHR.activities.ViewReportsDeatilsActivity;
 import com.cynoteck.petofyOPHR.activities.XRayReportDeatilsActivity;
 import com.cynoteck.petofyOPHR.adapters.HospitalizationReportsAdapter;
@@ -523,21 +524,24 @@ public class ReportListFragment extends Fragment implements ApiResponse, ViewAnd
 
     @Override
     public void onViewClick(int position) {
-//        Toast.makeText(getContext(), ""+petClinicVisitListArrayList.get(position).getId(), Toast.LENGTH_SHORT).show();
-        Intent viewReportsDeatilsActivityIntent = new Intent(getActivity().getApplication(), ViewReportsDeatilsActivity.class);
-        viewReportsDeatilsActivityIntent.putExtra("clinic_id", petClinicVisitListArrayList.get(position).getId());
-        viewReportsDeatilsActivityIntent.putExtra("pet_id", pet_id);
-        viewReportsDeatilsActivityIntent.putExtra("pet_name", pet_name);
-        viewReportsDeatilsActivityIntent.putExtra("pet_unique_id", pet_unique_id);
-        viewReportsDeatilsActivityIntent.putExtra("pet_sex", pet_sex);
-        viewReportsDeatilsActivityIntent.putExtra("pet_owner_name", pet_owner_name);
-        viewReportsDeatilsActivityIntent.putExtra("pet_owner_contact", pet_owner_contact);
-        viewReportsDeatilsActivityIntent.putExtra("pet_image_url", pet_image_url);
-        viewReportsDeatilsActivityIntent.putExtra("pet_DOB", pet_DOB);
-        viewReportsDeatilsActivityIntent.putExtra("id", petClinicVisitListArrayList.get(position).getNatureOfVisitId());
-        viewReportsDeatilsActivityIntent.putExtras(viewReportsDeatilsActivityIntent);
-        startActivity(viewReportsDeatilsActivityIntent);
-        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+        Intent lastPrescriptionIntent = new Intent(getContext(), PdfEditorActivity.class);
+        lastPrescriptionIntent.putExtra("encryptId",petClinicVisitListArrayList.get(position).getEncryptedId());
+        startActivity(lastPrescriptionIntent);
+//        Intent viewReportsDeatilsActivityIntent = new Intent(getActivity().getApplication(), ViewReportsDeatilsActivity.class);
+//        viewReportsDeatilsActivityIntent.putExtra("clinic_id", petClinicVisitListArrayList.get(position).getId());
+//        viewReportsDeatilsActivityIntent.putExtra("pet_id", pet_id);
+//        viewReportsDeatilsActivityIntent.putExtra("pet_name", pet_name);
+//        viewReportsDeatilsActivityIntent.putExtra("pet_unique_id", pet_unique_id);
+//        viewReportsDeatilsActivityIntent.putExtra("pet_sex", pet_sex);
+//        viewReportsDeatilsActivityIntent.putExtra("pet_owner_name", pet_owner_name);
+//        viewReportsDeatilsActivityIntent.putExtra("pet_owner_contact", pet_owner_contact);
+//        viewReportsDeatilsActivityIntent.putExtra("pet_image_url", pet_image_url);
+//        viewReportsDeatilsActivityIntent.putExtra("pet_DOB", pet_DOB);
+//        Log.d("getEncryptedId",petClinicVisitListArrayList.get(position).getEncryptedId());
+//        viewReportsDeatilsActivityIntent.putExtra("id", petClinicVisitListArrayList.get(position).getNatureOfVisitId());
+//        viewReportsDeatilsActivityIntent.putExtras(viewReportsDeatilsActivityIntent);
+//        startActivity(viewReportsDeatilsActivityIntent);
+//        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
 
     @Override

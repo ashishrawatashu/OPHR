@@ -488,7 +488,7 @@ public class LoginActivity extends FragmentActivity implements View.OnClickListe
         Intent intent = new Intent(this, DashBoardActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
-        Toast.makeText(LoginActivity.this, responseLogin.getResponseLogin().getResponseMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoginActivity.this, "Welcome Dr. "+Config.vet_first_name, Toast.LENGTH_SHORT).show();
     }
 
     private void otpDialog() {

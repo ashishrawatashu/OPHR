@@ -51,9 +51,6 @@
     </RelativeLayout>
 
 
-
-
-
     <TextView
         android:id="@+id/nice_day_TV"
         android:layout_width="0dp"
@@ -153,35 +150,35 @@
         app:layout_constraintTop_toBottomOf="@id/search_and_bar_ll" />
 
 
-                <LinearLayout
-                    android:id="@+id/something_wrong_LL"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" >
+    <LinearLayout
+        android:id="@+id/something_wrong_LL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito"
-                        android:text="somethingWrong"
-                        android:textColor="@color/gray_2"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:text="somethingWrong"
+            android:textColor="@color/gray_2" />
 
-                    <Button
-                        android:id="@+id/retry_btn"
-                        android:layout_marginTop="20dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:text="RETRY"
-                        android:background="@drawable/blue_background_bg"
-                        android:textColor="@color/whiteColor"/>
+        <Button
+            android:id="@+id/retry_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/blue_background_bg"
+            android:text="RETRY"
+            android:textColor="@color/whiteColor" />
 
-                </LinearLayout>
+    </LinearLayout>
 
 
     <ScrollView
@@ -194,14 +191,10 @@
         app:layout_constraintTop_toBottomOf="@+id/select_cat_TV">
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-
-
 
 
             <com.google.android.material.card.MaterialCardView
@@ -213,7 +206,7 @@
                 android:layout_marginRight="25dp"
                 android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="16dp">
+                app:cardElevation="5dp">
 
                 <LinearLayout
 
@@ -259,9 +252,10 @@
                             android:layout_height="match_parent"
                             android:fontFamily="@font/nunito"
                             android:gravity="center"
-                            android:text="111"
+                            android:maxLines="1"
+                            android:text="99999"
                             android:textColor="@color/gray_2"
-                            android:textSize="30sp"
+                            android:textSize="22dp"
                             android:textStyle="bold" />
 
                         <ImageView
@@ -287,7 +281,7 @@
                 android:layout_marginRight="25dp"
                 android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="16dp">
+                app:cardElevation="5dp">
 
                 <LinearLayout
 
@@ -334,9 +328,9 @@
                             android:layout_height="match_parent"
                             android:fontFamily="@font/nunito"
                             android:gravity="center"
-                            android:text="12"
+                            android:text="25"
                             android:textColor="@color/gray_2"
-                            android:textSize="30sp"
+                            android:textSize="22dp"
                             android:textStyle="bold" />
 
                         <ImageView
@@ -362,7 +356,7 @@
                 android:layout_marginRight="25dp"
                 android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="16dp">
+                app:cardElevation="5dp">
 
                 <LinearLayout
 
@@ -409,7 +403,7 @@
                             android:gravity="center"
                             android:text="5"
                             android:textColor="@color/gray_2"
-                            android:textSize="30sp"
+                            android:textSize="22dp"
                             android:textStyle="bold" />
 
                         <ImageView
@@ -436,7 +430,7 @@
                 android:layout_marginBottom="50dp"
                 android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
                 app:cardCornerRadius="6dp"
-                app:cardElevation="16dp">
+                app:cardElevation="5dp">
 
                 <LinearLayout
 

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import com.bumptech.glide.Glide;
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.api.ApiClient;
 import com.cynoteck.petofyOPHR.api.ApiResponse;
@@ -61,17 +64,19 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import in.gauriinfotech.commons.Commons;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
 public class AddXRayDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse {
-    TextView document_headline_TV, peto_edit_reg_number_dialog,calenderTextViewtestdate,folow_up_dt_view,xray_peto_edit_reg_number_dialog,doctorPrescription_headline_TV;
+    TextView upload_doc_image_TV,document_headline_TV, peto_edit_reg_number_dialog,calenderTextViewtestdate,folow_up_dt_view,xray_peto_edit_reg_number_dialog,doctorPrescription_headline_TV;
     AppCompatSpinner nature_of_visit_spinner,clinicNext_visit_spinner;
     EditText description_ET;
     Button save_BT;
-    ImageView xray_document,xray_test_upload_documents;
+    ImageView xray_document,upload_doc_image_upload_IV,upload_doc_image_delete_IV;
+    ProgressBar upload_doc_image_progress_bar;
     MaterialCardView back_arrow_CV;
     Methods methods;
 
@@ -91,6 +96,15 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     File file = null;
     Dialog dialog;
     Bitmap bitmap, thumbnail;
+    String[] mimeTypes = {"image/*",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "text/plain"
+    };
+    private int                 DOC_UPLOAD=105;
+    int front_status            = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,23 +119,23 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         Bundle extras = getIntent().getExtras();
         clinicNext_visit_spinner=findViewById(R.id.next_visit_spinner);
         doctorPrescription_headline_TV=findViewById(R.id.doctorPrescription_headline_TV);
-        xray_peto_edit_reg_number_dialog=findViewById(R.id.xray_peto_edit_reg_number_dialog);
         peto_edit_reg_number_dialog=findViewById(R.id.xray_peto_edit_reg_number_dialog);
         calenderTextViewtestdate=findViewById(R.id.calenderTextViewtestdate);
         folow_up_dt_view=findViewById(R.id.folow_up_dt_view);
         nature_of_visit_spinner=findViewById(R.id.nature_of_visit_spinner);
         description_ET=findViewById(R.id.description_ET);
-        xray_test_upload_documents=findViewById(R.id.xray_test_upload_documents);
-        xray_document=findViewById(R.id.xray_document);
+        upload_doc_image_upload_IV=findViewById(R.id.upload_doc_image_upload_IV);
+        upload_doc_image_TV= findViewById(R.id.upload_doc_image_TV);
+        upload_doc_image_progress_bar=findViewById(R.id.upload_doc_image_progress_bar);
+        upload_doc_image_delete_IV = findViewById(R.id.upload_doc_image_delete_IV);
         save_BT=findViewById(R.id.save_BT);
         back_arrow_CV=findViewById(R.id.back_arrow_CV);
-        document_headline_TV=findViewById(R.id.document_headline_TV);
         save_BT.setOnClickListener(this);
         calenderTextViewtestdate.setOnClickListener(this);
         folow_up_dt_view.setOnClickListener(this);
-        xray_test_upload_documents.setOnClickListener(this);
         back_arrow_CV.setOnClickListener(this);
-
+        upload_doc_image_delete_IV.setOnClickListener(this);
+        upload_doc_image_upload_IV.setOnClickListener(this);
         if (extras != null) {
             report_id = extras.getString("report_id");
             pet_id = extras.getString("pet_id");
@@ -170,6 +184,14 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.upload_doc_image_delete_IV:
+                strDocumentUrl = "";
+                upload_doc_image_progress_bar.setProgress(0);
+                upload_doc_image_upload_IV.setVisibility(View.VISIBLE);
+                upload_doc_image_delete_IV.setVisibility(View.GONE);
+
+                break;
+
             case R.id.folow_up_dt_view:
                 final Calendar cldr1 = Calendar.getInstance();
                 int day1 = cldr1.get(Calendar.DAY_OF_MONTH);
@@ -180,11 +202,12 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                folow_up_dt_view.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                folow_up_dt_view.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year1, month1, day1);
                 picker.show();
                 break;
+
             case R.id.calenderTextViewtestdate:
                 final Calendar cldr = Calendar.getInstance();
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
@@ -195,13 +218,18 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                calenderTextViewtestdate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                calenderTextViewtestdate.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year, month, day);
                 picker.show();
                 break;
-            case R.id.xray_test_upload_documents:
-                showPictureDialog();
+            case R.id.upload_doc_image_upload_IV:
+                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent1.addCategory(Intent.CATEGORY_OPENABLE);
+                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+                intent1.setType("*application/pdf||*application/doc");
+                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
+
                 break;
             case R.id.save_BT:
                 String strDescription=description_ET.getText().toString();
@@ -279,138 +307,18 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     }
 
 
-
-    private void showPictureDialog() {
-        dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_layout);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        RelativeLayout select_camera = (RelativeLayout) dialog.findViewById(R.id.select_camera);
-        RelativeLayout select_gallery = (RelativeLayout) dialog.findViewById(R.id.select_gallery);
-        RelativeLayout cancel_dialog = (RelativeLayout) dialog.findViewById(R.id.cancel_dialog);
-        select_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePhotoFromCamera();
-            }
-        });
-
-        select_gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePhotoFromGallary();
-            }
-        });
-
-        cancel_dialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void choosePhotoFromGallary() {
-
-
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        dialog.dismiss();
-        if (resultCode == RESULT_CANCELED) {
-            return;
-        }
-        if (requestCode == GALLERY) {
-            if (data != null) {
-
-                Uri contentURI = data.getData();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-                    xray_document.setImageBitmap(bitmap);
-                    saveImage(bitmap);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(AddXRayDeatilsActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        }
-        else if (requestCode == CAMERA) {
-
-            if (data.getData() == null)
-            {
-                thumbnail = (Bitmap) data.getExtras().get("data");
-                Log.e("jghl",""+thumbnail);
-                xray_document.setImageBitmap(thumbnail);
-                saveImage(thumbnail);
-                Toast.makeText(AddXRayDeatilsActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-            }
-
-            else{
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(AddXRayDeatilsActivity.this.getContentResolver(), data.getData());
-                    xray_document.setImageBitmap(bitmap);
-                    saveImage(bitmap);
-                    Toast.makeText(AddXRayDeatilsActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-
-        return;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            file = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".png");
-            file.createNewFile();
-            FileOutputStream fo = new FileOutputStream(file);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{file.getPath()},
-                    new String[]{"image/png"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::---&gt;" + file.getAbsolutePath());
+        if (requestCode==DOC_UPLOAD){
+            Uri uri = data.getData();
+            String fullPath = Commons.getPath(uri, this);
+            File file = new File(fullPath);
             UploadImages(file);
-            return file.getAbsolutePath();
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
         }
-        return "";
     }
+
 
     private void UploadImages(File absolutePath) {
         methods.showCustomProgressBarDialog(this);
@@ -419,7 +327,32 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
             RequestBody userDpFile = RequestBody.create(MediaType.parse("image/*"), absolutePath);
             userDpFilePart = MultipartBody.Part.createFormData("file", absolutePath.getName(), userDpFile);
         }
+            front_status = 0;
+            Handler front_handler = new Handler();
+            upload_doc_image_progress_bar.setVisibility(View.VISIBLE);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (front_status < 80) {
 
+                        front_status += 1;
+
+                        try {
+                            Thread.sleep(15);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        front_handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                upload_doc_image_progress_bar.setProgress(front_status);
+                            }
+                        });
+                    }
+                }
+            }).start();
         ApiService<ImageResponse> service = new ApiService<>();
         service.get( this, ApiClient.getApiInterface().uploadImages(Config.token,userDpFilePart), "UploadDocument");
         Log.e("DATALOG","check1=> "+service);
@@ -472,6 +405,7 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         service.get( this, ApiClient.getApiInterface().updateTestXRay(Config.token,updateXrayRequest), "UpdateTestXRay");
         Log.d("addPetLabParams",""+updateXrayRequest);
     }
+
     private void addPetXray(AddTestXRayRequest addTestXRayRequest) {
         ApiService<AddTestXRayResponse> service = new ApiService<>();
         service.get( this, ApiClient.getApiInterface().addTestXRay(Config.token,addTestXRayRequest), "AddTestXRay");
@@ -542,15 +476,17 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                     e.printStackTrace();
                 }
                 break;
+
             case "UploadDocument":
                 try {
                     methods.customProgressDismiss();
-                    Log.d("UploadDocument",arg0.body().toString());
                     ImageResponse imageResponse = (ImageResponse) arg0.body();
                     int responseCode = Integer.parseInt(imageResponse.getResponse().getResponseCode());
                     if (responseCode== 109){
-                        xray_test_upload_documents.setVisibility(View.VISIBLE);
-                        document_headline_TV.setText("Document Uploaded");
+                        upload_doc_image_progress_bar.setProgress(100);
+                        upload_doc_image_TV.setText("Document Uploaded");
+                        upload_doc_image_delete_IV.setVisibility(View.VISIBLE);
+                        upload_doc_image_upload_IV.setVisibility(View.GONE);
                         //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         strDocumentUrl=imageResponse.getData().getDocumentUrl();
                     }else if (responseCode==614){
@@ -613,7 +549,6 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     private void setSpinnerNextClinicVisit() {
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,nextVisitList);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
         clinicNext_visit_spinner.setAdapter(aa);
         if (type.equals("Update Test/X-rays")) {
             if (!next_visit.equals("")) {

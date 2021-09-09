@@ -579,6 +579,10 @@ public interface ApiInterface {
     Call<PetImmunizationRecordResponse> viewPetVaccination(@Header("Authorization") String auth, @Body ImmunizationRequest immunizationRequest);
    // Call<JsonObject> viewPetVaccination(@Header("Authorization") String auth, @Body ImmunizationRequest immunizationRequest);
 
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("pethealthrecord/ViewPetLastPrescriptionId")
+    Call<PetImmunizationRecordResponse> viewPetLastPrescriptionId(@Header("Authorization") String auth, @Body ImmunizationRequest immunizationRequest);
+
     //Bank Account .........................................
 
 

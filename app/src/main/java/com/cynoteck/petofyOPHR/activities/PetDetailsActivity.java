@@ -41,10 +41,13 @@ import com.cynoteck.petofyOPHR.api.ApiResponse;
 import com.cynoteck.petofyOPHR.api.ApiService;
 import com.cynoteck.petofyOPHR.params.getVaccinationDetails.GetVaccinationModelParameter;
 import com.cynoteck.petofyOPHR.params.getVaccinationDetails.GetVaccinationRequest;
+import com.cynoteck.petofyOPHR.params.immunizationRequest.ImmunizationParams;
+import com.cynoteck.petofyOPHR.params.immunizationRequest.ImmunizationRequest;
 import com.cynoteck.petofyOPHR.params.petReportsRequest.PetClinicVisitDetailsRequest;
 import com.cynoteck.petofyOPHR.params.petReportsRequest.PetClinicVistsDetailsParams;
 import com.cynoteck.petofyOPHR.params.vaccinationSaveParams.VaccinationParameter;
 import com.cynoteck.petofyOPHR.params.vaccinationSaveParams.VaccinationRequest;
+import com.cynoteck.petofyOPHR.response.getImmunizationReport.PetImmunizationRecordResponse;
 import com.cynoteck.petofyOPHR.response.getLastPrescriptionResponse.GetLastPrescriptionResponse;
 import com.cynoteck.petofyOPHR.response.getPetReportsResponse.getClinicVisitDetails.GetClinicVisitsDetailsResponse;
 import com.cynoteck.petofyOPHR.response.getVaccinationResponse.GetVaccineResponse;
@@ -71,7 +74,7 @@ import java.util.HashMap;
 import retrofit2.Response;
 
 public class PetDetailsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse, ImmunizationOnclickListener {
-    String pet_image_url, pet_id, pet_name, patent_name, pet_bread, pet_unique_id = "", pet_sex = "", pet_age = "", pet_DOB = "", pet_encrypted_id = "", lastVisitEncryptedId = "", pet_cat_id = "";
+    String pet_position_in_list="",pet_image_url, pet_id, pet_name, patent_name, pet_bread, pet_unique_id = "", pet_sex = "", pet_age = "", pet_DOB = "", pet_encrypted_id = "", lastVisitEncryptedId = "", pet_cat_id = "";
     Methods methods;
     WebView webview;
     RelativeLayout back_arrow_RL;
@@ -102,6 +105,7 @@ public class PetDetailsActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_pet_details);
         methods = new Methods(this);
         Bundle extras = getIntent().getExtras();
+
         pet_id = extras.getString("pet_id");
         pet_image_url = extras.getString("pet_image_url");
         pet_name = extras.getString("pet_name");
@@ -233,14 +237,15 @@ public class PetDetailsActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.last_visit_CL:
-                if (lastVisitEncryptedId.equals("")) {
-                    Toast.makeText(this, "No record found!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.e("idddd",lastVisitEncryptedId);
-                    Intent lastPrescriptionIntent = new Intent(this, PdfEditorActivity.class);
-                    lastPrescriptionIntent.putExtra("encryptId", lastVisitEncryptedId);
-                    startActivity(lastPrescriptionIntent);
-                }
+                methods.showCustomProgressBarDialog(this);
+                ImmunizationParams immunizationParams = new ImmunizationParams();
+                immunizationParams.setEncryptedId(pet_encrypted_id);
+                ImmunizationRequest immunizationRequest = new ImmunizationRequest();
+                immunizationRequest.setData(immunizationParams);
+
+                ApiService<PetImmunizationRecordResponse> service = new ApiService<>();
+                service.get(this, ApiClient.getApiInterface().viewPetLastPrescriptionId(Config.token, immunizationRequest), "GetLastVisit");
+                Log.d("GetImmunization", methods.getRequestJson(immunizationRequest));
                 break;
             case R.id.back_arrow_RL:
                 onBackPressed();
@@ -490,6 +495,7 @@ public class PetDetailsActivity extends AppCompatActivity implements View.OnClic
                     e.printStackTrace();
                 }
                 break;
+
             case "GetPetImmunizationHistory":
                 try {
                     Log.d("GetImmuniHistory", arg0.body().toString());
@@ -578,6 +584,29 @@ public class PetDetailsActivity extends AppCompatActivity implements View.OnClic
                     e.printStackTrace();
                 }
                 break;
+
+            case "GetLastVisit":
+                try {
+                    Log.d("GetLastVisit", arg0.body().toString());
+                    PetImmunizationRecordResponse immunizationRecordResponse = (PetImmunizationRecordResponse) arg0.body();
+                    methods.customProgressDismiss();
+                    int responseCode = Integer.parseInt(immunizationRecordResponse.getResponse().getResponseCode());
+                    if (responseCode == 109) {
+                        if (immunizationRecordResponse.getData().equals("")) {
+                            Toast.makeText(this, "No Record Found !", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Intent lastPrescriptionIntent = new Intent(this, PdfEditorActivity.class);
+                            lastPrescriptionIntent.putExtra("encryptId",immunizationRecordResponse.getData());
+                            startActivity(lastPrescriptionIntent);
+                        }
+                    } else {
+                        Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+
         }
 
     }
