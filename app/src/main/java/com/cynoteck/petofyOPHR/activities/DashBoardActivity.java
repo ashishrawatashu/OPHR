@@ -1,9 +1,9 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,24 +17,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.solver.GoalRow;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.api.ApiClient;
 import com.cynoteck.petofyOPHR.api.ApiResponse;
@@ -45,7 +39,6 @@ import com.cynoteck.petofyOPHR.fragments.PetRegisterFragment;
 import com.cynoteck.petofyOPHR.fragments.ProfileFragment;
 import com.cynoteck.petofyOPHR.response.loginRegisterResponse.UserPermissionMasterList;
 import com.cynoteck.petofyOPHR.response.staffPermissionListResponse.CheckStaffPermissionResponse;
-import com.cynoteck.petofyOPHR.response.totalStaffPetsAppointment.GetDashboardCountsResponse;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.UserResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
@@ -61,19 +54,18 @@ import java.util.ArrayList;
 
 import retrofit2.Response;
 
+@SuppressLint("StaticFieldLeak")
 public class DashBoardActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse {
 
     String currentVersion, latestVersion;
     Dialog dialog;
-    private RelativeLayout homeRL, profileRL, petregisterRL, appointmentRL;
     public ImageView icHome, icProfile, icPetRegister, icAppointment;
-    boolean doubleBackToExitPressedOnce = false;
     boolean exit = false;
     Methods methods;
     String IsVeterinarian = "";
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor login_editor;
-    private int USER_UPDATION_FIRST_TIME = 1;
+    private final int USER_UPDATION_FIRST_TIME = 1;
     String userTYpe = "", permissionId = "";
     BroadcastReceiver broadcastReceiver;
     FragmentTransaction ft;
@@ -93,7 +85,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         broadcastReceiver =new checkIntetnetConnectivity();
         registerBroadcast();
         getCurrentVersion();
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Config.tabPosition = 1;
         sharedPreferences = getSharedPreferences("userdetails", 0);
         Config.token = sharedPreferences.getString("token", "");
@@ -198,13 +189,9 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
             try {
-//It retrieves the latest version by scraping the content of current version from play store at runtime
                 Document doc = Jsoup.connect("https://play.google.com/store/apps/details?id=com.cynoteck.petofyOPHR").get();
                 latestVersion = doc.getElementsByClass("htlgb").get(6).text();
-
-                //latestVersion = "1.0.1";
                 Log.d("latestVersion", latestVersion);
-
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -216,14 +203,13 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
         protected void onPostExecute(JSONObject jsonObject) {
             if (latestVersion != null) {
                 if (!currentVersion.equalsIgnoreCase(latestVersion)) {
-                    if (!isFinishing()) { //This would help to prevent Error : BinderProxy@45d459c0 is not valid; is your activity running? error
+                    if (!isFinishing()) {
+                        //This would help to prevent Error : BinderProxy@45d459c0 is not valid; is your activity running? error
                         showUpdateDialog();
                     }
                 }
-            } else {
-                //background.start();
-                // super.onPostExecute(jsonObject);
             }
+
         }
 
         private void showUpdateDialog() {
@@ -248,7 +234,6 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //background.start();
                 }
             });
 
@@ -259,10 +244,10 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
     }
 
     private void init() {
-        homeRL = findViewById(R.id.homeRL);
-        profileRL = findViewById(R.id.profileRL);
-        petregisterRL = findViewById(R.id.petRegisterRL);
-        appointmentRL = findViewById(R.id.appointmentRL);
+        RelativeLayout homeRL = findViewById(R.id.homeRL);
+        RelativeLayout profileRL = findViewById(R.id.profileRL);
+        RelativeLayout petregisterRL = findViewById(R.id.petRegisterRL);
+        RelativeLayout appointmentRL = findViewById(R.id.appointmentRL);
         content_frame=findViewById(R.id.content_frame);
         icHome = findViewById(R.id.icHome);
         icProfile = findViewById(R.id.icProfile);
@@ -305,7 +290,6 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
                         login_editor.commit();
                         Config.user_Veterian_url = sharedPreferences.getString("profilePic", "");
                         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
-                        //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         IsVeterinarian = userResponse.getData().getIsVeterinarian();
                         Log.d("IsVeterinarian", "" + userResponse.getData().getIsVeterinarian());
                         if (IsVeterinarian.equals("false")) {
@@ -405,9 +389,7 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
                 builder1.setMessage("You should hear back within 24 hours.\nThank You..");
                 builder1.setCancelable(false);
 
-                builder1.setPositiveButton(
-                        "Log Out",
-                        new DialogInterface.OnClickListener() {
+                builder1.setPositiveButton("Log Out", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 SharedPreferences preferences = getSharedPreferences("userdetails", 0);
                                 SharedPreferences.Editor editor = preferences.edit();
@@ -428,7 +410,6 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
     @Override
     public void onError(Throwable t, String key) {
         Log.e("error", t.getMessage());
-        Log.e("errrrr", t.getLocalizedMessage());
         methods.customProgressDismiss();
     }
 
@@ -457,10 +438,9 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
             icPetRegister.setImageResource(R.drawable.pet_inactive);
             icAppointment.setImageResource(R.drawable.appointment_inactive);
         }
-//        Log.e("OnResume", "onResume function is called : ");
-
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -578,8 +558,6 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
             if (exit) {
                 super.onBackPressed();
                 finishAffinity();
-//                System.exit(0);
-                return;
             } else {
                 Toast.makeText(this, "Press Back again to Exit.", Toast.LENGTH_SHORT).show();
                 exit = true;
@@ -604,5 +582,4 @@ private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
             icAppointment.setImageResource(R.drawable.appointment_inactive);
         }
     }
-
 }
