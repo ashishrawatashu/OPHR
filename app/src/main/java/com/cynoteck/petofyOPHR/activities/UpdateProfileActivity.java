@@ -430,13 +430,13 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     clinicCode_updt.setError(null);
                     description_updt.setError(null);
                     clinic_name_updt.setError(null);
-                } else if (strPhUpdt.isEmpty()) {
+                } else if (strPhUpdt.length()!= 10) {
                     select_Category.setError(null);
                     select_service_Category.setError(null);
                     first_name_updt.setError(null);
                     last_name_updt.setError(null);
                     email_updt.setError(null);
-                    phone_updt.setError("Phone number is empty");
+                    phone_updt.setError("Invalid phone no!");
                     address_updt.setError(null);
                     postal_code_updt.setError(null);
                     website_updt.setError(null);

@@ -372,9 +372,9 @@
                 android:textStyle="bold"
                 android:fontFamily="@font/nunito"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/recommended_follow_up_textView"
+                app:layout_constraintStart_toStartOf="@+id/dot_Result_TV"
                 app:layout_constraintTop_toTopOf="@+id/recommended_follow_up_TV"
-                app:layout_constraintStart_toEndOf="@+id/recommended_follow_up_TV"/>
+                app:layout_constraintEnd_toEndOf="@+id/dot_Result_TV"/>
 
             <TextView
                 android:id="@+id/recommended_follow_up_textView"

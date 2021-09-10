@@ -1,55 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/whiteColor"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="5dp"
+    android:background="@color/whiteColor">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_marginTop="5dp"
-        android:id="@+id/pet_image_CIV"
-        android:layout_marginLeft="10dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/dummy_dog_image"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
 
-    <TextView
-        android:textSize="14sp"
-        android:id="@+id/pet_name_TV"
-        android:layout_width="0dp"
+    <com.google.android.material.card.MaterialCardView
+        android:backgroundTint="@color/gray_5"
+        android:id="@+id/allPets_CV"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/pet_image_CIV"
-        app:layout_constraintTop_toTopOf="@id/pet_image_CIV"
-        android:layout_marginLeft="10dp"
-        android:text="FaceBook (Male)"
-        android:fontFamily="@font/nunito"
-        android:textColor="@color/gray_1"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+        app:cardElevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:textSize="12sp"
-        android:id="@+id/pet_reg__id_TV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/pet_image_CIV"
-        app:layout_constraintTop_toBottomOf="@id/pet_name_TV"
-        android:layout_marginLeft="10dp"
-        android:text="PETO-1512_5522"
-        android:fontFamily="@font/nunito"
-        android:textColor="@color/gray_2"
-        android:layout_marginTop="3dp"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/pet_image_CIV"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/dummy_dog_image"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/pet_name_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/nunito"
+                android:text="FaceBook (Male)"
+                android:textColor="@color/gray_1"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/pet_image_CIV"
+                app:layout_constraintTop_toTopOf="@id/pet_image_CIV" />
+
+            <TextView
+                android:id="@+id/pet_reg__id_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:fontFamily="@font/nunito"
+                android:text="PETO-1512_5522"
+                android:textColor="@color/gray_2"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/pet_image_CIV"
+                app:layout_constraintTop_toBottomOf="@id/pet_name_TV" />
 
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    </com.google.android.material.card.MaterialCardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
