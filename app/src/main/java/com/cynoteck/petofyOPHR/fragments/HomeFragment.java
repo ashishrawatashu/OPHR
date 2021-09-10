@@ -163,6 +163,7 @@ public class HomeFragment<isOnline> extends Fragment implements View.OnClickList
         switch (v.getId()) {
             case R.id.search_box_TV:
                 Intent searchPetActivity = new Intent(getContext(), SearchActivity.class);
+                searchPetActivity.putExtra("intentFrom","Home");
                 startActivity(searchPetActivity);
                 break;
             case R.id.submit_parent_otp:

@@ -1,5 +1,6 @@
 package com.cynoteck.petofyOPHR.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class MediaUtils {
         }
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     public void openCamera() {
             Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (pictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
@@ -61,7 +63,7 @@ public class MediaUtils {
                     // Error occurred while creating the File
                 }
                 if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(mActivity, "com.cynoteck.petofy.fileprovider", photoFile);
+                    Uri photoURI = FileProvider.getUriForFile(mActivity, "com.cynoteck.petofyOPHR.fileprovider", photoFile);
                     pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     if(mFragment == null) {
                         mActivity.startActivityForResult(pictureIntent, REQ_CAMERA);

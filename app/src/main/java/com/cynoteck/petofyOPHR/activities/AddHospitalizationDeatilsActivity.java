@@ -235,15 +235,52 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                 if(strRequstVeterian.isEmpty()){
                     veterian_name_ET.setError("Enter Veterinarian Name");
                     hospital_name_ET.setError(null);
+                    hospital_phone_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    calenderTextView_admission_date.setError(null);
+                    veterian_phone_ET.setError(null);
+                    calenderTextView_discharge_date_TV.setError(null);
+                }else if (strPhoneNumber.length() != 10){
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
                     reson_of_hospitalization_ET.setError(null);
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
+                    veterian_phone_ET.setError("Invalid phone no !");
+                }else if(hospitalizationStr.equals("Select Hospital Type")) {
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
+                    veterian_phone_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    calenderTextView_admission_date.setError(null);
+                    calenderTextView_discharge_date_TV.setError(null);
+                    hospital_phone_ET.setError(null);
+                    Toast.makeText(this, "Select Hospitalization type ", Toast.LENGTH_SHORT).show();
+                }else if(strHospitalAdmissionDt.isEmpty()) {
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    veterian_phone_ET.setError(null);
+                    hospital_phone_ET.setError(null);
+                    calenderTextView_admission_date.setError("Enter Admission Date");
+                    calenderTextView_discharge_date_TV.setError(null);
+                }
+                else if(strHospitalDischargeDt.isEmpty()) {
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    calenderTextView_admission_date.setError(null);
+                    veterian_phone_ET.setError(null);
+                    hospital_phone_ET.setError(null);
+                    calenderTextView_discharge_date_TV.setError("Enter discharge Date");
                 }
                 else if(strHospitalName.isEmpty())
                 {
                     veterian_name_ET.setError(null);
+                    hospital_phone_ET.setError(null);
                     hospital_name_ET.setError("Enter Hospital Name");
                     reson_of_hospitalization_ET.setError(null);
+                    veterian_phone_ET.setError(null);
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
                 }
@@ -251,38 +288,22 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                 {
                     veterian_name_ET.setError(null);
                     hospital_name_ET.setError(null);
+                    veterian_phone_ET.setError(null);
+                    hospital_phone_ET.setError(null);
                     reson_of_hospitalization_ET.setError("Reason of Hospitalization");
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
-                }
-                else if(strHospitalAdmissionDt.isEmpty())
-                {
-                    veterian_name_ET.setError(null);
-                    hospital_name_ET.setError(null);
-                    reson_of_hospitalization_ET.setError(null);
-                    calenderTextView_admission_date.setError("Enter Admission Date");
-                    calenderTextView_discharge_date_TV.setError(null);
-                }
-                else if(strHospitalDischargeDt.isEmpty())
-                {
-                    veterian_name_ET.setError(null);
-                    hospital_name_ET.setError(null);
-                    reson_of_hospitalization_ET.setError(null);
-                    calenderTextView_admission_date.setError(null);
-                    calenderTextView_discharge_date_TV.setError("Enter discharge Date");
-                }
-                else if(hospitalizationStr.equals("Select Hospital Type"))
-                {
-                    veterian_name_ET.setError(null);
-                    hospital_name_ET.setError(null);
-                    reson_of_hospitalization_ET.setError(null);
-                    calenderTextView_admission_date.setError(null);
-                    calenderTextView_discharge_date_TV.setError(null);
-                    Toast.makeText(this, "Select Hospitalization type ", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    methods.showCustomProgressBarDialog(this);
+                } else if (!strHospitalphoneNumber.equals("")&&strHospitalphoneNumber.length()!=10){
 
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
+                    veterian_phone_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    calenderTextView_admission_date.setError(null);
+                    calenderTextView_discharge_date_TV.setError(null);
+                    hospital_phone_ET.setError("Invalid phone no!");
+                } else {
+                    methods.showCustomProgressBarDialog(this);
                     if (type.equals("Update Hospitalization")) {
                         UpdateHospitalizationParams updateHospitalizationParams = new UpdateHospitalizationParams();
                         updateHospitalizationParams.setId(report_id);

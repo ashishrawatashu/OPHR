@@ -130,7 +130,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pet_deatil_TV">
 
-                <EditText
+                <TextView
                     android:id="@+id/pet_parent_ET"
                     android:layout_width="0dp"
                     app:layout_constraintStart_toStartOf="parent"

@@ -28,6 +28,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -156,8 +157,8 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         select_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mediaUtils.openCamera();
                 dialog.dismiss();
+                mediaUtils.openCamera();
             }
         });
 
@@ -179,59 +180,19 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         dialog.show();
     }
 
-    private void choosePhotoFromGallary() {
-
-
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mediaUtils.onActivityResult(requestCode, resultCode, data);
-    }
+        if (requestCode ==USERUPDATION){
+            if (resultCode == RESULT_OK){
+                getUserDetails();
 
-//    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-//    public String saveImage(Bitmap myBitmap) {
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            catfile1 = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".png");
-//            catfile1.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(catfile1);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this,
-//                    new String[]{catfile1.getPath()},
-//                    new String[]{"image/png"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::---&gt;" + catfile1.getAbsolutePath());
-//            UploadImages(catfile1);
-//            return catfile1.getAbsolutePath();
-//
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        return "";
-//    }
+            }
+        }else {
+            mediaUtils.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     private void UploadImages(File absolutePath) {
         methods.showCustomProgressBarDialog(this);
@@ -289,11 +250,6 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                 .load(Config.user_Veterian_url)
                 .placeholder(R.drawable.empty_vet_image)
                 .into(vet_image_TV);
-//        Glide.with(this)
-//                .load(Config.coverimage)
-//                .placeholder(R.drawable.empty_vet_image)
-//                .into(cover_image);
-
         vet_name_TV.setText(Config.user_Veterian_name);
         vet_email_TV.setText(Config.user_Veterian_emial);
         vet_degree_TV.setText(Config.user_Veterian_study);
@@ -457,7 +413,6 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                         Config.user_Veterian_url = imageResponse.getData().getDocumentUrl();
                         Glide.with(this)
                                 .load(Config.user_Veterian_url)
-                                .placeholder(R.drawable.empty_vet_image)
                                 .into(vet_image_TV);
                         UploadProfileImageParams uploadProfileImageParams = new UploadProfileImageParams();
                         uploadProfileImageParams.setProfileImageUrl(imageResponse.getData().getDocumentUrl());

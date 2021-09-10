@@ -169,6 +169,7 @@ public class PetRegisterFragment extends Fragment implements ApiResponse, ViewDe
         switch (v.getId()) {
             case R.id.search_box_TV:
                 Intent searchPetActivity = new Intent(getContext(), SearchActivity.class);
+                searchPetActivity.putExtra("intentFrom","Home");
                 startActivity(searchPetActivity);
                 break;
             case R.id.addNewEntry:

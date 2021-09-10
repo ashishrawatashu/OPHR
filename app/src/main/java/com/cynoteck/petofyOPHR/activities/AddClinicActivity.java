@@ -2200,9 +2200,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
             case "SaveVaccination":
                 try {
-                    if (getImmuMstStatus.equals("false")){
-                        methods.customProgressDismiss();
-                    }
+                    methods.customProgressDismiss();
                     SaveResponseData saveResponseData = (SaveResponseData) arg0.body();
                     Log.e("SaveResponseData", methods.getRequestJson(saveResponseData));
                     int responseCode = Integer.parseInt(saveResponseData.getResponse().getResponseCode());
@@ -2212,12 +2210,15 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                         if (getImmuMstStatus.equals("true")){
                             Log.d("Check IF ","True");
                             folow_up_dt_view.setText(saveResponseData.getData().getNextVaccineDate());
-//                            setVaccineNextTypeSpinner();
-//                            setNextVaccineNameSpinner();
-                            getNextFirstVaccine();
-                            getFirstVaccine();
-                        }else {
-//                            setVaccineNextTypeSpinner();
+                            next_vaccine_ET.setEnabled(false);
+                            folow_up_dt_view.setText(saveResponseData.getData().getNextVaccineDate());
+                            nextVaccineName = saveResponseData.getData().getNextVaccineName();
+                            nextVaccineType = saveResponseData.getData().getVaccineType();
+                            vaccineNameList.add(nextVaccineName);
+                            Log.d("nextVaccineType222",nextVaccineType);
+                            Log.d("nextVaccineNamee222",nextVaccineName);
+                            setNextVaccineNameSpinner();
+                            setVaccineNextTypeSpinner(nextVaccineType);
                         }
                     } else if (responseCode == 115) {
                         alertDialogForVaccineAdd(saveResponseData.getData().getErrorMessage());
