@@ -7,25 +7,32 @@
         <entry key="..\:/SDK/platforms/android-29/data/res/layout/simple_spinner_item.xml" value="0.1" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_thumb.xml" value="0.2203125" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_track.xml" value="0.2203125" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_clinic.xml" value="0.2" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_hospitalization_deatils.xml" value="0.16" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_aadd_update_staff.xml" value="0.18" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_clinic.xml" value="0.17" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_hospitalization_deatils.xml" value="0.25" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_new_pet2.xml" value="0.20416666666666666" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_pet_register.xml" value="0.18055555555555555" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_update_appointment.xml" value="0.18" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_x_ray_deatils.xml" value="0.18055555555555555" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_add_x_ray_deatils.xml" value="0.25" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_get_pet_details.xml" value="0.18425925925925926" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_pet_details.xml" value="0.18" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_search.xml" value="0.2" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_staff_details.xml" value="0.20416666666666666" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_update_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_view_full_profile_vet.xml" value="0.13489583333333333" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/activity_x_ray_report_deatils.xml" value="0.22" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/all_staff_list.xml" value="0.16" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/all_visit_report.xml" value="0.12" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/fragment_pet_register.xml" value="0.25" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/fragment_vet_appointments.xml" value="0.20416666666666666" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/immunization_add_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/online_clinic_visits.xml" value="0.22" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/pet_register_list_layout.xml" value="0.22" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/reports_list.xml" value="0.20416666666666666" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/search_list.xml" value="0.22" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/vaccination_add_layout.xml" value="0.1" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/vaccination_chart_list.xml" value="0.20416666666666666" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/petofy_ophr/app/src/main/res/layout/vet_profile_fragment.xml" value="0.33" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_thumb.xml" value="0.13240740740740742" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_track.xml" value="0.13240740740740742" />

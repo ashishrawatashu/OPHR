@@ -1,5 +1,7 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import static com.cynoteck.petofyOPHR.fragments.ProfileFragment.vet_profile_pic;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -344,6 +346,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                         Config.vet_first_name = sharedPreferences.getString("first_name", "");
                         Config.vet_last_name = sharedPreferences.getString("last_name", "");
                         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
+                        Config.user_Veterian_url = sharedPreferences.getString("profilePic", "");
                         edit_profile_IV.setVisibility(View.VISIBLE);
                         StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < userResponse.getData().getPetTypeList().size(); i++) {
@@ -411,9 +414,13 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                     if (responseCode == 109) {
                         //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         Config.user_Veterian_url = imageResponse.getData().getDocumentUrl();
-                        Glide.with(this)
-                                .load(Config.user_Veterian_url)
-                                .into(vet_image_TV);
+                        Glide.with(this).load(Config.user_Veterian_url).into(vet_image_TV);
+                        Glide.with(this).load(Config.user_Veterian_url).into(vet_profile_pic);
+
+                        sharedPreferences = this.getSharedPreferences("userDetails", 0);
+                        login_editor = sharedPreferences.edit();
+                        login_editor.putString("profilePic", imageResponse.getData().getDocumentUrl());
+                        login_editor.commit();
                         UploadProfileImageParams uploadProfileImageParams = new UploadProfileImageParams();
                         uploadProfileImageParams.setProfileImageUrl(imageResponse.getData().getDocumentUrl());
                         UploadVetProfileImageData uploadVetProfileImageData = new UploadVetProfileImageData();

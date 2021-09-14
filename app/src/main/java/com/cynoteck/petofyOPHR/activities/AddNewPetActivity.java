@@ -293,7 +293,7 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                calenderTextView_dialog.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                calenderTextView_dialog.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                                 String DoB = dayOfMonth + " " + (monthOfYear + 1) + " " + year;
                                 String DoBforage = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
                                 Log.d("jajajaajja", "" + methods.getDays(DoB, methods.getDate()));
@@ -388,7 +388,13 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                     pet_parent_name_ET.setError(null);
                     pet_contact_number_ET.setError("Enter Contact Number");
                     calenderTextView_dialog.setError(null);
-                } else {
+                } else if (strPetContactNumber.length()!=10) {
+                    Toast.makeText(this, "Invalid Phone No.", Toast.LENGTH_SHORT).show();
+                    pet_name_ET.setError(null);
+                    pet_parent_name_ET.setError(null);
+                    pet_contact_number_ET.setError("Invalid Phone No.");
+                    calenderTextView_dialog.setError(null);
+                }else {
                     pet_name_ET.setError(null);
                     pet_parent_name_ET.setError(null);
                     pet_contact_number_ET.setError(null);

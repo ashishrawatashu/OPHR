@@ -121,6 +121,7 @@
 
             <EditText
                 android:id="@+id/veterian_name_ET"
+                android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"

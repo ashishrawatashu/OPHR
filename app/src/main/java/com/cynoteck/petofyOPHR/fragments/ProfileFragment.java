@@ -1,6 +1,7 @@
 package com.cynoteck.petofyOPHR.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,9 +24,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.activities.ChangePasswordActivity;
 import com.cynoteck.petofyOPHR.activities.GetAllBankAccountsActivity;
@@ -61,7 +64,8 @@ import retrofit2.Response;
 public class ProfileFragment extends Fragment implements View.OnClickListener, ApiResponse {
 
     TextView vet_name_TV,vet_study_TV;
-    ImageView vet_profile_pic;
+    @SuppressLint("StaticFieldLeak")
+    public static ImageView vet_profile_pic;
     SwitchCompat online_switch;
     View view;
     String status;
@@ -81,10 +85,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.vet_profile_fragment, container, false);
-        sharedPreferences = getActivity().getSharedPreferences("userdetails", 0);
+        sharedPreferences = getContext().getSharedPreferences("userdetails", 0);
         methods = new Methods(context);
-
-
 
         initialize();
         getVetInfo();
@@ -94,17 +96,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     }
 
     private void getVetInfo() {
-        try {
-            Glide.with(this)
-                    .load(new URL(Config.user_Veterian_url))
-                    .placeholder(R.drawable.doctor_dummy_image)
-                    .into(vet_profile_pic);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        Glide.with(this)
+                .load((Config.user_Veterian_url))
+                .placeholder(R.drawable.doctor_dummy_image)
+                .into(vet_profile_pic);
+
         vet_name_TV.setText(Config.user_Veterian_name);
         vet_study_TV.setText(Config.user_Veterian_study);
-
 
     }
 
@@ -135,8 +133,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
     }
 
-    public  void initialize()
-    {
+    public  void initialize() {
         vet_name_TV = view.findViewById(R.id.vet_name_TV);
         vet_study_TV = view.findViewById(R.id.vet_study_TV);
         vet_profile_pic = view.findViewById(R.id.vet_profile_pic);
@@ -220,8 +217,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         }
     }
 
- public void Mydialog()
-    {
+    public void Mydialog() {
         AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
         builder.setMessage("Do you really want to Logout");
         builder.setTitle("Alert Box");
@@ -258,16 +254,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     }
 
 
-
-
     @Override
     public void onResume() {
         super.onResume();
+        getVetInfo();
         if (Config.user_Veterian_online.equals("true")){
             online_switch.setChecked(true);
         }else {
             online_switch.setChecked(false);
-        }    }
+        }
+    }
 
     @Override
     public void onResponse(Response response, String key) {
@@ -282,7 +278,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                             SharedPreferences.Editor login_editor;
                             login_editor = sharedPreferences.edit();
                             login_editor.putString("onlineAppoint", "true");
-                            login_editor.commit();
+                            login_editor.apply();
                             Config.user_Veterian_online ="true";
 
                         }else {

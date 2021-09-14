@@ -205,6 +205,7 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                                 folow_up_dt_view.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year1, month1, day1);
+                picker.getDatePicker().setMinDate(cldr1.getTimeInMillis());
                 picker.show();
                 break;
 

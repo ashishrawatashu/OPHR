@@ -51,7 +51,7 @@ public class AddEditImmunizationActivity extends AppCompatActivity implements Ap
     MaterialCardView back_arrow_CV;
     //spinner Strings
     String vaacineID="",getStrSpnerItemIsPeriodicVaccineValue="0.0",strSpnerItemIsPeriodicVaccineNm="",strSpnerItemPetNm="Dog",getStrSpnerItemPetNmId="",strSpnerItemPetAgeUnitNm="",getStrSpnerItemPetAgeUnitValue="";
-// page String
+   // page String
     String booster_one_string_CB="false",booster_two_string_CB="false",is_Periodic_Vaccine_string_CB="false",serial_number_string="",minimum_age_string="",maxmimum_age_string="",primary_vaccine_name_string,booster_one_string="",booster_two_string="";
     ArrayList<String> petType = new ArrayList<>();
     ArrayList<String> ageUnit=new ArrayList<>();

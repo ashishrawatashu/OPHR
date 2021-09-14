@@ -5,16 +5,21 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cynoteck.petofyOPHR.R;
@@ -88,10 +93,30 @@ public class SearchActivity extends AppCompatActivity implements ApiResponse, Se
             }
         });
 
+        searchpet.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String searchText = searchpet.getText().toString();
+                    if (searchText.equals("")){
+                        searchpet.setFocusable(true);
+                    }else {
+                        search_PB.setVisibility(View.VISIBLE);
+                        nested_scroll_view.setVisibility(View.GONE);
+                        petSearchDependsOnPrefix(searchpet.getText().toString());                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
 
     }
 
     private void petSearchDependsOnPrefix(String prefix) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Hide:
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         PetDataParams getPetDataParams = new PetDataParams();
         getPetDataParams.setPageNumber(0);//0
         getPetDataParams.setPageSize(10);//0

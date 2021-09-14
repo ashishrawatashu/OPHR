@@ -228,6 +228,7 @@
             <EditText
                 android:id="@+id/pet_name_ET"
                 android:layout_width="0dp"
+                android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
@@ -433,6 +434,7 @@
                     android:fontFamily="@font/nunito"
                     android:gravity="center_vertical"
                     android:hint="@string/ParentName"
+                    android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:inputType="textCapWords"
                     android:maxLines="1"
                     android:paddingLeft="25dp"

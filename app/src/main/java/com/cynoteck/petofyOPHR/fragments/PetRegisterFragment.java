@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.activities.AddNewPetActivity;
-import com.cynoteck.petofyOPHR.activities.AddPetRegister;
 import com.cynoteck.petofyOPHR.activities.PetDetailsActivity;
 import com.cynoteck.petofyOPHR.activities.PetIdCardActivity;
 import com.cynoteck.petofyOPHR.activities.PetProfileActivity;
