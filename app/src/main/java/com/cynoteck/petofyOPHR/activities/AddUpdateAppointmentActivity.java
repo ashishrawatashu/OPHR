@@ -142,7 +142,7 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
         purpose.add("Deworming");
         purpose.add("Routine health check up");
         purpose.add("Skin, coat & hair related problems");
-        purpose.add("Diarrhea, Vomitting, other stomach realted problems");
+        purpose.add("Diarrhea, Vomiting, other stomach related problems");
         purpose.add("Eye check up");
         purpose.add("Dental check up");
         purpose.add("Other");

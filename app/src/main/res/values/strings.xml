@@ -236,5 +236,6 @@
     <string name="subscription">Subscription</string>
 
     <string name="clinicVisitHeadline">Choose the type of visit</string>
-    <string name="upload_doc">Upload Documet</string>
+    <string name="upload_doc">Upload Document</string>
+    <string name="noAppointment">No appointment found..</string>
 </resources>

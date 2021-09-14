@@ -96,6 +96,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Config.tabPosition = 1;
         sharedPreferences = getSharedPreferences("userdetails", 0);
+        Config.user_Veterian_url = sharedPreferences.getString("profilePic", "");
         Config.token = sharedPreferences.getString("token", "");
         Config.user_id = sharedPreferences.getString("userId", "");
         Config.user_Veterian_phone = sharedPreferences.getString("phoneNumber", "");

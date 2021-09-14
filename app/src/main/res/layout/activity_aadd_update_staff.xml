@@ -136,6 +136,7 @@
           <EditText
               android:id="@+id/staff_first_name_ET"
               android:layout_width="0dp"
+              android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
               android:layout_height="50dp"
               android:layout_marginLeft="20dp"
               android:layout_marginTop="10dp"
@@ -171,6 +172,7 @@
               android:id="@+id/staff_last_name_ET"
               android:layout_width="0dp"
               android:layout_height="50dp"
+              android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
               android:layout_marginLeft="20dp"
               android:layout_marginTop="10dp"
               android:layout_marginRight="20dp"

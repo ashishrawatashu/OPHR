@@ -212,6 +212,16 @@ public class AddUpdateStaffActivity extends AppCompatActivity implements View.On
                     staff_qualification_ET.setError(null);
                     staff_reg_number_ET.setError(null);
 
+                }else if (strStaffPhone.length()!=10) {
+                    staff_first_name_ET.setError(null);
+                    staff_last_name_ET.setError(null);
+                    staff_email_ET.setError(null);
+                    staff_password_ET.setError(null);
+                    staff_confirm_password_ET.setError(null);
+                    staff_phone_ET.setError("Invalid Phone no !");
+                    staff_qualification_ET.setError(null);
+                    staff_reg_number_ET.setError(null);
+
                 } else if (strStaffPassword.isEmpty()&&activityType.equals("Add")) {
                         staff_first_name_ET.setError(null);
                         staff_last_name_ET.setError(null);

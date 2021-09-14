@@ -1577,7 +1577,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
         SaveRequest saveRequest = new SaveRequest();
         saveRequest.setData(saveVaccineModel);
         ApiService<SaveResponseData> service = new ApiService<>();
-        service.get(this, ApiClient.getApiInterface().savePreviousVaccinationDetails(Config.token, saveRequest), "SaveVaccination");
+        service.get(this, ApiClient.getApiInterface().savePreviousVaccinationDetails(Config.token, saveRequest), "SavePreviousVaccinationDetails");
         Log.e("SavePreviousVaccination", "" + methods.getRequestJson(saveRequest));
     }
 
@@ -2170,6 +2170,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                     e.printStackTrace();
                 }
                 break;
+
             case "GetNextVaccinationDateAndName":
                 try {
                     methods.customProgressDismiss();
@@ -2213,15 +2214,53 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                             next_vaccine_ET.setEnabled(false);
                             folow_up_dt_view.setText(saveResponseData.getData().getNextVaccineDate());
                             nextVaccineName = saveResponseData.getData().getNextVaccineName();
-                            nextVaccineType = saveResponseData.getData().getVaccineType();
+                            nextVaccineType = saveResponseData.getData().getNextVaccineType();
                             vaccineNameList.add(nextVaccineName);
-                            Log.d("nextVaccineType222",nextVaccineType);
-                            Log.d("nextVaccineNamee222",nextVaccineName);
+                            vaccineTypeList.add(nextVaccineType);
                             setNextVaccineNameSpinner();
                             setVaccineNextTypeSpinner(nextVaccineType);
                         }
                     } else if (responseCode == 115) {
                         alertDialogForVaccineAdd(saveResponseData.getData().getErrorMessage());
+                        folow_up_dt_view.setText(saveResponseData.getData().getNextVaccineDate());
+                        next_vaccine_ET.setEnabled(false);
+                        folow_up_dt_view.setText(saveResponseData.getData().getNextVaccineDate());
+                        nextVaccineName = saveResponseData.getData().getNextVaccineName();
+                        nextVaccineType = saveResponseData.getData().getNextVaccineType();
+                        vaccineNameList.add(nextVaccineName);
+                        vaccineTypeList.add(nextVaccineType);
+                        setNextVaccineNameSpinner();
+                        setVaccineNextTypeSpinner(nextVaccineType);
+                    } else if (responseCode == 113) {
+                        Toast.makeText(this, saveResponseData.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case "SavePreviousVaccinationDetails":
+                try {
+                    methods.customProgressDismiss();
+                    SaveResponseData saveResponseData = (SaveResponseData) arg0.body();
+                    Log.e("SaveResponseData", methods.getRequestJson(saveResponseData));
+                    int responseCode = Integer.parseInt(saveResponseData.getResponse().getResponseCode());
+                    if (responseCode == 109) {
+                        next_dewormer_spinner.setEnabled(false);
+                        next_dewormer_spinner.setClickable(false);
+                        if (getImmuMstStatus.equals("true")){
+                            Log.d("Check IF ","True");
+                            folow_up_dt_view.setText(saveResponseData.getData().getNextVaccineDate());
+                            next_vaccine_ET.setEnabled(false);
+                            folow_up_dt_view.setText(saveResponseData.getData().getNextVaccineDate());
+                            nextVaccineName = saveResponseData.getData().getNextVaccineName();
+                            nextVaccineType = saveResponseData.getData().getNextVaccineType();
+                            vaccineNameList.add(nextVaccineName);
+                            vaccineTypeList.add(nextVaccineType);
+                            setNextVaccineNameSpinner();
+                            setVaccineNextTypeSpinner(nextVaccineType);
+                            saveVaccineAfterAdd();
+                        }
                     } else if (responseCode == 113) {
                         Toast.makeText(this, saveResponseData.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -2319,7 +2358,11 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        vaccinationModelArrayList.clear();
+                        hospitalizationReportsAdapter.notifyDataSetChanged();
                         dialogInterface.dismiss();
+                        onBackPressed();
+
                     }
                 });
         alertDialog.show();
@@ -2441,11 +2484,15 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                         next_vaccine_type_spinner.setEnabled(true);
                         next_vaccine_type_TV.setEnabled(true);
                         next_vaccine_LL.setVisibility(View.VISIBLE);
+                        next_vaccine_ET.setEnabled(true);
+
                     }else {
                         folow_up_dt_view.setEnabled(false);
                         next_vaccine_type_spinner.setEnabled(false);
                         next_vaccine_type_TV.setEnabled(false);
                         next_vaccine_LL.setVisibility(View.VISIBLE);
+                        next_vaccine_ET.setEnabled(false);
+
 
                     }
                     if (strToolbarName.equals("Update Clinic")) {
