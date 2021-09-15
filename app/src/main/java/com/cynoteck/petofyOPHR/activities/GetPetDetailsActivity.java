@@ -139,7 +139,6 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
         currentDateAndTime();
         Bundle extras = getIntent().getExtras();
         init();
-        requestMultiplePermissions();
         petSex=new ArrayList<>();
         petSex.add("Pet Sex");
         petSex.add("Male");
@@ -1050,20 +1049,26 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
         Dexter.withActivity(this)
                 .withPermissions(
                         android.Manifest.permission.CAMERA,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Log.d("Debuging","All Permission Granted");
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+//                            storagePermissionDialog();
+                            startActivity(new Intent(GetPetDetailsActivity.this,PermissionCheckActivity.class));
+                            Toast.makeText(GetPetDetailsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
                         }
+
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
-                            //openSettingsDialog();
+                            startActivity(new Intent(GetPetDetailsActivity.this,PermissionCheckActivity.class));
                         }
                     }
 
@@ -1077,7 +1082,7 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
                 withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
-                        Log.d("Debuging","Some Error");
+                        Toast.makeText(GetPetDetailsActivity.this, "Some Error! ", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .onSameThread()
@@ -1099,5 +1104,12 @@ public class GetPetDetailsActivity extends AppCompatActivity implements View.OnC
         File imgFile = new File(imgPath);
         Log.d ("imgdata: " , imgFile.toString());
         UploadImages(imgFile);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestMultiplePermissions();
+
     }
 }

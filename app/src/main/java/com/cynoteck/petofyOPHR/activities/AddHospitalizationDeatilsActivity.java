@@ -97,7 +97,6 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hospitalization_deatils);
         init();
-        requestMultiplePermissions();
     }
 
     private void init() {
@@ -170,6 +169,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 
 
     }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
@@ -373,6 +373,56 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
         Log.e("AddPetHospitalParam","===>"+updateHospitalizationRequest);
 
     }
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+//                        android.Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+//                            storagePermissionDialog();
+                            startActivity(new Intent(AddHospitalizationDeatilsActivity.this,PermissionCheckActivity.class));
+                            Toast.makeText(AddHospitalizationDeatilsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            Toast.makeText(AddHospitalizationDeatilsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(AddHospitalizationDeatilsActivity.this,PermissionCheckActivity.class));
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+
+
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(AddHospitalizationDeatilsActivity.this, "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestMultiplePermissions();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     @Override
@@ -423,45 +473,6 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
         service.get( this, ApiClient.getApiInterface().uploadImages(Config.token,userDpFilePart), "UploadDocument");
         Log.e("DATALOG","check1=> "+service);
 
-    }
-
-    private void requestMultiplePermissions() {
-        Dexter.withActivity(this)
-                .withPermissions(
-                        android.Manifest.permission.CAMERA,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            Log.d("PERMISSION","All permissions are granted by user!");
-//                            Toast.makeText(AddHospitalizationDeatilsActivity.this, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-                        }
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-                            //openSettingsDialog();
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-
-
-                }).
-                withErrorListener(new PermissionRequestErrorListener() {
-                    @Override
-                    public void onError(DexterError error) {
-                        Toast.makeText(AddHospitalizationDeatilsActivity.this, "Some Error! ", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .onSameThread()
-                .check();
     }
 
     private void addHospitalization(AddHospitalizationRequest addHospitalizationRequest) {

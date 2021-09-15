@@ -238,4 +238,11 @@
     <string name="clinicVisitHeadline">Choose the type of visit</string>
     <string name="upload_doc">Upload Document</string>
     <string name="noAppointment">No appointment found..</string>
+    <string name="download">Download</string>
+    <string name="newVersion">Petofy OPHR new version is available!</string>
+    <string name="pleaseDownload">Please download the latest version. </string>
+    <string name="cameraAndStorage">Storage and camera permission required !</string>
+    <string name="grant">Allow</string>
+    <string name="openSetting">Open Setting</string>
+    <string name="allow">Allow</string>
 </resources>

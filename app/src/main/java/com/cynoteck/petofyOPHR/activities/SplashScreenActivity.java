@@ -1,5 +1,6 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,16 +20,25 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import java.util.List;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -142,20 +152,71 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                requestMultiplePermissions();
 
-                internetChkCode=0;
-                Intent intent;
-                SharedPreferences sharedPreferences = getSharedPreferences("userdetails", 0);
-                String loggedIn = sharedPreferences.getString("loggedIn", "");
-                if (loggedIn.equals("loggedIn")){
-                     intent = new Intent(SplashScreenActivity.this,DashBoardActivity.class);
-                }else {
-                    intent = new Intent(SplashScreenActivity.this, InstructionActivity.class);
-                }
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
+
             }
         },2500);
+    }
+
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        android.Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                            intentActivity();
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+                            intentActivity();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            Log.d("STORAGE_DIALOG","openSettingsDialog");
+                            startActivity(new Intent(SplashScreenActivity.this,PermissionCheckActivity.class));
+
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+
+
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Log.d("STORAGE_DIALOG",error.toString());
+
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+
+    private void intentActivity() {
+        internetChkCode=0;
+        Intent intent;
+        SharedPreferences sharedPreferences = getSharedPreferences("userdetails", 0);
+        String loggedIn = sharedPreferences.getString("loggedIn", "");
+
+        if (loggedIn.equals("loggedIn")){
+            intent = new Intent(SplashScreenActivity.this,DashBoardActivity.class);
+        }else {
+            intent = new Intent(SplashScreenActivity.this, InstructionActivity.class);
+        }
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
     }
 
 //    protected void registerBroadcast() {

@@ -1,5 +1,6 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -10,15 +11,18 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -49,8 +53,16 @@ import com.cynoteck.petofyOPHR.response.totalStaffPetsAppointment.GetDashboardCo
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.UserResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -58,6 +70,7 @@ import org.jsoup.nodes.Document;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Response;
 
@@ -82,13 +95,20 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
     static LinearLayout something_wrong_LL;
     Button rtry;
     HomeFragment homeFragment = new HomeFragment();
-
+    BottomSheetDialog updateDialog;
+    Dialog  settingDialog,storageDialog;
+    boolean  dialogStatus = false;
+    Button open_setting_BT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
         init();
+        settingDialogInit();
+//        storagePermissionDialogInit();
+//        requestMultiplePermissions();
+        Log.d("CHECK","ONCREATE");
         methods = new Methods(this);
         broadcastReceiver =new checkIntetnetConnectivity();
         registerBroadcast();
@@ -127,6 +147,10 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             ft = getSupportFragmentManager().beginTransaction();
 
         }
+    }
+
+    private void settingDialogInit() {
+
     }
 
     private void getCurrentVersion() {
@@ -186,6 +210,76 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         content_frame.setVisibility(View.GONE);
 
     }
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        android.Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                            try {
+                                settingDialog.dismiss();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+                            storagePermissionDialog();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            openSettingsDialog();
+                            Log.d("STORAGE_DIALOG","openSettingsDialog");
+
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+
+
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(DashBoardActivity.this, "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+
+    private void openSettingsDialog() {
+        dialogStatus  = true;
+        settingDialog  = new Dialog(this);
+        settingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingDialog.setCancelable(false);
+        settingDialog.setContentView(R.layout.open_setting_dialog);
+        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        open_setting_BT = settingDialog.findViewById(R.id.open_setting_BT);
+        open_setting_BT.setOnClickListener(this);
+        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        settingDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = settingDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+    }
+
+    private void storagePermissionDialog() {
+    }
 
 
     // -----------------------------------------------------------------------------------------------------------
@@ -218,45 +312,45 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             if (latestVersion != null) {
                 if (!currentVersion.equalsIgnoreCase(latestVersion)) {
                     if (!isFinishing()) { //This would help to prevent Error : BinderProxy@45d459c0 is not valid; is your activity running? error
-                        showUpdateDialog();
+                        newUpdateDialog();
                     }
                 }
-            } else {
-                //background.start();
-                // super.onPostExecute(jsonObject);
             }
         }
 
-        private void showUpdateDialog() {
-            final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DashBoardActivity.this);
-            builder.setTitle("A New Update is Available");
-            builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    try {
-                        Intent intent;
-                        intent = new Intent(Intent.ACTION_VIEW);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setData(Uri.parse("market://details?id=" + "com.cynoteck.petofyOPHR"));
-                        startActivity(intent);
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.cynoteck.petofyOPHR")));
-                    }
-                    dialog.dismiss();
+    }
+
+    private void newUpdateDialog() {
+        updateDialog  = new BottomSheetDialog(this);
+        updateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        updateDialog.setCancelable(false);
+        updateDialog.setContentView(R.layout.update_new_version_dialog);
+        updateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Button download_BT = updateDialog.findViewById(R.id.download_BT);
+        updateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        download_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent;
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setData(Uri.parse("market://details?id=" + "com.cynoteck.petofyOPHR"));
+                    startActivity(intent);
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.cynoteck.petofyOPHR")));
                 }
-            });
+                updateDialog.dismiss();
+            }
+        });
 
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //background.start();
-                }
-            });
-
-            builder.setCancelable(false);
-            dialog = builder.show();
-        }
-
+        updateDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = updateDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
     }
 
     private void init() {
@@ -623,6 +717,15 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                     methods.customProgressDismiss();
                     show();
                 }
+                break;
+
+            case R.id.open_setting_BT:
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+
+                break;
 
         }
 

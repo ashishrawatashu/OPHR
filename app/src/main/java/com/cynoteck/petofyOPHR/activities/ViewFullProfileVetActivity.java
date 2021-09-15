@@ -124,7 +124,6 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         methods = new Methods(this);
         mediaUtils = new MediaUtils(this);
 
-        requestMultiplePermissions();
         inilization();
         Glide.with(this)
                 .load(Config.user_Veterian_url)
@@ -214,19 +213,26 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         Dexter.withActivity(this)
                 .withPermissions(
                         android.Manifest.permission.CAMERA,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+//                            storagePermissionDialog();
+                            startActivity(new Intent(ViewFullProfileVetActivity.this,PermissionCheckActivity.class));
+                            Toast.makeText(ViewFullProfileVetActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
                         }
+
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
-                            //openSettingsDialog();
+                            startActivity(new Intent(ViewFullProfileVetActivity.this,PermissionCheckActivity.class));
                         }
                     }
 
@@ -596,6 +602,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     @Override
     protected void onResume() {
         super.onResume();
+        requestMultiplePermissions();
 
     }
 

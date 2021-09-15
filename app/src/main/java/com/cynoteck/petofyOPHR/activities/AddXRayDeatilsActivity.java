@@ -13,9 +13,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,6 +48,7 @@ import com.cynoteck.petofyOPHR.response.clinicVisist.ClinicVisitResponse;
 import com.cynoteck.petofyOPHR.response.testResponse.XrayTestResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -104,6 +107,7 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     };
     private int                 DOC_UPLOAD=105;
     int front_status            = 0;
+    Dialog  settingDialog,storageDialog;
 
 
     @Override
@@ -112,7 +116,6 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_add_x_ray_deatils);
         methods=new Methods(this);
         init();
-        requestMultiplePermissions();
     }
 
     private void init() {
@@ -363,23 +366,28 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
-                        android.Manifest.permission.CAMERA,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        android.Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Log.d("PERMISSION","All permissions are granted by user!");
-//                            Toast.makeText(AddXRayDeatilsActivity.this, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+//                            storagePermissionDialog();
+                            startActivity(new Intent(AddXRayDeatilsActivity.this,PermissionCheckActivity.class));
+                            Toast.makeText(AddXRayDeatilsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
                         }
 
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
-                            //openSettingsDialog();
+                            Toast.makeText(AddXRayDeatilsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(AddXRayDeatilsActivity.this,PermissionCheckActivity.class));
                         }
                     }
 
@@ -400,6 +408,63 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                 .check();
     }
 
+    private void storagePermissionDialog() {
+        storageDialog  = new Dialog(this);
+        storageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        storageDialog.setCancelable(false);
+        storageDialog.setContentView(R.layout.storage_permission_dialog);
+        storageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Button allow_BT = storageDialog.findViewById(R.id.allow_BT);
+        storageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        allow_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestMultiplePermissions();
+                storageDialog.dismiss();
+            }
+        });
+
+        storageDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = storageDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+    }
+
+    private void openSettingsDialog() {
+        settingDialog  = new Dialog(this);
+        settingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingDialog.setCancelable(false);
+        settingDialog.setContentView(R.layout.open_setting_dialog);
+        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Button open_setting_BT = settingDialog.findViewById(R.id.open_setting_BT);
+        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        open_setting_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        });
+
+        settingDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = settingDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+            requestMultiplePermissions();
+    }
 
     private void updateXray(UpdateXrayRequest updateXrayRequest) {
         ApiService<AddTestXRayResponse> service = new ApiService<>();

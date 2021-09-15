@@ -332,6 +332,8 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
                                 data.putString("appointment", "join");
                                 data.putString("appoint_link", String.valueOf((Uri.parse(appointmentListsJoin.get(joinPostion).getMeetingUrl()))));
                                 data.putString("toolbar_name", "ADD CLINIC");
+                                data.putString("pet_cat_id","1");
+
                                 petDetailsIntent.putExtras(data);
                                 startActivity(petDetailsIntent);
                             } else if (permissionId.equals("12")) {
@@ -428,6 +430,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
             data.putString("appointment", "join");
             data.putString("appoint_link", String.valueOf((Uri.parse(appointmentLists.get(position).getMeetingUrl()))));
             data.putString("toolbar_name", "ADD CLINIC");
+            data.putString("pet_cat_id","1");
             petDetailsIntent.putExtras(data);
             startActivity(petDetailsIntent);
         }
