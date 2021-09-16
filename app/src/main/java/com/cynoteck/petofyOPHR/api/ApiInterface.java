@@ -149,6 +149,7 @@ import com.cynoteck.petofyOPHR.response.updateVetDetailsresponse.UpdateVetRespon
 import com.google.gson.JsonObject;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -250,8 +251,12 @@ public interface ApiInterface {
 
     @Multipart
     @POST("document/UploadDocument")
-    Call<ImageResponse> uploadImages(@Header("Authorization") String auth,
-                                     @Part MultipartBody.Part file);
+    Call<ImageResponse> uploadImages(@Header("Authorization") String auth, @Part MultipartBody.Part file);
+
+    @Multipart
+    @POST("document/UploadDocument")
+    Call<ImageResponse> UploadDocument(@Header("Authorization") String auth, @Part MultipartBody.Part file,  @Part("filename") RequestBody name);
+
 
     @Multipart
     @POST("user/ChangeProfileImage")

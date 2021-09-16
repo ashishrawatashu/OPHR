@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -75,6 +76,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     Methods methods;
     Context context;
     ConstraintLayout general_details_CL,operating_hours_CL,change_password_CL,immunization_master_CL,bank_account_CL,privacy_CL,logout_CL;
+    private final int                          UPDATE = 3;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -89,18 +92,18 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         methods = new Methods(context);
 
         initialize();
-        getVetInfo();
+//        getVetInfo();
         switchOnline();
 
         return view;
     }
 
     private void getVetInfo() {
+
         Glide.with(this)
                 .load((Config.user_Veterian_url))
                 .placeholder(R.drawable.doctor_dummy_image)
                 .into(vet_profile_pic);
-
         vet_name_TV.setText(Config.user_Veterian_name);
         vet_study_TV.setText(Config.user_Veterian_study);
 
@@ -192,8 +195,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                 startActivity(changePass_intent);
                 break;
             case R.id.general_details_CL:
-                Intent veterian_full_profile_intent = new Intent(getContext(), ViewFullProfileVetActivity.class);
-                startActivity(veterian_full_profile_intent);
+                Intent parentFullProfileIntent = new Intent(getActivity(), ViewFullProfileVetActivity.class);
+                startActivityForResult(parentFullProfileIntent, UPDATE);
                 break;
 
             case R.id.operating_hours_CL:
@@ -258,13 +261,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     public void onResume() {
         super.onResume();
         getVetInfo();
-        if (Config.user_Veterian_online.equals("true")){
-            online_switch.setChecked(true);
-        }else {
-            online_switch.setChecked(false);
-        }
     }
+    @RequiresApi(api = Build.VERSION_CODES.FROYO)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+//        if (requestCode == UPDATE) {
+//            getVetInfo();
+//        }
+    }
     @Override
     public void onResponse(Response response, String key) {
         switch (key){

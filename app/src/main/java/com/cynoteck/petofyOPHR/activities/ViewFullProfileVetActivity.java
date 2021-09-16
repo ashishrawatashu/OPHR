@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -95,13 +96,9 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     SharedPreferences.Editor login_editor;
     Methods methods;
     UserResponse userResponse;
-    PetTypeListAdapter petTypeListAdapter;
     ServiceTypeListAdpater serviceTypeListAdpater;
     Dialog dialog;
-    private int GALLERY = 1, CAMERA = 2, USERUPDATION = 3;
-    Bitmap bitmap, thumbnail;
-    private static final String IMAGE_DIRECTORY = "/Picture";
-    File catfile1 = null;
+    private int USERUPDATION = 3;
     ArrayList<ServiceTypeList> petService;
     ArrayList<PetTypeList> petType;
     ShimmerFrameLayout vet_profile_shimmer;
@@ -113,7 +110,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     List<String> petTypeText;
     List<String> petTypeValue;
     MediaUtils mediaUtils;
-    String selctProflImage="0";
+    ProgressBar vet_image_progress_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +185,6 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         if (requestCode ==USERUPDATION){
             if (resultCode == RESULT_OK){
                 getUserDetails();
-
             }
         }else {
             mediaUtils.onActivityResult(requestCode, resultCode, data);
@@ -196,7 +192,8 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     }
 
     private void UploadImages(File absolutePath) {
-        methods.showCustomProgressBarDialog(this);
+//        methods.showCustomProgressBarDialog(this);
+        vet_image_progress_bar.setVisibility(View.VISIBLE);
         MultipartBody.Part userDpFilePart = null;
         if (absolutePath != null) {
             RequestBody userDpFile = RequestBody.create(MediaType.parse("image/*"), absolutePath);
@@ -277,6 +274,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     private void inilization() {
         image_edit_CV = findViewById(R.id.image_edit_CV);
 //        cover_image=findViewById(R.id.cover_image);
+        vet_image_progress_bar = findViewById(R.id.vet_image_progress_bar);
         vet_full_details_SV = findViewById(R.id.vet_full_details_SV);
         vet_profile_shimmer = findViewById(R.id.vet_profile_shimmer);
         vet_service_type_RV = findViewById(R.id.vet_service_type_RV);
@@ -447,7 +445,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
 
             case "UpdateProfileImage":
                 try {
-                    methods.customProgressDismiss();
+                    vet_image_progress_bar.setVisibility(View.GONE);
                     JsonObject jsonObject = new JsonObject();
                     jsonObject = (JsonObject) response.body();
                     int responseCode = Integer.parseInt(String.valueOf(jsonObject.getAsJsonObject("response").get("responseCode")));
@@ -569,6 +567,13 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override

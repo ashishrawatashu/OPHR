@@ -53,6 +53,7 @@ import com.cynoteck.petofyOPHR.response.totalStaffPetsAppointment.GetDashboardCo
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.UserResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.cynoteck.petofyOPHR.utils.VetDetailsSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -393,6 +394,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                     UserResponse userResponse = (UserResponse) response.body();
                     int responseCode = Integer.parseInt(userResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
+                        VetDetailsSingleton.getInstance().userResponse = (UserResponse) response.body();
                         icHome.setImageResource(R.drawable.home_active);
                         login_editor = sharedPreferences.edit();
                         login_editor.putString("profilePic", userResponse.getData().getProfileImageUrl());

@@ -4,6 +4,7 @@ import com.cynoteck.petofyOPHR.response.Header;
 import com.cynoteck.petofyOPHR.response.Response;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PetServiceResponse {
@@ -11,7 +12,7 @@ public class PetServiceResponse {
     private Header header;
 
     @SerializedName("data")
-    private List<PetServiceModel> data = null;
+    private ArrayList<PetServiceModel> data = null;
 
     private Response response;
 
@@ -23,11 +24,11 @@ public class PetServiceResponse {
         this.header = header;
     }
 
-    public List<PetServiceModel> getData() {
+    public ArrayList<PetServiceModel> getData() {
         return data;
     }
 
-    public void setData(List<PetServiceModel> data) {
+    public void setData(ArrayList<PetServiceModel> data) {
         this.data = data;
     }
 

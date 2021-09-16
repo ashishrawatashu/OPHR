@@ -38,6 +38,7 @@ import com.cynoteck.petofyOPHR.response.addHospitalizationResponse.Addhospitaliz
 import com.cynoteck.petofyOPHR.response.addPet.imageUpload.ImageResponse;
 import com.cynoteck.petofyOPHR.response.hospitalTypeListResponse.HospitalAddmissionTypeResp;
 import com.cynoteck.petofyOPHR.utils.Config;
+import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
 import com.google.android.material.card.MaterialCardView;
 import com.karumi.dexter.Dexter;
@@ -60,7 +61,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class AddHospitalizationDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse {
+public class AddHospitalizationDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse , MediaUtils.GetImg{
     EditText veterian_name_ET,veterian_phone_ET,hospital_name_ET,hospital_phone_ET,reson_of_hospitalization_ET,result_ET;
     Spinner hospital_type_spinner;
     TextView upload_doc_image_TV,  calenderTextView_admission_date,hospitalization_peto_edit_reg_number_dialog,
@@ -92,10 +93,12 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
     };
     private int                 DOC_UPLOAD=105;
     int front_status            = 0;
+    MediaUtils mediaUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hospitalization_deatils);
+        mediaUtils  = new MediaUtils(this);
         init();
     }
 
@@ -215,11 +218,12 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                 break;
 
             case R.id.upload_doc_image_upload_IV:
-                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent1.addCategory(Intent.CATEGORY_OPENABLE);
-                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-                intent1.setType("*application/pdf||*application/doc");
-                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
+//                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//                intent1.addCategory(Intent.CATEGORY_OPENABLE);
+//                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+//                intent1.setType("*application/pdf||*application/doc");
+//                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
+                mediaUtils.openGallery();
 
                 break;
             case R.id.save_BT:
@@ -428,12 +432,13 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==DOC_UPLOAD){
-            Uri uri = data.getData();
-            String fullPath = Commons.getPath(uri, this);
-            File file = new File(fullPath);
-            UploadImages(file);
-        }
+        mediaUtils.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode==DOC_UPLOAD){
+//            Uri uri = data.getData();
+//            String fullPath = Commons.getPath(uri, this);
+//            File file = new File(fullPath);
+//            UploadImages(file);
+//        }
     }
 
     private void UploadImages(File absolutePath) {
@@ -613,5 +618,14 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
     @Override
     public void onError(Throwable t, String key) {
         Log.e("Error",t.getLocalizedMessage());
+    }
+
+    @Override
+    public void imgdata(String imgPath) {
+        Log.d ("imgdata123" , imgPath.toString());
+        Uri selectedImageURI = null;
+        File imgFile = new File(imgPath);
+        Log.d ("imgdata: " , imgFile.toString());
+        UploadImages(imgFile);
     }
 }
