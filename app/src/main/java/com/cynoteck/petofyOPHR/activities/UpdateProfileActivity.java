@@ -58,6 +58,7 @@ import com.cynoteck.petofyOPHR.response.updateVetDetailsresponse.UpdateVetRespon
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
 import com.cynoteck.petofyOPHR.utils.ServiceTypeClicks;
+import com.cynoteck.petofyOPHR.utils.VetDetailsSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
@@ -122,6 +123,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
             strSrvcCatUpdt = "", strContrySpnr = "", strStateSpnr = "", strCitySpnr = "", strCountryId = "", strStringCityId = "",
             strStateId = "", strCatId = "", strSrvsCatId = "", strCatUrl1 = "", strCatUrl2 = "", strSrvsUrl1 = "", strSrvsUrl2 = "",
             strSrvsUrl3 = "", strSrvsUrl4 = "", strSrvsUrl5 = "", strClinicCode = "", intentService = "", intentType = "", strOnlineCharges = "10";
+
     BottomSheetDialog serviceType_BSD;
     CheckBox select_services_CB;
     ArrayList<PetServiceModel> petServiceModels = new ArrayList<>();
@@ -132,6 +134,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
         methods = new Methods(this);
+        Log.d("SERVICETYPE", methods.getRequestJson(VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList()));
 
 
 
@@ -199,6 +202,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
         //setImages();
         setValueFromSharePref();
+
 //        requestMultiplePermissions();
         if (methods.isInternetOn()) {
             getState();
@@ -667,6 +671,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     data.setCountryId(strCountryId);
                     data.setPostalCode(strPostlUpdt);
                     data.setSelectedPetTypeIds(strCatId);
+                    Log.d("strSrvsCatId",strSrvsCatId);
                     data.setSelectedServiceTypeIds(strSrvsCatId.substring(1));
                     data.setProfileImageUrl(Config.user_Veterian_url);
                     data.setServiceImageUrl("");
@@ -909,12 +914,12 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
             case R.id.select_services_CB:
                 if (select_services_CB.isChecked()){
-                    for (int i =0; i<petServiceModels.size();i++){
-                        petServiceModels.get(i).setIsActive(true);
+                    for (int i =0; i<VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().size();i++){
+                        VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(i).setStatus("1");
                     }
                 }else {
                     for (int i =0; i<petServiceModels.size();i++){
-                        petServiceModels.get(i).setIsActive(false);
+                        VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(i).setStatus("0");
                     }
                 }
                 serviceTypesAdapter.notifyDataSetChanged();
@@ -947,7 +952,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         checkBoxSelectAllCheck();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         choose_plan_RV.setLayoutManager(linearLayoutManager);
-        serviceTypesAdapter = new ServiceTypesAdapter(this,petServiceModels,this);
+        serviceTypesAdapter = new ServiceTypesAdapter(this,VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList(),this);
         choose_plan_RV.setAdapter(serviceTypesAdapter);
         serviceTypesAdapter.notifyDataSetChanged();
         serviceType_BSD.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -962,11 +967,12 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
     private void checkBoxSelectAllCheck() {
         strSrvsCatId = "";
-        petServiceModels.get(0).setIsActive(true);
+        VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(0).setStatus("1");
+//        petServiceModels.get(0).setIsActive(true);
         int count=0;
-        for (int i = 0;i<petServiceModels.size();i++){
-            if (petServiceModels.get(i).getIsActive()){
-                strSrvsCatId = strSrvsCatId+","+petServiceModels.get(i).getId();
+        for (int i = 0;i<VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().size();i++){
+            if (VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(i).getStatus().equals("1")){
+                strSrvsCatId = strSrvsCatId+","+VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(i).getValue();
                 count++;
             }
         }
@@ -1543,7 +1549,9 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onServiceTypeClicks(int position, boolean checkBox) {
-        
+    public void onServiceTypeClicks(int position, String status) {
+        Log.e("insurancePlanModels",status+"");
+        VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(position).setStatus(status);
+        checkBoxSelectAllCheck();
     }
 }

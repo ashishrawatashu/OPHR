@@ -11,20 +11,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.PetServiceModel;
+import com.cynoteck.petofyOPHR.response.updateProfileResponse.ServiceTypeList;
 import com.cynoteck.petofyOPHR.utils.ServiceTypeClicks;
 
 import java.util.ArrayList;
 
 public class ServiceTypesAdapter extends RecyclerView.Adapter<ServiceTypesAdapter.MyViewHolder> {
 
-    ArrayList<PetServiceModel> petServiceModels;
+    ArrayList<ServiceTypeList> petServiceModels;
     ServiceTypeClicks onServiceTypeClicks;
     Context context;
 
-    public ServiceTypesAdapter(Context context, ArrayList<PetServiceModel> petServiceModels, ServiceTypeClicks onServiceTypeClicks) {
+
+    public ServiceTypesAdapter(Context context, ArrayList<ServiceTypeList> petServiceModels, ServiceTypeClicks onServiceTypeClicks) {
         this.petServiceModels           = petServiceModels;
-        this.onServiceTypeClicks    = onServiceTypeClicks;
-        this.context            = context;
+        this.onServiceTypeClicks        = onServiceTypeClicks;
+        this.context                    = context;
     }
 
     @NonNull
@@ -38,14 +40,14 @@ public class ServiceTypesAdapter extends RecyclerView.Adapter<ServiceTypesAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ServiceTypesAdapter.MyViewHolder holder, final int position) {
-        holder.check_box_id.setText(petServiceModels.get(position).getServiceType1());
-        if (petServiceModels.get(position).getId()==1.0){
+        holder.check_box_id.setText(petServiceModels.get(position).getText());
+        if (petServiceModels.get(position).getStatus().equals("1")){
             holder.check_box_id.setChecked(true);
-            holder.check_box_id.setClickable(false);
-            holder.check_box_id.setFocusable(false);
-            petServiceModels.get(position).setIsActive(true);
+//            holder.check_box_id.setClickable(false);
+//            holder.check_box_id.setFocusable(false);
+            petServiceModels.get(position).setStatus("1");
         }
-        if (petServiceModels.get(position).getIsActive()){
+        if (petServiceModels.get(position).getStatus().equals("1")){
             holder.check_box_id.setChecked(true);
         }else {
             holder.check_box_id.setChecked(false);
@@ -74,11 +76,11 @@ public class ServiceTypesAdapter extends RecyclerView.Adapter<ServiceTypesAdapte
                 public void onClick(View v) {
                     if (onServiceTypeClicks!=null){
                         if (check_box_id.isChecked()){
-                            petServiceModels.get(getAdapterPosition()).setIsActive(true);
-                            onServiceTypeClicks.onServiceTypeClicks(getAdapterPosition(),true);
+                            petServiceModels.get(getAdapterPosition()).getStatus().equals("1");
+                            onServiceTypeClicks.onServiceTypeClicks(getAdapterPosition(),"1");
                         }else {
-                            petServiceModels.get(getAdapterPosition()).setIsActive(false);
-                            onServiceTypeClicks.onServiceTypeClicks(getAdapterPosition(),false);
+                            petServiceModels.get(getAdapterPosition()).getStatus().equals("0");
+                            onServiceTypeClicks.onServiceTypeClicks(getAdapterPosition(),"0");
                         }
                     }
                 }

@@ -60,6 +60,7 @@ import com.cynoteck.petofyOPHR.response.updateProfileResponse.UserResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.cynoteck.petofyOPHR.utils.VetDetailsSingleton;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.JsonObject;
@@ -312,6 +313,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                     userResponse = (UserResponse) response.body();
                     int responseCode = Integer.parseInt(userResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
+                        VetDetailsSingleton.getInstance().userResponse = (UserResponse) response.body();
                         Log.e("stydy",userResponse.getData().getVetQualifications());
                         petService = new ArrayList<>();
                         petServiceText = new ArrayList<>();
