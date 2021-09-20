@@ -1,12 +1,14 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -33,9 +35,12 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.cynoteck.petofyOPHR.R;
+import com.cynoteck.petofyOPHR.adapters.ServiceTypesAdapter;
 import com.cynoteck.petofyOPHR.api.ApiClient;
 import com.cynoteck.petofyOPHR.api.ApiResponse;
 import com.cynoteck.petofyOPHR.api.ApiService;
@@ -44,6 +49,7 @@ import com.cynoteck.petofyOPHR.params.updateRequest.getValue.UpdateRequest;
 import com.cynoteck.petofyOPHR.response.addPet.imageUpload.ImageResponse;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.CityResponse;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.CountryResponse;
+import com.cynoteck.petofyOPHR.response.updateProfileResponse.PetServiceModel;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.PetServiceResponse;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.PetTypeResponse;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.StateResponse;
@@ -51,6 +57,9 @@ import com.cynoteck.petofyOPHR.response.updateProfileResponse.UserResponse;
 import com.cynoteck.petofyOPHR.response.updateVetDetailsresponse.UpdateVetResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.cynoteck.petofyOPHR.utils.ServiceTypeClicks;
+import com.cynoteck.petofyOPHR.utils.VetDetailsSingleton;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
@@ -75,7 +84,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class UpdateProfileActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse, TextWatcher {
+public class UpdateProfileActivity extends AppCompatActivity implements View.OnClickListener, ServiceTypeClicks, ApiResponse, TextWatcher {
     ProgressBar horizontal_progress_bar;
     EditText first_name_updt, last_name_updt, email_updt, phone_updt, address_updt, online_charges_ET,
             postal_code_updt, website_updt, social_media_url_updt, registration_num_updt, clinicCode_updt,
@@ -114,11 +123,18 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
             strSrvcCatUpdt = "", strContrySpnr = "", strStateSpnr = "", strCitySpnr = "", strCountryId = "", strStringCityId = "",
             strStateId = "", strCatId = "", strSrvsCatId = "", strCatUrl1 = "", strCatUrl2 = "", strSrvsUrl1 = "", strSrvsUrl2 = "",
             strSrvsUrl3 = "", strSrvsUrl4 = "", strSrvsUrl5 = "", strClinicCode = "", intentService = "", intentType = "", strOnlineCharges = "10";
+
+    BottomSheetDialog serviceType_BSD;
+    CheckBox select_services_CB;
+    ArrayList<PetServiceModel> petServiceModels = new ArrayList<>();
+    ServiceTypesAdapter serviceTypesAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
         methods = new Methods(this);
+        Log.d("SERVICETYPE", methods.getRequestJson(VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList()));
 
 
 
@@ -186,6 +202,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
         //setImages();
         setValueFromSharePref();
+
 //        requestMultiplePermissions();
         if (methods.isInternetOn()) {
             getState();
@@ -198,26 +215,6 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         }
 
     }
-//    -----------------------------------------------------------------------------------------------------------------
-//    private void content()
-//    {
-//        refresh(50);
-//    }
-
-//    private void refresh(int mill)
-//    {
-//        Handler handler=new Handler();
-//        final Runnable runnable=new Runnable() {
-//            @Override
-//            public void run() {
-//                content();
-//
-//            }
-//        };
-//
-//    }
-//
-//--------------------------------------------------------------------------------------------------------------
     private void getState() {
         methods.showCustomProgressBarDialog(this);
         ApiService<StateResponse> service = new ApiService<>();
@@ -325,6 +322,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -430,13 +428,13 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     clinicCode_updt.setError(null);
                     description_updt.setError(null);
                     clinic_name_updt.setError(null);
-                } else if (strPhUpdt.isEmpty()) {
+                } else if (strPhUpdt.length()!= 10) {
                     select_Category.setError(null);
                     select_service_Category.setError(null);
                     first_name_updt.setError(null);
                     last_name_updt.setError(null);
                     email_updt.setError(null);
-                    phone_updt.setError("Phone number is empty");
+                    phone_updt.setError("Invalid phone no!");
                     address_updt.setError(null);
                     postal_code_updt.setError(null);
                     website_updt.setError(null);
@@ -673,7 +671,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     data.setCountryId(strCountryId);
                     data.setPostalCode(strPostlUpdt);
                     data.setSelectedPetTypeIds(strCatId);
-                    data.setSelectedServiceTypeIds(strSrvsCatId);
+                    Log.d("strSrvsCatId",strSrvsCatId);
+                    data.setSelectedServiceTypeIds(strSrvsCatId.substring(1));
                     data.setProfileImageUrl(Config.user_Veterian_url);
                     data.setServiceImageUrl("");
                     data.setFirstServiceImageUrl(strSrvsUrl1);
@@ -833,74 +832,75 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.select_service_Category:
-                strSrvsCatId = "";
-                select_service_Category.setText("Set Services");
-                AlertDialog.Builder mBuilderr = new AlertDialog.Builder(this);
-                mBuilderr.setTitle("Items available in a shop");
-                mBuilderr.setMultiChoiceItems(serviceCategory, chkItemsSevice, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
-                        if (isChecked) {
-                            if (!muserItemService.contains(position)) {
-                                muserItemService.add(position);
-                            }
-                        } else if (muserItemService.contains(position)) {
-                            muserItemService.remove(position);
-                        }
-                    }
-                });
-
-                mBuilderr.setCancelable(false);
-                mBuilderr.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        String item = "";
-                        for (int i = 0; i < muserItemService.size(); i++) {
-                            item = item + serviceCategory[muserItemService.get(i)];
-                            strSrvsCatId = strSrvsCatId + servcCatHasmap.get(serviceCategory[muserItemService.get(i)]);
-                            if (i != muserItemService.size() - 1) ;
-                            {
-                                item = item + ", ";
-                                strSrvsCatId = strSrvsCatId + ",";
-                            }
-                        }
-                        strSrvsCatId = methods.removeLastElement(strSrvsCatId);
-                        Log.d("Selected_item_category", "" + item);
-                        if (item.equals("")) {
-                            select_service_Category.setText("Set Services");
-                            int progress = horizontal_progress_bar.getProgress();
-                            progress = progress - 7;
-                            setProgressStatus(progress);
-                        } else {
-                            select_service_Category.setText(item);
-                            int progress = horizontal_progress_bar.getProgress();
-                            progress = progress + 7;
-                            setProgressStatus(progress);
-                        }
-                    }
-                });
-
-                mBuilderr.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-
-                mBuilderr.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        for (int i = 0; i < chkItemsSevice.length; i++) {
-                            chkItemsSevice[i] = false;
-                            muserItemService.clear();
-                            listServiceCatId.clear();
-                            select_service_Category.setText("Set Sevices");
-                        }
-                    }
-                });
-
-                AlertDialog mDialogg = mBuilderr.create();
-                mDialogg.show();
+                showPlansDialog();
+//                strSrvsCatId = "";
+//                select_service_Category.setText("Set Services");
+//                AlertDialog.Builder mBuilderr = new AlertDialog.Builder(this);
+//                mBuilderr.setTitle("Items available in a shop");
+//                mBuilderr.setMultiChoiceItems(serviceCategory, chkItemsSevice, new DialogInterface.OnMultiChoiceClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+//                        if (isChecked) {
+//                            if (!muserItemService.contains(position)) {
+//                                muserItemService.add(position);
+//                            }
+//                        } else if (muserItemService.contains(position)) {
+//                            muserItemService.remove(position);
+//                        }
+//                    }
+//                });
+//
+//                mBuilderr.setCancelable(false);
+//                mBuilderr.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int which) {
+//                        String item = "";
+//                        for (int i = 0; i < muserItemService.size(); i++) {
+//                            item = item + serviceCategory[muserItemService.get(i)];
+//                            strSrvsCatId = strSrvsCatId + servcCatHasmap.get(serviceCategory[muserItemService.get(i)]);
+//                            if (i != muserItemService.size() - 1) ;
+//                            {
+//                                item = item + ", ";
+//                                strSrvsCatId = strSrvsCatId + ",";
+//                            }
+//                        }
+//                        strSrvsCatId = methods.removeLastElement(strSrvsCatId);
+//                        Log.d("Selected_item_category", "" + item);
+//                        if (item.equals("")) {
+//                            select_service_Category.setText("Set Services");
+//                            int progress = horizontal_progress_bar.getProgress();
+//                            progress = progress - 7;
+//                            setProgressStatus(progress);
+//                        } else {
+//                            select_service_Category.setText(item);
+//                            int progress = horizontal_progress_bar.getProgress();
+//                            progress = progress + 7;
+//                            setProgressStatus(progress);
+//                        }
+//                    }
+//                });
+//
+//                mBuilderr.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.dismiss();
+//                    }
+//                });
+//
+//                mBuilderr.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int which) {
+//                        for (int i = 0; i < chkItemsSevice.length; i++) {
+//                            chkItemsSevice[i] = false;
+//                            muserItemService.clear();
+//                            listServiceCatId.clear();
+//                            select_service_Category.setText("Set Sevices");
+//                        }
+//                    }
+//                });
+//
+//                AlertDialog mDialogg = mBuilderr.create();
+//                mDialogg.show();
                 break;
 
             case R.id.logout_CV:
@@ -910,6 +910,21 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                 editor.apply();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
+                break;
+
+            case R.id.select_services_CB:
+                if (select_services_CB.isChecked()){
+                    for (int i =0; i<VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().size();i++){
+                        VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(i).setStatus("1");
+                    }
+                }else {
+                    for (int i =0; i<petServiceModels.size();i++){
+                        VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(i).setStatus("0");
+                    }
+                }
+                serviceTypesAdapter.notifyDataSetChanged();
+                checkBoxSelectAllCheck();
+
                 break;
         }
 
@@ -923,6 +938,51 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 
         Log.e("DATALOG", "checkUpdate=> " + methods.getRequestJson(updateRequest));
 //        Log.e("DATALOG", "checkUpdate=> " + methods);
+
+    }
+    private void showPlansDialog() {
+        serviceType_BSD = new BottomSheetDialog(this);
+        serviceType_BSD.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        serviceType_BSD.setCancelable(true);
+        serviceType_BSD.setContentView(R.layout.service_type_dialog_layout);
+        select_services_CB                     = serviceType_BSD.findViewById(R.id.select_services_CB);
+        ImageView       cross_IV                = serviceType_BSD.findViewById(R.id.cross_IV);
+        RecyclerView choose_plan_RV          = serviceType_BSD.findViewById(R.id.choose_plan_RV);
+        select_services_CB.setOnClickListener(this);
+        checkBoxSelectAllCheck();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        choose_plan_RV.setLayoutManager(linearLayoutManager);
+        serviceTypesAdapter = new ServiceTypesAdapter(this,VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList(),this);
+        choose_plan_RV.setAdapter(serviceTypesAdapter);
+        serviceTypesAdapter.notifyDataSetChanged();
+        serviceType_BSD.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        cross_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                serviceType_BSD.dismiss();
+            }
+        });
+        serviceType_BSD.show();
+    }
+
+    private void checkBoxSelectAllCheck() {
+        strSrvsCatId = "";
+        VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(0).setStatus("1");
+//        petServiceModels.get(0).setIsActive(true);
+        int count=0;
+        for (int i = 0;i<VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().size();i++){
+            if (VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(i).getStatus().equals("1")){
+                strSrvsCatId = strSrvsCatId+","+VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(i).getValue();
+                count++;
+            }
+        }
+        if (petServiceModels.size()==count){
+            select_services_CB.setChecked(true);
+        }else {
+            select_services_CB.setChecked(false);
+        }
+
+        select_service_Category.setText("Selected Category ("+count+")");
 
     }
 
@@ -1067,15 +1127,16 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     PetServiceResponse petServiceResponse = (PetServiceResponse) response.body();
                     int responseCode = Integer.parseInt(petServiceResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
-//                        Toast.makeText(UpdateProfileActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                        serviceCategory = new String[petServiceResponse.getData().size()];
-                        Log.d("lalal", "" + petServiceResponse.getData().size());
-                        for (int i = 0; i < petServiceResponse.getData().size(); i++) {
-                            Log.d("petttt", "" + petServiceResponse.getData().get(i).getServiceType1());
-                            serviceCategory[i] = petServiceResponse.getData().get(i).getServiceType1();
-                            servcCatHasmap.put(petServiceResponse.getData().get(i).getServiceType1(), petServiceResponse.getData().get(i).getId());
-                        }
-                        chkItemsSevice = new boolean[serviceCategory.length];
+                        petServiceModels  = petServiceResponse.getData();
+//                        serviceCategory = new String[petServiceResponse.getData().size()];
+//                        Log.d("lalal", "" + methods.getRequestJson(petServiceResponse));
+//
+//                        for (int i = 0; i < petServiceResponse.getData().size(); i++) {
+//                            Log.d("petttt", "" + petServiceResponse.getData().get(i).getServiceType1());
+//                            serviceCategory[i] = petServiceResponse.getData().get(i).getServiceType1();
+//                            servcCatHasmap.put(petServiceResponse.getData().get(i).getServiceType1(), petServiceResponse.getData().get(i).getId());
+//                        }
+//                        chkItemsSevice = new boolean[serviceCategory.length];
 
                     } else if (responseCode == 614) {
                         Toast.makeText(UpdateProfileActivity.this, petServiceResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -1090,9 +1151,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
             case "UpdateVeterinarian":
                 try {
                     Log.d("UpdateVeterinarian", String.valueOf(response.code()));
-//                    Log.d("ttttt", response.body().toString());
                     UpdateVetResponse userResponse = (UpdateVetResponse) response.body();
-//                    Log.d("updateCode", String.valueOf(userResponse));
                     int responseCode = Integer.parseInt(userResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
                         Toast.makeText(UpdateProfileActivity.this, "Updated", Toast.LENGTH_SHORT).show();
@@ -1487,5 +1546,12 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    @Override
+    public void onServiceTypeClicks(int position, String status) {
+        Log.e("insurancePlanModels",status+"");
+        VetDetailsSingleton.getInstance().userResponse.getData().getServiceTypeList().get(position).setStatus(status);
+        checkBoxSelectAllCheck();
     }
 }

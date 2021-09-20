@@ -149,6 +149,7 @@ import com.cynoteck.petofyOPHR.response.updateVetDetailsresponse.UpdateVetRespon
 import com.google.gson.JsonObject;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -250,8 +251,12 @@ public interface ApiInterface {
 
     @Multipart
     @POST("document/UploadDocument")
-    Call<ImageResponse> uploadImages(@Header("Authorization") String auth,
-                                     @Part MultipartBody.Part file);
+    Call<ImageResponse> uploadImages(@Header("Authorization") String auth, @Part MultipartBody.Part file);
+
+    @Multipart
+    @POST("document/UploadDocument")
+    Call<ImageResponse> UploadDocument(@Header("Authorization") String auth, @Part MultipartBody.Part file,  @Part("filename") RequestBody name);
+
 
     @Multipart
     @POST("user/ChangeProfileImage")
@@ -279,6 +284,13 @@ public interface ApiInterface {
     Call<GetReportsTypeResponse> getReportsType(@Header("Authorization") String auth);
 
     //GetRecomender Vaccine
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("user/GetImmunizationMasterStatus")
+    Call<JsonObject> getImmunizationMasterStatus(@Header("Authorization") String auth);
+
+
+
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @POST("immunization/GetRecommendedVaccine")
     Call<ImmunizationVaccineResponse> getRecommendedVaccine(@Header("Authorization") String auth, @Body ImmunizationRequestt immunizationRequestt);
@@ -571,6 +583,10 @@ public interface ApiInterface {
     @POST("pethealthrecord/ViewPetVaccination")
     Call<PetImmunizationRecordResponse> viewPetVaccination(@Header("Authorization") String auth, @Body ImmunizationRequest immunizationRequest);
    // Call<JsonObject> viewPetVaccination(@Header("Authorization") String auth, @Body ImmunizationRequest immunizationRequest);
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("pethealthrecord/ViewPetLastPrescriptionId")
+    Call<PetImmunizationRecordResponse> viewPetLastPrescriptionId(@Header("Authorization") String auth, @Body ImmunizationRequest immunizationRequest);
 
     //Bank Account .........................................
 

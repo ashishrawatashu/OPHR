@@ -1,5 +1,6 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -28,6 +29,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -96,7 +98,7 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
     ImageView new_pet_search, cancel_IV;
     TextView pet_parent_TV, appointment_headline, calenderTextViewAppointDt, pet_parent_Details, time_TV, parent_TV, cancelOtpDialog, pet_details_TV;
     EditText title_ET, duration_TV, description_ET;
-    EditText pet_parent_ET;
+    TextView pet_parent_ET;
     ConstraintLayout pet_search_layout;
     Methods methods;
     ArrayList<GetPetParentListData> petParent = new ArrayList<>();
@@ -117,8 +119,10 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
     ArrayList<String> purpose;
     com.cynoteck.petofyOPHR.adapters.SearchAdapter SearchAdapter;
     boolean stopShowPetList = true;
+    ProgressBar search_pet_PB;
 
     ArrayList<PetList> profileList = new ArrayList<>();
+    final int SEARCH_PET = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +142,7 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
         purpose.add("Deworming");
         purpose.add("Routine health check up");
         purpose.add("Skin, coat & hair related problems");
-        purpose.add("Diarrhea, Vomitting, other stomach realted problems");
+        purpose.add("Diarrhea, Vomiting, other stomach related problems");
         purpose.add("Eye check up");
         purpose.add("Dental check up");
         purpose.add("Other");
@@ -151,7 +155,8 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
             time_TV.setText(currentTime);
             duration_TV.setText("15");
         } else if (type.equals("update")) {
-            pet_parent_ET.setEnabled(false);
+            new_pet_search.setVisibility(View.GONE);
+            cancel_IV.setVisibility(View.GONE);
             pet_search_layout.setVisibility(View.VISIBLE);
             add_pet_CV.setVisibility(View.INVISIBLE);
 //            pet_parent_Details.setVisibility(View.VISIBLE);
@@ -258,6 +263,7 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
         pet_search_RV = findViewById(R.id.pet_search_RV);
         purpose_spinner = findViewById(R.id.purpose_spinner);
         back_arrow_CV = findViewById(R.id.back_arrow_CV);
+        search_pet_PB = findViewById(R.id.search_pet_PB);
         appointment_headline = findViewById(R.id.appointment_headline);
         calenderTextViewAppointDt = findViewById(R.id.calenderTextViewAppointDt);
         time_TV = findViewById(R.id.time_TV);
@@ -266,7 +272,6 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
         duration_TV = findViewById(R.id.duration_TV);
         description_ET = findViewById(R.id.description_ET);
         pet_parent_ET = findViewById(R.id.pet_parent_ET);
-        pet_parent_Details = findViewById(R.id.pet_parent_ET);
         create_appointment_BT = findViewById(R.id.create_appointment_BT);
         parent_TV = findViewById(R.id.parent_TV);
         add_pet_CV = findViewById(R.id.add_pet_CV);
@@ -281,7 +286,9 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
         create_appointment_BT.setOnClickListener(this);
         calenderTextViewAppointDt.setOnClickListener(this);
         cancel_IV.setOnClickListener(this);
+        pet_search_layout.setOnClickListener(this);
         time_TV.setOnClickListener(this);
+        pet_parent_ET.setOnClickListener(this);
         pet_parent_ET.addTextChangedListener(this);
         visit_type_SC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -299,51 +306,63 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
     }
 
     private void searchPet() {
-        pet_parent_ET.addTextChangedListener(new TextWatcher() {
-            long lastChange = 0;
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, final int start, int before, final int count) {
-                if (charSequence.length() > 1) {
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            if (System.currentTimeMillis() - lastChange >= 300) {
-                                //send request
-                                if (methods.isInternetOn()) {
-                                    pet_search_RV.setVisibility(View.GONE);
-                                    if (!pet_parent_ET.getText().toString().equals("")) {
-                                        getPetList(pet_parent_ET.getText().toString());
-                                    }
-                                } else {
-                                    methods.DialogInternet();
-                                }
-                            }
-                        }
-                    }, 300);
-                    lastChange = System.currentTimeMillis();
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-
-            }
-        });
+//        pet_parent_ET.addTextChangedListener(new TextWatcher() {
+//            long lastChange = 0;
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, final int start, int before, final int count) {
+//                if (charSequence.length() > 1) {
+//                    new Handler().postDelayed(new Runnable() {
+//                        public void run() {
+//                            if (System.currentTimeMillis() - lastChange >= 300) {
+//                                //send request
+//                                if (methods.isInternetOn()) {
+//                                    pet_search_RV.setVisibility(View.GONE);
+//                                    if (!pet_parent_ET.getText().toString().equals("")) {
+//                                        getPetList(pet_parent_ET.getText().toString());
+//                                    }
+//                                } else {
+//                                    methods.DialogInternet();
+//                                }
+//                            }
+//                        }
+//                    }, 300);
+//                    lastChange = System.currentTimeMillis();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//
+//            }
+//        });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
+            case R.id.new_pet_search:
+
+            case R.id.pet_parent_ET:
+                Intent searchPetActivity = new Intent(this, SearchActivity.class);
+                searchPetActivity.putExtra("intentFrom","Appointment");
+                startActivityForResult(searchPetActivity, SEARCH_PET);
+                break;
+
             case R.id.cancel_IV:
-                pet_parent_ET.getText().clear();
+                pet_parent_ET.setText("");
+                userID = "";
+                new_pet_search.setVisibility(View.VISIBLE);
+                search_pet_PB.setVisibility(View.GONE);
+                cancel_IV.setVisibility(View.GONE);
                 break;
             case R.id.submit_parent_otp:
                 String otp = pet_parent_otp.getText().toString();
@@ -369,76 +388,90 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
                 otpDialog.dismiss();
                 break;
 
-            case R.id.new_pet_search:
-                if ((pet_parent_ET.getText().toString().isEmpty()) || (petUniueId.contains(pet_parent_ET.getText().toString()) == false)) {
-                    Toast.makeText(this, "Data Not Found", Toast.LENGTH_SHORT).show();
-                } else {
-                    String petoUniqueIdSplit = pet_parent_ET.getText().toString().substring(0, 4);
-                    Log.d("petoUniqueIdSplit", "" + petoUniqueIdSplit);
-                    if (petoUniqueIdSplit.equals("PETO")) {
-                        if (petUniueId.contains(pet_parent_ET.getText().toString()) == true) {
-                            InputMethodManager imm1 = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm1.hideSoftInputFromWindow(pet_parent_ET.getWindowToken(), 0);
-                            String value = petExistingSearch.get(pet_parent_ET.getText().toString());
-                            Log.d("kakakka", "" + value);
-                            StringTokenizer st = new StringTokenizer(value, ",");
-                            String PetUniqueId = st.nextToken();
-                            String PetName = st.nextToken();
-                            String PetParentName = st.nextToken();
-                            String PetSex = st.nextToken();
-                            String petAge = st.nextToken();
-                            String Id = st.nextToken();
-                            Log.d("ppppp", "" + PetUniqueId + " " + PetName + " " + PetParentName + " " + PetSex + " " + petAge + " " + Id);
-                            Intent petDetailsIntent = new Intent(this.getApplication(), PetDetailsActivity.class);
-                            Bundle data = new Bundle();
-                            data.putString("pet_id", Id);
-                            data.putString("pet_name", PetName);
-                            data.putString("pet_parent", PetParentName);
-                            data.putString("pet_sex", PetSex);
-                            data.putString("pet_age", petAge);
-                            data.putString("pet_unique_id", PetUniqueId);
-                            petDetailsIntent.putExtras(data);
-                            startActivity(petDetailsIntent);
-                        } else {
+//            case R.id.new_pet_search:
+//                if (methods.isInternetOn()) {
+//                    pet_search_RV.setVisibility(View.GONE);
+//                    if (!pet_parent_ET.getText().toString().equals("")) {
+//                        new_pet_search.setVisibility(View.GONE);
+//                        search_pet_PB.setVisibility(View.VISIBLE);
+//                        cancel_IV.setVisibility(View.GONE);
+//                        getPetList(pet_parent_ET.getText().toString());
+//                    }else {
+//                        Toast.makeText(AddUpdateAppointmentActivity.this, "Enter Pet Details ", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    methods.DialogInternet();
+//                }
 
-                            Log.d("Add Anotheer Veterian", "vet");
-                            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                            alertDialog.setTitle("Are you sure?");
-                            alertDialog.setMessage("This pet is not registered with you. Do you want to add ?");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            InPetRegisterRequest inPetRegisterRequest = new InPetRegisterRequest();
-                                            InPetregisterParams inPetregisterParams = new InPetregisterParams();
-                                            Log.d("kkakakka", "" + pet_parent_ET.getText().toString());
-                                            inPetregisterParams.setUniqueId(pet_parent_ET.getText().toString());
-                                            inPetRegisterRequest.setData(inPetregisterParams);
-                                            if (methods.isInternetOn()) {
-                                                chkVetInregister(inPetRegisterRequest);
-                                                clearSearch();
-                                            } else {
-                                                methods.DialogInternet();
-                                            }
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            dialogInterface.dismiss();
-                                        }
-                                    });
-                            alertDialog.show();
-                        }
-                    } else {
-                        pet_parent_ET.requestFocus();
-                        InputMethodManager imm1 = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm1.showSoftInput(pet_parent_ET, InputMethodManager.SHOW_IMPLICIT);
-                    }
-                }
+//                if ((pet_parent_ET.getText().toString().isEmpty()) || (petUniueId.contains(pet_parent_ET.getText().toString()) == false)) {
+//                    Toast.makeText(this, "Data Not Found", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    String petoUniqueIdSplit = pet_parent_ET.getText().toString().substring(0, 4);
+//                    Log.d("petoUniqueIdSplit", "" + petoUniqueIdSplit);
+//                    if (petoUniqueIdSplit.equals("PETO")) {
+//                        if (petUniueId.contains(pet_parent_ET.getText().toString()) == true) {
+//                            InputMethodManager imm1 = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm1.hideSoftInputFromWindow(pet_parent_ET.getWindowToken(), 0);
+//                            String value = petExistingSearch.get(pet_parent_ET.getText().toString());
+//                            Log.d("kakakka", "" + value);
+//                            StringTokenizer st = new StringTokenizer(value, ",");
+//                            String PetUniqueId = st.nextToken();
+//                            String PetName = st.nextToken();
+//                            String PetParentName = st.nextToken();
+//                            String PetSex = st.nextToken();
+//                            String petAge = st.nextToken();
+//                            String Id = st.nextToken();
+//                            Log.d("ppppp", "" + PetUniqueId + " " + PetName + " " + PetParentName + " " + PetSex + " " + petAge + " " + Id);
+//                            Intent petDetailsIntent = new Intent(this.getApplication(), PetDetailsActivity.class);
+//                            Bundle data = new Bundle();
+//                            data.putString("pet_id", Id);
+//                            data.putString("pet_name", PetName);
+//                            data.putString("pet_parent", PetParentName);
+//                            data.putString("pet_sex", PetSex);
+//                            data.putString("pet_age", petAge);
+//                            data.putString("pet_unique_id", PetUniqueId);
+//                            petDetailsIntent.putExtras(data);
+//                            startActivity(petDetailsIntent);
+//                        } else {
+//
+//                            Log.d("Add Anotheer Veterian", "vet");
+//                            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+//                            alertDialog.setTitle("Are you sure?");
+//                            alertDialog.setMessage("This pet is not registered with you. Do you want to add ?");
+//                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            InPetRegisterRequest inPetRegisterRequest = new InPetRegisterRequest();
+//                                            InPetregisterParams inPetregisterParams = new InPetregisterParams();
+//                                            Log.d("kkakakka", "" + pet_parent_ET.getText().toString());
+//                                            inPetregisterParams.setUniqueId(pet_parent_ET.getText().toString());
+//                                            inPetRegisterRequest.setData(inPetregisterParams);
+//                                            if (methods.isInternetOn()) {
+//                                                chkVetInregister(inPetRegisterRequest);
+//                                                clearSearch();
+//                                            } else {
+//                                                methods.DialogInternet();
+//                                            }
+//                                            dialog.dismiss();
+//                                        }
+//                                    });
+//                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",
+//                                    new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(DialogInterface dialogInterface, int i) {
+//                                            dialogInterface.dismiss();
+//                                        }
+//                                    });
+//                            alertDialog.show();
+//                        }
+//                    } else {
+//                        pet_parent_ET.requestFocus();
+//                        InputMethodManager imm1 = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm1.showSoftInput(pet_parent_ET, InputMethodManager.SHOW_IMPLICIT);
+//                    }
+//                }
 
-                break;
+//                break;
 
             case R.id.add_pet_CV:
                 Intent adNewIntent = new Intent(this, AddNewPetActivity.class);
@@ -598,7 +631,6 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
     }
 
     private void clearSearch() {
-        pet_parent_ET.getText().clear();
 //        search_boxRL.setVisibility(View.GONE);
 //        back_arrow_IV_new_entry.setVisibility(View.GONE);
 //        staff_headline_TV.setVisibility(View.VISIBLE);
@@ -688,9 +720,9 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 cancel_IV.setVisibility(View.VISIBLE);
+                new_pet_search.setVisibility(View.GONE);
+                cancel_IV.setVisibility(View.VISIBLE);
                 pet_search_layout.setVisibility(View.VISIBLE);
-//                parent_TV.setVisibility(View.VISIBLE);
-//                pet_parent_Details.setVisibility(View.VISIBLE);
                 pet_details_TV.setVisibility(View.GONE);
                 petId = data.getStringExtra("petId");
                 userID = data.getStringExtra("userId");
@@ -702,6 +734,19 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
                 petName = data.getStringExtra("petName");
                 pet_parent_ET.setText(petUniqueID + ":-" + petName + "(" + petSex + "," + petParentString + ")");
 
+            }
+        }else if (requestCode == SEARCH_PET){
+            if (resultCode == RESULT_OK) {
+                cancel_IV.setVisibility(View.GONE);
+                new_pet_search.setVisibility(View.GONE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                petId = data.getStringExtra("petId");
+                userID = data.getStringExtra("userID");
+                String petDetails = data.getStringExtra("petName") + " ( " + data.getStringExtra("PetUniqueId") + " )";
+                pet_parent_ET.setText(petDetails);
+                pet_search_RV.setVisibility(View.GONE);
+                cancel_IV.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -715,12 +760,15 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
         switch (key) {
             case "GetPetListBySearch":
                 try {
+                    new_pet_search.setVisibility(View.GONE);
+                    search_pet_PB.setVisibility(View.GONE);
+                    cancel_IV.setVisibility(View.VISIBLE);
                     GetPetListResponse getPetListResponse = (GetPetListResponse) arg0.body();
                     int responseCode = Integer.parseInt(getPetListResponse.getResponse().getResponseCode());
                     profileList.clear();
                     if (responseCode == 109) {
                         if (getPetListResponse.getData().getPetList().isEmpty()) {
-//                            Toast.makeText(this, "Pet Not Exist !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Pet Not Exist !", Toast.LENGTH_SHORT).show();
                         }
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddUpdateAppointmentActivity.this);
                         pet_search_RV.setLayoutManager(linearLayoutManager);
@@ -860,7 +908,7 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
                     int responseCode = Integer.parseInt(appointmentDetailsResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
                         userID = appointmentDetailsResponse.getData().getUserId();
-                        pet_parent_ET.setText(appointmentDetailsResponse.getData().getPetParent().getFullName());
+//                        pet_parent_ET.setText(appointmentDetailsResponse.getData().getPetParent().getFullName());
                         title_ET.setText(appointmentDetailsResponse.getData().getTitle());
                         dateString = appointmentDetailsResponse.getData().getEventStartDate().substring(0, 10);
                         Log.d("time", dateString);
@@ -1076,23 +1124,11 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
 
     @Override
     public void onViewDetailsClick(int position) {
-//        petDetails(profileList.get(position).getId());
-        pet_parent_ET.clearFocus();
-//        pet_parent_ET.setInputType(InputType.TYPE_NULL);
-//        pet_parent_ET.setCursorVisible(false);
-//        pet_parent_ET.setFocusableInTouchMode(false);
-//        pet_parent_ET.setFocusable(false);
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         petId = profileList.get(position).getId();
         userID = profileList.get(position).getUserId();
-        String petDetails = profileList.get(position).getPetName() + " ( " + profileList.get(position).getPetCategory()
-                + " , " + profileList.get(position).getPetSex()
-                + " , " + profileList.get(position).getPetBreed() + "),"
-                + " " + profileList.get(position).getPetParentName() + " ,(" + profileList.get(position).getContactNumber() + " )";
-//        parent_TV.setVisibility(View.VISIBLE);
-//        pet_parent_TV.setVisibility(View.VISIBLE);
-//        parent_TV.setText(petDetails);
+        String petDetails = profileList.get(position).getPetName() + " ( " + profileList.get(position).getPetUniqueId()+" )";
         pet_parent_ET.setText(petDetails);
         pet_search_RV.setVisibility(View.GONE);
         cancel_IV.setVisibility(View.VISIBLE);

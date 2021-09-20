@@ -108,6 +108,7 @@
                 android:background="@drawable/edit_text_background"
                 android:gravity="center_vertical"
                 android:hint="veterinarian"
+                android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingLeft="25dp"

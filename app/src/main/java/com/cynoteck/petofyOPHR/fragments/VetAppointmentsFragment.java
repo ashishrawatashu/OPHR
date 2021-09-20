@@ -332,6 +332,8 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
                                 data.putString("appointment", "join");
                                 data.putString("appoint_link", String.valueOf((Uri.parse(appointmentListsJoin.get(joinPostion).getMeetingUrl()))));
                                 data.putString("toolbar_name", "ADD CLINIC");
+                                data.putString("pet_cat_id","1");
+
                                 petDetailsIntent.putExtras(data);
                                 startActivity(petDetailsIntent);
                             } else if (permissionId.equals("12")) {
@@ -359,8 +361,8 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
 
                 break;
             case "Status":
-                try {
 
+                try {
                     Log.d("appointmentstaus", response.body().toString());
                     JsonObject appointmentstaus = (JsonObject) response.body();
                     Log.d("appointmentstaus", appointmentstaus.toString());
@@ -369,7 +371,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
                     Log.d("hhshshhs", "" + response);
                     int responseCode = Integer.parseInt(String.valueOf(responseStaus.get("responseCode")));
                     if (responseCode == 109) {
-
+                        methods.customProgressDismiss();
                         pendingAppointment();
                         Toast.makeText(getContext(), "Status Changes Successfully Status", Toast.LENGTH_SHORT).show();
                     }
@@ -428,6 +430,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
             data.putString("appointment", "join");
             data.putString("appoint_link", String.valueOf((Uri.parse(appointmentLists.get(position).getMeetingUrl()))));
             data.putString("toolbar_name", "ADD CLINIC");
+            data.putString("pet_cat_id","1");
             petDetailsIntent.putExtras(data);
             startActivity(petDetailsIntent);
         }
@@ -472,6 +475,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        methods.showCustomProgressBarDialog(getActivity());
 
                             requestPendingData.get(position).setIsApproved("true");
                             requestPendingAdapter.notifyItemChanged(position);
@@ -522,7 +526,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        methods.showCustomProgressBarDialog(getActivity());
                         requestPendingData.remove(position);
                         requestPendingAdapter.notifyItemChanged(position);
                         requestPendingAdapter.notifyDataSetChanged();

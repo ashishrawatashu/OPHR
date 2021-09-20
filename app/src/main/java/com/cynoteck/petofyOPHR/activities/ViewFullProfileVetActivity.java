@@ -1,17 +1,23 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import static com.cynoteck.petofyOPHR.fragments.ProfileFragment.vet_profile_pic;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -19,11 +25,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -50,7 +58,9 @@ import com.cynoteck.petofyOPHR.response.onlineAppointmentOnOff.OnlineAppointment
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.ServiceTypeList;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.UserResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
+import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.cynoteck.petofyOPHR.utils.VetDetailsSingleton;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.JsonObject;
@@ -77,7 +87,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class ViewFullProfileVetActivity extends AppCompatActivity implements ApiResponse, View.OnClickListener {
+public class ViewFullProfileVetActivity extends AppCompatActivity implements ApiResponse,MediaUtils.GetImg, View.OnClickListener {
 
     TextView vet_name_TV, vet_degree_TV, vet_phone_TV, vet_email_TV, vet_category_TV, vet_address_TV;
     RecyclerView vet_service_type_RV;
@@ -87,30 +97,31 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     SharedPreferences.Editor login_editor;
     Methods methods;
     UserResponse userResponse;
-    PetTypeListAdapter petTypeListAdapter;
     ServiceTypeListAdpater serviceTypeListAdpater;
     Dialog dialog;
-    private int GALLERY = 1, CAMERA = 2, USERUPDATION = 3;
-    Bitmap bitmap, thumbnail;
-    private static final String IMAGE_DIRECTORY = "/Picture";
-    File catfile1 = null;
+    private int USERUPDATION = 3;
     ArrayList<ServiceTypeList> petService;
     ArrayList<PetTypeList> petType;
     ShimmerFrameLayout vet_profile_shimmer;
     ScrollView vet_full_details_SV;
     List<String> petServiceText;
     List<String> petServiceValue;
-
+    BroadcastReceiver broadcastReceiver=null;
 
     List<String> petTypeText;
     List<String> petTypeValue;
+    MediaUtils mediaUtils;
+    ProgressBar vet_image_progress_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_full_profile_vet);
+        broadcastReceiver =new checkIntetnetConnectivity();
+        registerBroadcast();
         methods = new Methods(this);
-        requestMultiplePermissions();
+        mediaUtils = new MediaUtils(this);
+
         inilization();
         Glide.with(this)
                 .load(Config.user_Veterian_url)
@@ -145,14 +156,16 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         select_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePhotoFromCamera();
+                dialog.dismiss();
+                mediaUtils.openCamera();
             }
         });
 
         select_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                choosePhotoFromGallary();
+                mediaUtils.openGallery();
+                dialog.dismiss();
             }
         });
 
@@ -166,108 +179,22 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         dialog.show();
     }
 
-    private void choosePhotoFromGallary() {
-
-
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_CANCELED) {
-            return;
-        }
-        if (requestCode == GALLERY) {
-            if (data != null) {
-                dialog.dismiss();
-                Uri contentURI = data.getData();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-                    vet_image_TV.setImageBitmap(bitmap);
-                    saveImage(bitmap);
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(ViewFullProfileVetActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        } else if (requestCode == CAMERA) {
-            dialog.dismiss();
-            if (data.getData() == null) {
-                thumbnail = (Bitmap) data.getExtras().get("data");
-                Log.e("jghl", "" + thumbnail);
-                vet_image_TV.setImageBitmap(thumbnail);
-
-                saveImage(thumbnail);
-            } else {
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
-                    Glide.with(this)
-                            .load(bitmap)
-                            .into(vet_image_TV);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-            Toast.makeText(this, "Image Saved!", Toast.LENGTH_SHORT).show();
-        } else if (requestCode == USERUPDATION) {
-            if (resultCode == RESULT_OK) {
-                setVetInfo();
+        if (requestCode ==USERUPDATION){
+            if (resultCode == RESULT_OK){
                 getUserDetails();
             }
+        }else {
+            mediaUtils.onActivityResult(requestCode, resultCode, data);
         }
-        return;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            catfile1 = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".png");
-            catfile1.createNewFile();
-            FileOutputStream fo = new FileOutputStream(catfile1);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{catfile1.getPath()},
-                    new String[]{"image/png"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::---&gt;" + catfile1.getAbsolutePath());
-            UploadImages(catfile1);
-            return catfile1.getAbsolutePath();
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
     }
 
     private void UploadImages(File absolutePath) {
-        methods.showCustomProgressBarDialog(this);
+//        methods.showCustomProgressBarDialog(this);
+        vet_image_progress_bar.setVisibility(View.VISIBLE);
         MultipartBody.Part userDpFilePart = null;
         if (absolutePath != null) {
             RequestBody userDpFile = RequestBody.create(MediaType.parse("image/*"), absolutePath);
@@ -284,19 +211,26 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         Dexter.withActivity(this)
                 .withPermissions(
                         android.Manifest.permission.CAMERA,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+//                            storagePermissionDialog();
+                            startActivity(new Intent(ViewFullProfileVetActivity.this,PermissionCheckActivity.class));
+                            Toast.makeText(ViewFullProfileVetActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
                         }
+
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
-                            //openSettingsDialog();
+                            startActivity(new Intent(ViewFullProfileVetActivity.this,PermissionCheckActivity.class));
                         }
                     }
 
@@ -322,11 +256,6 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                 .load(Config.user_Veterian_url)
                 .placeholder(R.drawable.empty_vet_image)
                 .into(vet_image_TV);
-//        Glide.with(this)
-//                .load(Config.coverimage)
-//                .placeholder(R.drawable.empty_vet_image)
-//                .into(cover_image);
-
         vet_name_TV.setText(Config.user_Veterian_name);
         vet_email_TV.setText(Config.user_Veterian_emial);
         vet_degree_TV.setText(Config.user_Veterian_study);
@@ -346,6 +275,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     private void inilization() {
         image_edit_CV = findViewById(R.id.image_edit_CV);
 //        cover_image=findViewById(R.id.cover_image);
+        vet_image_progress_bar = findViewById(R.id.vet_image_progress_bar);
         vet_full_details_SV = findViewById(R.id.vet_full_details_SV);
         vet_profile_shimmer = findViewById(R.id.vet_profile_shimmer);
         vet_service_type_RV = findViewById(R.id.vet_service_type_RV);
@@ -383,6 +313,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                     userResponse = (UserResponse) response.body();
                     int responseCode = Integer.parseInt(userResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
+                        VetDetailsSingleton.getInstance().userResponse = (UserResponse) response.body();
                         Log.e("stydy",userResponse.getData().getVetQualifications());
                         petService = new ArrayList<>();
                         petServiceText = new ArrayList<>();
@@ -421,6 +352,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                         Config.vet_first_name = sharedPreferences.getString("first_name", "");
                         Config.vet_last_name = sharedPreferences.getString("last_name", "");
                         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
+                        Config.user_Veterian_url = sharedPreferences.getString("profilePic", "");
                         edit_profile_IV.setVisibility(View.VISIBLE);
                         StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < userResponse.getData().getPetTypeList().size(); i++) {
@@ -481,23 +413,26 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                 break;
             case "UploadDocument":
                 try {
-                    methods.customProgressDismiss();
+//                    methods.customProgressDismiss();
                     Log.e("UploadDocument", response.body().toString());
                     ImageResponse imageResponse = (ImageResponse) response.body();
                     int responseCode = Integer.parseInt(imageResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
                         //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         Config.user_Veterian_url = imageResponse.getData().getDocumentUrl();
+                        Glide.with(this).load(Config.user_Veterian_url).into(vet_image_TV);
+                        Glide.with(this).load(Config.user_Veterian_url).into(vet_profile_pic);
+
+                        sharedPreferences = this.getSharedPreferences("userDetails", 0);
+                        login_editor = sharedPreferences.edit();
+                        login_editor.putString("profilePic", imageResponse.getData().getDocumentUrl());
+                        login_editor.commit();
                         UploadProfileImageParams uploadProfileImageParams = new UploadProfileImageParams();
                         uploadProfileImageParams.setProfileImageUrl(imageResponse.getData().getDocumentUrl());
                         UploadVetProfileImageData uploadVetProfileImageData = new UploadVetProfileImageData();
                         uploadVetProfileImageData.setData(uploadProfileImageParams);
                         ApiService<JsonObject> service = new ApiService<>();
                         service.get(this, ApiClient.getApiInterface().updateProfileImage(Config.token, uploadVetProfileImageData), "UpdateProfileImage");
-                        Log.d("UpdateProfileImage", uploadVetProfileImageData.toString());
-                        Log.d("UpdateProfileImage ","upload document");
-
-                        Toast.makeText(this, "Success in uploading", Toast.LENGTH_SHORT).show();
 
                     } else if (responseCode == 614) {
                         Toast.makeText(this, imageResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -512,16 +447,13 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
 
             case "UpdateProfileImage":
                 try {
-                    methods.customProgressDismiss();
-//                    Log.d("UploadDocument", response.body().toString());
+                    vet_image_progress_bar.setVisibility(View.GONE);
                     JsonObject jsonObject = new JsonObject();
                     jsonObject = (JsonObject) response.body();
                     int responseCode = Integer.parseInt(String.valueOf(jsonObject.getAsJsonObject("response").get("responseCode")));
                     if (responseCode == 109) {
-//                        Log.d("UploadDocument ","Update prfile img");
-//                        getUserDetails();
 
-//                        Toast.makeText(this," Update profile image response code 109 "+ jsonObject.getAsJsonObject("response").get("responseMessage").toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Profile Image is Uploaded", Toast.LENGTH_SHORT).show();
                     } else if (responseCode == 614) {
                         Toast.makeText(this,"response code 614"+ jsonObject.getAsJsonObject("response").get("responseMessage").toString(), Toast.LENGTH_SHORT).show();
                     } else {
@@ -629,11 +561,64 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
 
         }
     }
+    protected void registerBroadcast() {
+//        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public  void dialog(boolean value) {
+        if (value) {
+            Log.e("VewFullProfileVet", "Yes connected to net");
+//            Handler handler = new Handler();
+//            Runnable delayrunnable = new Runnable() {
+//                @Override
+//                public void run() {
+//                    Log.e("Connected", "Yes inside handler ");
+//                }
+//            };
+//            handler.postDelayed(delayrunnable, 30000);
+        }
+        else {
+
+            Log.e("VewFullProfileVet", "Not Connected to net ");
+        }
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        requestMultiplePermissions();
 
+    }
+
+    @Override
+    public void imgdata(String imgPath) {
+        Log.d ("imgdata123" , imgPath.toString());
+        Uri selectedImageURI = null;
+        File imgFile = new File(imgPath);
+        Log.d ("imgdata: " , imgFile.toString());
+        UploadImages(imgFile);
     }
 }

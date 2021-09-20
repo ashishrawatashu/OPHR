@@ -174,7 +174,7 @@
             android:layout_centerInParent="true"
             android:fontFamily="@font/nunito"
             android:gravity="start"
-            android:text="All Patience Report"
+            android:text="All Patient Report"
             android:textColor="#000"
             android:textSize="22sp"
             android:visibility="visible" />
@@ -203,6 +203,10 @@
             android:visibility="gone" />
 
     </RelativeLayout>
+
+
+
+
 
 
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -245,6 +249,38 @@
         </LinearLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/something_wrong_FR"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito"
+            android:text="somethingWrong"
+            android:textColor="@color/gray_2"/>
+
+        <Button
+            android:id="@+id/retryBTN"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="RETRY"
+            android:background="@drawable/blue_background_bg"
+            android:textColor="@color/whiteColor"/>
+
+    </LinearLayout>
+
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested_scroll_view"

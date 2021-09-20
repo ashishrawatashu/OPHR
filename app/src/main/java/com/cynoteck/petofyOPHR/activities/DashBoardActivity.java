@@ -1,28 +1,42 @@
 package com.cynoteck.petofyOPHR.activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.solver.GoalRow;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.cynoteck.petofyOPHR.R;
@@ -35,11 +49,21 @@ import com.cynoteck.petofyOPHR.fragments.PetRegisterFragment;
 import com.cynoteck.petofyOPHR.fragments.ProfileFragment;
 import com.cynoteck.petofyOPHR.response.loginRegisterResponse.UserPermissionMasterList;
 import com.cynoteck.petofyOPHR.response.staffPermissionListResponse.CheckStaffPermissionResponse;
+import com.cynoteck.petofyOPHR.response.totalStaffPetsAppointment.GetDashboardCountsResponse;
 import com.cynoteck.petofyOPHR.response.updateProfileResponse.UserResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.cynoteck.petofyOPHR.utils.VetDetailsSingleton;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -47,6 +71,7 @@ import org.jsoup.nodes.Document;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Response;
 
@@ -64,18 +89,35 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
     SharedPreferences.Editor login_editor;
     private int USER_UPDATION_FIRST_TIME = 1;
     String userTYpe = "", permissionId = "";
+    BroadcastReceiver broadcastReceiver;
+    FragmentTransaction ft;
+    static FrameLayout content_frame;
+    static boolean checkNet=true;
+    static LinearLayout something_wrong_LL;
+    Button rtry;
+    HomeFragment homeFragment = new HomeFragment();
+    BottomSheetDialog updateDialog;
+    Dialog  settingDialog,storageDialog;
+    boolean  dialogStatus = false;
+    Button open_setting_BT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
         init();
+        settingDialogInit();
+//        storagePermissionDialogInit();
+//        requestMultiplePermissions();
+        Log.d("CHECK","ONCREATE");
         methods = new Methods(this);
+        broadcastReceiver =new checkIntetnetConnectivity();
+        registerBroadcast();
         getCurrentVersion();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Config.tabPosition = 1;
         sharedPreferences = getSharedPreferences("userdetails", 0);
+        Config.user_Veterian_url = sharedPreferences.getString("profilePic", "");
         Config.token = sharedPreferences.getString("token", "");
         Config.user_id = sharedPreferences.getString("userId", "");
         Config.user_Veterian_phone = sharedPreferences.getString("phoneNumber", "");
@@ -98,16 +140,17 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                 getUserDetails();
             } else {
                 methods.DialogInternet();
+
             }
         }
 
         if (savedInstanceState == null) {
-            HomeFragment homeFragment = new HomeFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.content_frame, homeFragment);
-            ft.commit();
-            icHome.setImageResource(R.drawable.home_active);
+            ft = getSupportFragmentManager().beginTransaction();
+
         }
+    }
+
+    private void settingDialogInit() {
 
     }
 
@@ -123,18 +166,126 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             e1.printStackTrace();
         }
         currentVersion = pInfo.versionName;
-
         //currentVersion="1.0.2";
         Log.d("currentVersion", currentVersion);
-
         new GetLatestVersion().execute();
 
     }
 
+    protected void registerBroadcast() {
+//        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public  static void isConnected(boolean value) {
+        if (value) {
+            checkNet=true;
+            Log.e("Connected", "Yes ");
+        }
+        else {
+            checkNet=false;
+            show();
+        }
+    }
+
+    private static void show() {
+
+        something_wrong_LL.setVisibility(View.VISIBLE);
+        content_frame.setVisibility(View.GONE);
+
+    }
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        android.Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                            try {
+                                settingDialog.dismiss();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+                            storagePermissionDialog();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            openSettingsDialog();
+                            Log.d("STORAGE_DIALOG","openSettingsDialog");
+
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+
+
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(DashBoardActivity.this, "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+
+    private void openSettingsDialog() {
+        dialogStatus  = true;
+        settingDialog  = new Dialog(this);
+        settingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingDialog.setCancelable(false);
+        settingDialog.setContentView(R.layout.open_setting_dialog);
+        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        open_setting_BT = settingDialog.findViewById(R.id.open_setting_BT);
+        open_setting_BT.setOnClickListener(this);
+        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        settingDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = settingDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+    }
+
+    private void storagePermissionDialog() {
+    }
+
+
+    // -----------------------------------------------------------------------------------------------------------
     private class GetLatestVersion extends AsyncTask<String, String, JSONObject> {
-
         private ProgressDialog progressDialog;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -144,7 +295,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         protected JSONObject doInBackground(String... params) {
             try {
 //It retrieves the latest version by scraping the content of current version from play store at runtime
-
                 Document doc = Jsoup.connect("https://play.google.com/store/apps/details?id=com.cynoteck.petofyOPHR").get();
                 latestVersion = doc.getElementsByClass("htlgb").get(6).text();
 
@@ -155,7 +305,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                 e.printStackTrace();
 
             }
-
             return new JSONObject();
         }
 
@@ -164,68 +313,69 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             if (latestVersion != null) {
                 if (!currentVersion.equalsIgnoreCase(latestVersion)) {
                     if (!isFinishing()) { //This would help to prevent Error : BinderProxy@45d459c0 is not valid; is your activity running? error
-                        showUpdateDialog();
+                        newUpdateDialog();
                     }
                 }
-            } else {
-                //background.start();
-                // super.onPostExecute(jsonObject);
             }
-        }
-
-        private void showUpdateDialog() {
-            final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DashBoardActivity.this);
-            builder.setTitle("A New Update is Available");
-            builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    try {
-                        Intent intent;
-                        intent = new Intent(Intent.ACTION_VIEW);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setData(Uri.parse("market://details?id=" + "com.cynoteck.petofyOPHR"));
-                        startActivity(intent);
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.cynoteck.petofyOPHR")));
-                    }
-                    dialog.dismiss();
-                }
-            });
-
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //background.start();
-                }
-            });
-
-            builder.setCancelable(false);
-            dialog = builder.show();
         }
 
     }
 
+    private void newUpdateDialog() {
+        updateDialog  = new BottomSheetDialog(this);
+        updateDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        updateDialog.setCancelable(false);
+        updateDialog.setContentView(R.layout.update_new_version_dialog);
+        updateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Button download_BT = updateDialog.findViewById(R.id.download_BT);
+        updateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        download_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent;
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setData(Uri.parse("market://details?id=" + "com.cynoteck.petofyOPHR"));
+                    startActivity(intent);
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.cynoteck.petofyOPHR")));
+                }
+                updateDialog.dismiss();
+            }
+        });
+
+        updateDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = updateDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+    }
 
     private void init() {
         homeRL = findViewById(R.id.homeRL);
         profileRL = findViewById(R.id.profileRL);
         petregisterRL = findViewById(R.id.petRegisterRL);
         appointmentRL = findViewById(R.id.appointmentRL);
-
+        content_frame=findViewById(R.id.content_frame);
         icHome = findViewById(R.id.icHome);
         icProfile = findViewById(R.id.icProfile);
         icPetRegister = findViewById(R.id.icPetRegister);
         icAppointment = findViewById(R.id.icAppointment);
+        something_wrong_LL=findViewById(R.id.something_wrong_LL);
+        rtry=findViewById(R.id.retry_BT);
 
         homeRL.setOnClickListener(this);
         profileRL.setOnClickListener(this);
         petregisterRL.setOnClickListener(this);
         appointmentRL.setOnClickListener(this);
-
-
+        rtry.setOnClickListener(this);
     }
 
-    private void getUserDetails() {
+
+    public void getUserDetails() {
         methods.showCustomProgressBarDialog(this);
         ApiService<UserResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().getUserDetailsApi(Config.token), "GetUserDetails");
@@ -238,17 +388,20 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             case "GetUserDetails":
                 try {
                     methods.customProgressDismiss();
+                    ft.add(R.id.content_frame, homeFragment);
+                    ft.commit();
                     Log.d("GetUserDetails", response.body().toString());
                     UserResponse userResponse = (UserResponse) response.body();
                     int responseCode = Integer.parseInt(userResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
+                        VetDetailsSingleton.getInstance().userResponse = (UserResponse) response.body();
+                        icHome.setImageResource(R.drawable.home_active);
                         login_editor = sharedPreferences.edit();
                         login_editor.putString("profilePic", userResponse.getData().getProfileImageUrl());
                         login_editor.putString("vet_charges", userResponse.getData().getOnlineConsultationCharges());
                         login_editor.commit();
                         Config.user_Veterian_url = sharedPreferences.getString("profilePic", "");
                         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
-
                         //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         IsVeterinarian = userResponse.getData().getIsVeterinarian();
                         Log.d("IsVeterinarian", "" + userResponse.getData().getIsVeterinarian());
@@ -330,7 +483,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                         Toast.makeText(this, "Please Try Again!!", Toast.LENGTH_SHORT).show();
                     }
 
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -375,7 +527,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         Log.e("error", t.getMessage());
         Log.e("errrrr", t.getLocalizedMessage());
         methods.customProgressDismiss();
-
     }
 
     @Override
@@ -402,13 +553,12 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             icPetRegister.setImageResource(R.drawable.pet_inactive);
             icAppointment.setImageResource(R.drawable.appointment_inactive);
         }
+//        Log.e("OnResume", "onResume function is called : ");
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
-
             case R.id.homeRL:
                 Config.count = 1;
                 Config.tabPosition = 1;
@@ -420,7 +570,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.content_frame, homeFragment);
                 ft.commit();
-
                 break;
 
             case R.id.profileRL:
@@ -464,7 +613,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                     ftPetRegister.replace(R.id.content_frame, petRegisterFragment);
                     ftPetRegister.commit();
                 }
-
                 break;
 
             case R.id.appointmentRL:
@@ -496,6 +644,88 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                     ftAppointment.commit();
                 }
 
+                break;
+
+            case R.id.retry_BT:
+                if(checkNet)
+                {
+                    something_wrong_LL.setVisibility(View.GONE);
+                    content_frame.setVisibility(View.VISIBLE);
+//                    getUserDetails();
+//                    Toast.makeText(getApplicationContext(), ""+Config.tabPosition, Toast.LENGTH_SHORT).show();
+                        if(Config.tabPosition==3)
+                             {
+                                userTYpe = sharedPreferences.getString("user_type", "");
+                                if (userTYpe.equals("Vet Staff"))
+                                {
+                                    Gson gson = new Gson();
+                                    String json = sharedPreferences.getString("userPermission", null);
+                                    Type type = new TypeToken<ArrayList<UserPermissionMasterList>>() {
+                                    }.getType();
+                                    ArrayList<UserPermissionMasterList> arrayList = gson.fromJson(json, type);
+                                    Log.e("ArrayList", arrayList.toString());
+                                    Log.d("UserType", userTYpe);
+                                    permissionId = "16";
+                                    methods.showCustomProgressBarDialog(this);
+                                    String url = "user/CheckStaffPermission/" + permissionId;
+                                    Log.e("URL", url);
+                                    ApiService<CheckStaffPermissionResponse> service = new ApiService<>();
+                                    service.get(this, ApiClient.getApiInterface().getCheckStaffPermission(Config.token, url), "CheckPermission");
+                                }else if (userTYpe.equals("Veterinarian")) {
+                                    icHome.setImageResource(R.drawable.home_inactive);
+                                    icProfile.setImageResource(R.drawable.profile_inactive);
+                                    icPetRegister.setImageResource(R.drawable.pet_inactive);
+                                    icAppointment.setImageResource(R.drawable.appointment_active);
+                                    VetAppointmentsFragment VetAppointmentsFragment = new VetAppointmentsFragment();
+                                    FragmentTransaction ftAppointment = getSupportFragmentManager().beginTransaction();
+                                    ftAppointment.replace(R.id.content_frame, VetAppointmentsFragment);
+                                    ftAppointment.commit();
+                                }
+                             }
+
+                  else if(Config.tabPosition==2)
+                    {
+                        userTYpe = sharedPreferences.getString("user_type", "");
+                        if (userTYpe.equals("Vet Staff")) {
+                            Gson gson = new Gson();
+                            String json = sharedPreferences.getString("userPermission", null);
+                            Type type = new TypeToken<ArrayList<UserPermissionMasterList>>() {
+                            }.getType();
+                            ArrayList<UserPermissionMasterList> arrayList = gson.fromJson(json, type);
+                            Log.e("ArrayList", arrayList.toString());
+                            Log.d("UserType", userTYpe);
+                            permissionId = "9";
+                            methods.showCustomProgressBarDialog(this);
+                            String url = "user/CheckStaffPermission/" + permissionId;
+                            Log.e("URL", url);
+                            ApiService<CheckStaffPermissionResponse> service = new ApiService<>();
+                            service.get(this, ApiClient.getApiInterface().getCheckStaffPermission(Config.token, url), "CheckPermission");
+                        } else if (userTYpe.equals("Veterinarian")) {
+                            icHome.setImageResource(R.drawable.home_inactive);
+                            icProfile.setImageResource(R.drawable.profile_inactive);
+                            icPetRegister.setImageResource(R.drawable.pet_active);
+                            icAppointment.setImageResource(R.drawable.appointment_inactive);
+                            PetRegisterFragment petRegisterFragment = new PetRegisterFragment();
+                            FragmentTransaction ftPetRegister = getSupportFragmentManager().beginTransaction();
+                            ftPetRegister.replace(R.id.content_frame, petRegisterFragment);
+                            ftPetRegister.commit();
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    methods.customProgressDismiss();
+                    show();
+                }
+                break;
+
+            case R.id.open_setting_BT:
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
 
                 break;
 

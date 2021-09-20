@@ -2,6 +2,8 @@ package com.cynoteck.petofyOPHR.params.addPetClinicParamRequest;
 
 import com.google.gson.JsonArray;
 
+import java.util.ArrayList;
+
 public class AddPetClinicParam {
     private String petId;
     private String veterinarian;
@@ -25,13 +27,23 @@ public class AddPetClinicParam {
     private String documents;
     private String appointmentId;
     private String dewormerDose;
-    private JsonArray vaccinationModels = null;
+//    private JsonArray vaccinationModels = null;
+    private ArrayList<VaccinationModel> vaccinationModels;
 
-    public JsonArray getVaccinationModels() {
+//    public JsonArray getVaccinationModels() {
+//        return vaccinationModels;
+//    }
+
+//    public void setVaccinationModels(JsonArray vaccinationModels) {
+//        this.vaccinationModels = vaccinationModels;
+//    }
+
+
+    public ArrayList<VaccinationModel> getVaccinationModels() {
         return vaccinationModels;
     }
 
-    public void setVaccinationModels(JsonArray vaccinationModels) {
+    public void setVaccinationModels(ArrayList<VaccinationModel> vaccinationModels) {
         this.vaccinationModels = vaccinationModels;
     }
 
@@ -214,7 +226,7 @@ public class AddPetClinicParam {
     @Override
     public String toString()
     {
-        return "ClassPojo [petId= "+petId+", veterinarian = "+veterinarian+", visitDate = "+visitDate+", natureOfVisitId = "+natureOfVisitId+", vaccine = "+vaccine+", description= "+description+", weightLbs = "+weightLbs+", weightOz = "+weightOz+", temperature = "+temperature+", dateOfOnset = "+dateOfOnset+", description = "+description+", dewormerName = "+dewormerName+", remarks= "+remarks+", nextVaccineName ="+nextVaccineName+", history = "+history+", nextVaccinetype = "+nextVaccinetype+", treatmentRemarks = "+treatmentRemarks+", diagnosisProcedure = "+diagnosisProcedure+", followUpId = "+followUpId+", followUpDate = "+followUpDate+", documents = "+documents+", appointmentId= "+appointmentId+",dewormerDose="+dewormerDose+", vaccinationModels= " + vaccinationModels +"]";
+        return "ClassPojo [petId= "+petId+", veterinarian = "+veterinarian+", visitDate = "+visitDate+", natureOfVisitId = "+natureOfVisitId+", vaccine = "+vaccine+", description= "+description+", weightLbs = "+weightLbs+", weightOz = "+weightOz+", temperature = "+temperature+", dateOfOnset = "+dateOfOnset+", description = "+description+", dewormerName = "+dewormerName+", remarks= "+remarks+", history = "+history+", nextVaccineName ="+nextVaccineName+", nextVaccinetype = "+nextVaccinetype+", treatmentRemarks = "+treatmentRemarks+", diagnosisProcedure = "+diagnosisProcedure+", followUpId = "+followUpId+", followUpDate = "+followUpDate+", documents = "+documents+", appointmentId= "+appointmentId+",dewormerDose="+dewormerDose+", vaccinationModels= " + vaccinationModels +"]";
     }
 
 }

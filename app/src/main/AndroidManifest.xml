@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.cynoteck.petofyOPHR">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,6 +16,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <supports-screens
         android:anyDensity="true"
@@ -32,10 +35,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.VetOperatingHoursActivity"></activity>
+        <activity
+            android:name=".activities.PermissionCheckActivity"
+            android:exported="true" />
+        <activity android:name=".activities.VetOperatingHoursActivity" />
         <activity android:name=".activities.InstructionActivity" />
         <activity android:name=".activities.StaffDetailsActivity" />
         <activity android:name=".activities.AddUpdateStaffActivity" />
+
+        <receiver android:name=".activities.checkIntetnetConnectivity">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".activities.PdfViewerActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
@@ -44,18 +57,16 @@
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity android:name=".activities.AllVisitsActivity" />
         <activity android:name=".activities.UpcomingVisitsActivity" />
-        <activity android:name=".activities.GetAllBankAccountsActivity"
-            android:screenOrientation="sensor"
+        <activity
+            android:name=".activities.GetAllBankAccountsActivity"
             android:configChanges="orientation|screenSize"
-
-            />
+            android:screenOrientation="sensor" />
         <activity android:name=".activities.BankAccountDetailsActivity" />
         <activity android:name=".activities.AddEditImmunizationActivity" />
         <activity android:name=".activities.ImmunizationChartActivity" />
         <activity android:name=".activities.PetProfileActivity" />
         <activity android:name=".activities.SettingActivity" />
-        <activity android:name=".activities.StaffPermissionActivity" />
-        <!--        <activity android:name=".activities.OperatingHoursActivity" />-->
+        <activity android:name=".activities.StaffPermissionActivity" /> <!-- <activity android:name=".activities.OperatingHoursActivity" /> -->
         <activity android:name=".activities.MedicalHistoryActivity" />
         <activity android:name=".activities.AddUpdateAppointmentActivity" />
         <activity android:name=".activities.ViewFullProfileVetActivity" />
@@ -141,7 +152,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="com.cynoteck.petofyOPHR.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

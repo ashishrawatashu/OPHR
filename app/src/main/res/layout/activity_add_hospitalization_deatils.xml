@@ -38,6 +38,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
             app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -120,6 +121,7 @@
 
             <EditText
                 android:id="@+id/veterian_name_ET"
+                android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
@@ -295,12 +297,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
+                android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/edit_text_background"
                 android:gravity="center_vertical"
                 android:hint="@string/hospitalname"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:maxLines="1"
                 android:paddingLeft="25dp"
                 android:fontFamily="@font/nunito"
@@ -372,7 +375,7 @@
                 android:background="@drawable/edit_text_background"
                 android:gravity="center_vertical"
                 android:hint="@string/resaonofHospitalization"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:paddingLeft="25dp"
                 android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
@@ -407,7 +410,7 @@
                 android:background="@drawable/edit_text_background"
                 android:gravity="center_vertical"
                 android:hint="@string/result"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:paddingLeft="25dp"
                 android:fontFamily="@font/nunito"
                 android:textColor="@color/gray_1"
@@ -436,7 +439,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/document_layout"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
@@ -448,64 +451,61 @@
                 app:layout_constraintTop_toBottomOf="@id/document_tv">
 
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/upload_doc_image_CIV"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/upload_doc_icon"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/upload_image_bg"
-                    android:id="@+id/hospitalization_upload_documents"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <ImageView
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"
-                    android:id="@+id/hospitalization_document_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RelativeLayout
-                    android:id="@+id/upload_RL"
-                    android:layout_marginLeft="10dp"
-                    android:elevation="1dp"
-                    android:src="@drawable/upload_up_icon"
-                    android:layout_width="50dp"
-                    android:scaleType="fitXY"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:visibility="visible"
-                        android:layout_width="50dp"
-                        android:src="@drawable/white_circle_bg"
-                        android:layout_height="match_parent" />
-                    <ImageView
-                        android:visibility="visible"
-                        android:layout_width="50dp"
-                        android:padding="8dp"
-                        android:src="@drawable/upload_up_icon"
-                        android:layout_height="match_parent" />
-
-                </RelativeLayout>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/upload_doc_image_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/upload_doc"
+                    app:layout_constraintStart_toEndOf="@id/upload_doc_image_CIV"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/upload_doc_image_progress_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="0dp"
-                    android:id="@+id/document_headline_TV"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="40dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="2"
+                    android:progressBackgroundTint="@color/colorPrimaryDark"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintStart_toEndOf="@+id/upload_RL"
-                    android:text="Upload Document"
-                    android:fontFamily="@font/nunito"
-                    android:textColor="@color/gray_1"
-                    android:textSize="20dp"
-                    android:gravity="center"/>
+                    app:layout_constraintStart_toEndOf="@+id/upload_doc_image_CIV"
+                    app:layout_constraintTop_toBottomOf="@id/upload_doc_image_TV" />
 
+                <ImageView
+                    android:id="@+id/upload_doc_image_upload_IV"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/upload_icon"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
+                <ImageView
+                    android:id="@+id/upload_doc_image_delete_IV"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="5dp"
+                    android:src="@drawable/delete_icon"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/gray_3" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

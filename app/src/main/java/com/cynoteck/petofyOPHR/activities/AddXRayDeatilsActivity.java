@@ -1,9 +1,12 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
@@ -11,16 +14,21 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +37,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import com.bumptech.glide.Glide;
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.api.ApiClient;
 import com.cynoteck.petofyOPHR.api.ApiResponse;
@@ -42,7 +51,10 @@ import com.cynoteck.petofyOPHR.response.addTestAndXRayResponse.AddTestXRayRespon
 import com.cynoteck.petofyOPHR.response.clinicVisist.ClinicVisitResponse;
 import com.cynoteck.petofyOPHR.response.testResponse.XrayTestResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
+import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
+import com.cynoteck.petofyOPHR.utils.RealPathUtil;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -61,17 +73,19 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import in.gauriinfotech.commons.Commons;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class AddXRayDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse {
-    TextView document_headline_TV, peto_edit_reg_number_dialog,calenderTextViewtestdate,folow_up_dt_view,xray_peto_edit_reg_number_dialog,doctorPrescription_headline_TV;
+public class AddXRayDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse ,MediaUtils.GetImg{
+    TextView upload_doc_image_TV,document_headline_TV, peto_edit_reg_number_dialog,calenderTextViewtestdate,folow_up_dt_view,xray_peto_edit_reg_number_dialog,doctorPrescription_headline_TV;
     AppCompatSpinner nature_of_visit_spinner,clinicNext_visit_spinner;
     EditText description_ET;
     Button save_BT;
-    ImageView xray_document,xray_test_upload_documents;
+    ImageView xray_document,upload_doc_image_upload_IV,upload_doc_image_delete_IV;
+    ProgressBar upload_doc_image_progress_bar;
     MaterialCardView back_arrow_CV;
     Methods methods;
 
@@ -91,37 +105,48 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     File file = null;
     Dialog dialog;
     Bitmap bitmap, thumbnail;
+    String[] mimeTypes = {"image/*",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "text/plain"
+    };
+    private int                 DOC_UPLOAD=105;
+    int front_status            = 0;
+    Dialog  settingDialog,storageDialog;
+    MediaUtils mediaUtils;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_x_ray_deatils);
         methods=new Methods(this);
+        mediaUtils = new MediaUtils(this);
         init();
-        requestMultiplePermissions();
     }
 
     private void init() {
         Bundle extras = getIntent().getExtras();
         clinicNext_visit_spinner=findViewById(R.id.next_visit_spinner);
         doctorPrescription_headline_TV=findViewById(R.id.doctorPrescription_headline_TV);
-        xray_peto_edit_reg_number_dialog=findViewById(R.id.xray_peto_edit_reg_number_dialog);
         peto_edit_reg_number_dialog=findViewById(R.id.xray_peto_edit_reg_number_dialog);
         calenderTextViewtestdate=findViewById(R.id.calenderTextViewtestdate);
         folow_up_dt_view=findViewById(R.id.folow_up_dt_view);
         nature_of_visit_spinner=findViewById(R.id.nature_of_visit_spinner);
         description_ET=findViewById(R.id.description_ET);
-        xray_test_upload_documents=findViewById(R.id.xray_test_upload_documents);
-        xray_document=findViewById(R.id.xray_document);
+        upload_doc_image_upload_IV=findViewById(R.id.upload_doc_image_upload_IV);
+        upload_doc_image_TV= findViewById(R.id.upload_doc_image_TV);
+        upload_doc_image_progress_bar=findViewById(R.id.upload_doc_image_progress_bar);
+        upload_doc_image_delete_IV = findViewById(R.id.upload_doc_image_delete_IV);
         save_BT=findViewById(R.id.save_BT);
         back_arrow_CV=findViewById(R.id.back_arrow_CV);
-        document_headline_TV=findViewById(R.id.document_headline_TV);
         save_BT.setOnClickListener(this);
         calenderTextViewtestdate.setOnClickListener(this);
         folow_up_dt_view.setOnClickListener(this);
-        xray_test_upload_documents.setOnClickListener(this);
         back_arrow_CV.setOnClickListener(this);
-
+        upload_doc_image_delete_IV.setOnClickListener(this);
+        upload_doc_image_upload_IV.setOnClickListener(this);
         if (extras != null) {
             report_id = extras.getString("report_id");
             pet_id = extras.getString("pet_id");
@@ -170,6 +195,14 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.upload_doc_image_delete_IV:
+                strDocumentUrl = "";
+                upload_doc_image_progress_bar.setProgress(0);
+                upload_doc_image_upload_IV.setVisibility(View.VISIBLE);
+                upload_doc_image_delete_IV.setVisibility(View.GONE);
+
+                break;
+
             case R.id.folow_up_dt_view:
                 final Calendar cldr1 = Calendar.getInstance();
                 int day1 = cldr1.get(Calendar.DAY_OF_MONTH);
@@ -180,11 +213,13 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                folow_up_dt_view.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                folow_up_dt_view.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year1, month1, day1);
+                picker.getDatePicker().setMinDate(cldr1.getTimeInMillis());
                 picker.show();
                 break;
+
             case R.id.calenderTextViewtestdate:
                 final Calendar cldr = Calendar.getInstance();
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
@@ -195,13 +230,21 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                calenderTextViewtestdate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                calenderTextViewtestdate.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year, month, day);
                 picker.show();
                 break;
-            case R.id.xray_test_upload_documents:
-                showPictureDialog();
+            case R.id.upload_doc_image_upload_IV:
+//                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//                intent1.addCategory(Intent.CATEGORY_OPENABLE);
+//                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+//                intent1.setType("*application/pdf||*application/doc");
+//                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
+
+                mediaUtils.openGallery();
+
+
                 break;
             case R.id.save_BT:
                 String strDescription=description_ET.getText().toString();
@@ -279,137 +322,28 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     }
 
 
-
-    private void showPictureDialog() {
-        dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_layout);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        RelativeLayout select_camera = (RelativeLayout) dialog.findViewById(R.id.select_camera);
-        RelativeLayout select_gallery = (RelativeLayout) dialog.findViewById(R.id.select_gallery);
-        RelativeLayout cancel_dialog = (RelativeLayout) dialog.findViewById(R.id.cancel_dialog);
-        select_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePhotoFromCamera();
-            }
-        });
-
-        select_gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePhotoFromGallary();
-            }
-        });
-
-        cancel_dialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void choosePhotoFromGallary() {
-
-
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
-
-    }
-
+    @SuppressLint("ObsoleteSdkInt")
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        dialog.dismiss();
-        if (resultCode == RESULT_CANCELED) {
-            return;
-        }
-        if (requestCode == GALLERY) {
-            if (data != null) {
+        mediaUtils.onActivityResult(requestCode, resultCode, data);
 
-                Uri contentURI = data.getData();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-                    xray_document.setImageBitmap(bitmap);
-                    saveImage(bitmap);
+//        if (requestCode==DOC_UPLOAD){
+//            String selectedImagePath = getAbsolutePath(data.getData());
+//            imgUser.setImageBitmap(decodeFile(selectedImagePath));
+//            Uri uri = data.getData();
+//            String fullPath = Commons.getPath(uri, this);
+//            Log.d("fullPath",fullPath);
+//            File file = new File(fullPath);
+//            String uriString = uri.toString();
+//            File myFile = new File(uriString);
+//
+//            String path = getPath(AddXRayDeatilsActivity.this,uri);
+//            File file = new File(selectedImagePath);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(AddXRayDeatilsActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        }
-        else if (requestCode == CAMERA) {
-
-            if (data.getData() == null)
-            {
-                thumbnail = (Bitmap) data.getExtras().get("data");
-                Log.e("jghl",""+thumbnail);
-                xray_document.setImageBitmap(thumbnail);
-                saveImage(thumbnail);
-                Toast.makeText(AddXRayDeatilsActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-            }
-
-            else{
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(AddXRayDeatilsActivity.this.getContentResolver(), data.getData());
-                    xray_document.setImageBitmap(bitmap);
-                    saveImage(bitmap);
-                    Toast.makeText(AddXRayDeatilsActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-
-        return;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            file = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".png");
-            file.createNewFile();
-            FileOutputStream fo = new FileOutputStream(file);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{file.getPath()},
-                    new String[]{"image/png"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::---&gt;" + file.getAbsolutePath());
-            UploadImages(file);
-            return file.getAbsolutePath();
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
+//            UploadImages(file);
+//        }
     }
 
     private void UploadImages(File absolutePath) {
@@ -419,7 +353,32 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
             RequestBody userDpFile = RequestBody.create(MediaType.parse("image/*"), absolutePath);
             userDpFilePart = MultipartBody.Part.createFormData("file", absolutePath.getName(), userDpFile);
         }
+            front_status = 0;
+            Handler front_handler = new Handler();
+            upload_doc_image_progress_bar.setVisibility(View.VISIBLE);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (front_status < 80) {
 
+                        front_status += 1;
+
+                        try {
+                            Thread.sleep(15);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        front_handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                upload_doc_image_progress_bar.setProgress(front_status);
+                            }
+                        });
+                    }
+                }
+            }).start();
         ApiService<ImageResponse> service = new ApiService<>();
         service.get( this, ApiClient.getApiInterface().uploadImages(Config.token,userDpFilePart), "UploadDocument");
         Log.e("DATALOG","check1=> "+service);
@@ -429,23 +388,28 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
-                        android.Manifest.permission.CAMERA,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        android.Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Log.d("PERMISSION","All permissions are granted by user!");
-//                            Toast.makeText(AddXRayDeatilsActivity.this, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+//                            storagePermissionDialog();
+                            startActivity(new Intent(AddXRayDeatilsActivity.this,PermissionCheckActivity.class));
+                            Toast.makeText(AddXRayDeatilsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
                         }
 
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
-                            //openSettingsDialog();
+                            Toast.makeText(AddXRayDeatilsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(AddXRayDeatilsActivity.this,PermissionCheckActivity.class));
                         }
                     }
 
@@ -467,11 +431,70 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     }
 
 
+    private void storagePermissionDialog() {
+        storageDialog  = new Dialog(this);
+        storageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        storageDialog.setCancelable(false);
+        storageDialog.setContentView(R.layout.storage_permission_dialog);
+        storageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Button allow_BT = storageDialog.findViewById(R.id.allow_BT);
+        storageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        allow_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestMultiplePermissions();
+                storageDialog.dismiss();
+            }
+        });
+
+        storageDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = storageDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+    }
+
+    private void openSettingsDialog() {
+        settingDialog  = new Dialog(this);
+        settingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingDialog.setCancelable(false);
+        settingDialog.setContentView(R.layout.open_setting_dialog);
+        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Button open_setting_BT = settingDialog.findViewById(R.id.open_setting_BT);
+        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        open_setting_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        });
+
+        settingDialog.show();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = settingDialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+            requestMultiplePermissions();
+    }
+
     private void updateXray(UpdateXrayRequest updateXrayRequest) {
         ApiService<AddTestXRayResponse> service = new ApiService<>();
         service.get( this, ApiClient.getApiInterface().updateTestXRay(Config.token,updateXrayRequest), "UpdateTestXRay");
         Log.d("addPetLabParams",""+updateXrayRequest);
     }
+
     private void addPetXray(AddTestXRayRequest addTestXRayRequest) {
         ApiService<AddTestXRayResponse> service = new ApiService<>();
         service.get( this, ApiClient.getApiInterface().addTestXRay(Config.token,addTestXRayRequest), "AddTestXRay");
@@ -542,15 +565,17 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                     e.printStackTrace();
                 }
                 break;
+
             case "UploadDocument":
                 try {
                     methods.customProgressDismiss();
-                    Log.d("UploadDocument",arg0.body().toString());
                     ImageResponse imageResponse = (ImageResponse) arg0.body();
                     int responseCode = Integer.parseInt(imageResponse.getResponse().getResponseCode());
                     if (responseCode== 109){
-                        xray_test_upload_documents.setVisibility(View.VISIBLE);
-                        document_headline_TV.setText("Document Uploaded");
+                        upload_doc_image_progress_bar.setProgress(100);
+                        upload_doc_image_TV.setText("Document Uploaded");
+                        upload_doc_image_delete_IV.setVisibility(View.VISIBLE);
+                        upload_doc_image_upload_IV.setVisibility(View.GONE);
                         //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         strDocumentUrl=imageResponse.getData().getDocumentUrl();
                     }else if (responseCode==614){
@@ -613,7 +638,6 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     private void setSpinnerNextClinicVisit() {
         ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,nextVisitList);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
         clinicNext_visit_spinner.setAdapter(aa);
         if (type.equals("Update Test/X-rays")) {
             if (!next_visit.equals("")) {
@@ -663,5 +687,14 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         methods.customProgressDismiss();
         Toast.makeText(this, "Please try again!", Toast.LENGTH_SHORT).show();
         Log.e("error",t.getLocalizedMessage());
+    }
+
+    @Override
+    public void imgdata(String imgPath) {
+        Log.d ("imgdata123" , imgPath.toString());
+        Uri selectedImageURI = null;
+        File imgFile = new File(imgPath);
+        Log.d ("imgdata: " , imgFile.toString());
+        UploadImages(imgFile);
     }
 }

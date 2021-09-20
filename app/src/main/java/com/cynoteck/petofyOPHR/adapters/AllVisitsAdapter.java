@@ -44,7 +44,6 @@ public class AllVisitsAdapter extends RecyclerView.Adapter<AllVisitsAdapter.MyVi
         holder.pet_phone_TV.setText(getMyVisitPetRecordPetClinicVisitLists.get(position).getContactNumber());
         holder.pet_nature_of_visit_TV.setText(getMyVisitPetRecordPetClinicVisitLists.get(position).getNatureOfVisit().getNature());
         holder.pet_remakrs_TV.setText(getMyVisitPetRecordPetClinicVisitLists.get(position).getTreatmentRemarks());
-        holder.pet_nature_of_visit_TV.setText(getMyVisitPetRecordPetClinicVisitLists.get(position).getVisitDate());
         holder.follow_up_date_TV.setText(getMyVisitPetRecordPetClinicVisitLists.get(position).getFollowUpDate());
 
 

@@ -1,9 +1,13 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,9 +18,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +64,7 @@ public class MedicalHistoryActivity extends AppCompatActivity implements ApiResp
     RecyclerView petList_RV;
     ReportsAdapter reportsAdapter;
     ArrayList<PetList> profileList;
-    private ShimmerFrameLayout mShimmerViewContainer;
+    private static ShimmerFrameLayout mShimmerViewContainer;
     TextView reports_headline_TV;
     AutoCompleteTextView search_box;
     ImageView empty_IV, search_IV,cancel_IV;
@@ -70,6 +77,11 @@ public class MedicalHistoryActivity extends AppCompatActivity implements ApiResp
     String userTYpe = "", permissionId = "";
     int pos;
     RelativeLayout visit_register_RL, upcoming_visits_RL;
+    BroadcastReceiver receiverMedicalHistory;
+    static boolean checkNet=true;
+    static LinearLayout something_wrong_FR;
+    static NestedScrollView nested_scroll_view;
+    Button retryBTN;
 
     public MedicalHistoryActivity() {
         // Required empty public constructor
@@ -79,7 +91,17 @@ public class MedicalHistoryActivity extends AppCompatActivity implements ApiResp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_reports);
+        receiverMedicalHistory=new checkIntetnetConnectivity();
+//        if(Config.report==true)
+//        {
+//        }
+            registerBroadcast();
+
+
         sharedPreferences = getSharedPreferences("userdetails", 0);
+        something_wrong_FR=findViewById(R.id.something_wrong_FR);
+        nested_scroll_view=(NestedScrollView) findViewById(R.id.nested_scroll_view);
+        retryBTN=findViewById(R.id.retryBTN);
 
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
         upcoming_visits_RL = findViewById(R.id.upcoming_visits_RL);
@@ -100,6 +122,9 @@ public class MedicalHistoryActivity extends AppCompatActivity implements ApiResp
         visit_register_RL.setOnClickListener(this);
         search_box.addTextChangedListener(this);
         cancel_IV.setOnClickListener(this);
+        retryBTN.setOnClickListener(this);
+
+
         methods = new Methods(this);
         search_IV.setEnabled(false);
         profileList = new ArrayList<>();
@@ -436,6 +461,21 @@ public class MedicalHistoryActivity extends AppCompatActivity implements ApiResp
                 InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); // hide
                 break;
+
+
+            case R.id.retryBTN:
+                if(checkNet)
+                {
+                    something_wrong_FR.setVisibility(View.GONE);
+                    nested_scroll_view.setVisibility(View.VISIBLE);
+                    mShimmerViewContainer.setVisibility(View.VISIBLE);
+                    mShimmerViewContainer.startShimmerAnimation();
+                     getPetList(page, pagelimit);
+
+                }
+                else{
+                    show();
+                }
         }
     }
 
@@ -455,4 +495,50 @@ public class MedicalHistoryActivity extends AppCompatActivity implements ApiResp
     public void afterTextChanged(Editable s) {
 
     }
+
+
+
+
+    protected void registerBroadcast() {
+//        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(receiverMedicalHistory, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(receiverMedicalHistory, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(receiverMedicalHistory);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        Config.report=false;
+    }
+
+
+    public  static void isConn(boolean value) {
+        if (value) {
+            checkNet=true;
+            Log.e("Connected", "Yes ");
+        }
+        else {
+            checkNet=false;
+            show();
+        }
+    }
+
+    private static void show() {
+        something_wrong_FR.setVisibility(View.VISIBLE);
+        nested_scroll_view.setVisibility(View.GONE);
+        mShimmerViewContainer.setVisibility(View.GONE);
+        mShimmerViewContainer.stopShimmerAnimation();
+
+    }
+
 }

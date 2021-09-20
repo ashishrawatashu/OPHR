@@ -1,10 +1,15 @@
 package com.cynoteck.petofyOPHR.fragments;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,8 +19,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +29,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.activities.AddNewPetActivity;
@@ -30,6 +37,7 @@ import com.cynoteck.petofyOPHR.activities.MedicalHistoryActivity;
 import com.cynoteck.petofyOPHR.activities.PetDetailsActivity;
 import com.cynoteck.petofyOPHR.activities.SearchActivity;
 import com.cynoteck.petofyOPHR.activities.StaffListActivity;
+import com.cynoteck.petofyOPHR.activities.checkIntetnetConnectivity;
 import com.cynoteck.petofyOPHR.api.ApiClient;
 import com.cynoteck.petofyOPHR.api.ApiResponse;
 import com.cynoteck.petofyOPHR.api.ApiService;
@@ -57,7 +65,7 @@ import java.util.HashMap;
 
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment implements View.OnClickListener, ApiResponse, TextWatcher {
+public class HomeFragment<isOnline> extends Fragment implements View.OnClickListener, ApiResponse, TextWatcher {
 
     RecyclerView pet_list_RV;
     Context context;
@@ -71,13 +79,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
     TextView vet_name_TV, staff_headline_TV, cancelOtpDialog;
     String petId = "", petParentContactNumber = "", strResponseOtp = "";
     Dialog otpDialog;
+    SwipeRefreshLayout swipeUp;
     TextInputLayout otp_TL;
     TextInputEditText pet_parent_otp;
-    Button submit_parent_otp;
+    Button submit_parent_otp,retry_btn;
     SharedPreferences sharedPreferences;
     String userTYpe = "";
+    static  LinearLayout something_wrong_layout,below_section;
+    static ScrollView scrollViewSection;
+    static TextView select_cat_TV;
     String permissionId = "";
-    TextView search_box_TV, total_my_pets_TV, total_appointment_TV, total_staff_TV;
+    TextView search_box_TV, total_my_pets_TV, total_appointment_TV, total_staff_TV,help;
+    static boolean isCon;
+    BroadcastReceiver broadcastReceiver;
+
 
     @Override
     public void onAttach(Context context) {
@@ -95,7 +110,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_home, container, false);
         sharedPreferences = getActivity().getSharedPreferences("userdetails", 0);
-
+//        broadcastReceiver =new checkIntetnetConnectivity();
+//        registerBroadcast();
         init();
         ApiService<GetDashboardCountsResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().getDashboardCounts(Config.token), "GetDashboardCounts");
@@ -110,7 +126,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
         search_box_TV = view.findViewById(R.id.search_box_TV);
         staff_headline_TV = view.findViewById(R.id.staff_headline_TV);
         addNewEntry = view.findViewById(R.id.addNewEntry);
+        select_cat_TV=view.findViewById(R.id.select_cat_TV);
         reports_CV = view.findViewById(R.id.reports_CV);
+//        help=view.findViewById(R.id.help);
         all_staff_CV = view.findViewById(R.id.staff_CV);
         pet_list_RV = view.findViewById(R.id.pet_id_TV);
         allPets_CV = view.findViewById(R.id.allPets_CV);
@@ -118,6 +136,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
         total_staff_TV = view.findViewById(R.id.total_staff_TV);
         total_my_pets_TV = view.findViewById(R.id.total_my_pets_TV);
         total_appointment_TV = view.findViewById(R.id.total_appointment_TV);
+
+        something_wrong_layout=view.findViewById(R.id.something_wrong_LL);
+
+        below_section=view.findViewById(R.id.below_section);
+        retry_btn=view.findViewById(R.id.retry_btn);
+        scrollViewSection=view.findViewById(R.id.scrollView5);
+
 
         vet_name_TV.setText("Hello, Dr " + Config.vet_first_name);
 
@@ -127,15 +152,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
         all_staff_CV.setOnClickListener(this);
         appoint_CV.setOnClickListener(this);
         search_box_TV.setOnClickListener(this);
+        retry_btn.setOnClickListener(this);
 
 
     }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_box_TV:
                 Intent searchPetActivity = new Intent(getContext(), SearchActivity.class);
+                searchPetActivity.putExtra("intentFrom","Home");
                 startActivity(searchPetActivity);
                 break;
             case R.id.submit_parent_otp:
@@ -188,6 +216,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
                 break;
 
             case R.id.reports_CV:
+                Config.report=true;
                 Intent medicalHisroryIntent = new Intent(getContext(), MedicalHistoryActivity.class);
                 startActivity(medicalHisroryIntent);
                 break;
@@ -245,6 +274,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
                 }
 
                 break;
+
+
+//            case R.id.retry_btn:
+//                if(isCon)
+//                {
+//                    setTotalDashboardNumber();
+//                    something_wrong_layout.setVisibility(View.GONE);
+//                    scrollViewSection.setVisibility(View.VISIBLE);
+//                    select_cat_TV.setVisibility(View.VISIBLE);
+//                    below_section.setVisibility(View.VISIBLE);
+//
+//                }
+//                else
+//                {
+//                    show();
+//
+//                }
 
 
         }
@@ -482,10 +528,54 @@ public class HomeFragment extends Fragment implements View.OnClickListener, ApiR
 
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
 
     }
+
+
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//
+//        try {
+//            getActivity().unregisterReceiver(broadcastReceiver);
+//        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    protected void registerBroadcast() {
+////        registerReceiver(broadcastReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            getActivity().registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            getActivity().registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+//        }
+//    }
+//
+//    public static void isConnected(boolean val) {
+//        if (val) {
+//            isCon = true;
+//
+//        } else {
+//            isCon = false;
+//            show();
+//
+//        }
+//    }
+//
+//   static void show()
+//    {
+//        something_wrong_layout.setVisibility(View.VISIBLE);
+//        scrollViewSection.setVisibility(View.GONE);
+//        select_cat_TV.setVisibility(View.GONE);
+//        below_section.setVisibility(View.GONE);
+//
+//    }
+
+
+
 }

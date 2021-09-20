@@ -1,28 +1,24 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +38,7 @@ import com.cynoteck.petofyOPHR.response.addHospitalizationResponse.Addhospitaliz
 import com.cynoteck.petofyOPHR.response.addPet.imageUpload.ImageResponse;
 import com.cynoteck.petofyOPHR.response.hospitalTypeListResponse.HospitalAddmissionTypeResp;
 import com.cynoteck.petofyOPHR.utils.Config;
-import com.cynoteck.petofyOPHR.utils.FilePath;
+import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
 import com.google.android.material.card.MaterialCardView;
 import com.karumi.dexter.Dexter;
@@ -53,27 +49,25 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import in.gauriinfotech.commons.Commons;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class AddHospitalizationDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse {
+public class AddHospitalizationDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse , MediaUtils.GetImg{
     EditText veterian_name_ET,veterian_phone_ET,hospital_name_ET,hospital_phone_ET,reson_of_hospitalization_ET,result_ET;
     Spinner hospital_type_spinner;
-    TextView document_headline_TV,  calenderTextView_admission_date,hospitalization_peto_edit_reg_number_dialog,
+    TextView upload_doc_image_TV,  calenderTextView_admission_date,hospitalization_peto_edit_reg_number_dialog,
             calenderTextView_discharge_date_TV,doctorPrescription_headline_TV;
     Button save_BT;
-    ImageView hospitalization_document_name,hospitalization_upload_documents;
+    ImageView upload_doc_image_upload_IV,upload_doc_image_delete_IV;
     MaterialCardView back_arrow_CV;
     Methods methods;
 
@@ -82,6 +76,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
     HashMap<String,String> hospitalTypeHashmap=new HashMap<>();
 
     DatePickerDialog picker;
+    ProgressBar upload_doc_image_progress_bar;
 
     String report_id="",hospitalizationStr="",hospitalizationId="",pet_id="",pet_name="",pet_owner_name="",pet_sex="",pet_unique_id="",strDocumentUrl="",hospital_type,hospital_name,hospital_phone,admission,discharge,result,reason,type;
 
@@ -90,13 +85,21 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
     File file = null;
     Dialog dialog;
     Bitmap bitmap, thumbnail;
-
+    String[] mimeTypes = {"image/*",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "text/plain"
+    };
+    private int                 DOC_UPLOAD=105;
+    int front_status            = 0;
+    MediaUtils mediaUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_hospitalization_deatils);
+        mediaUtils  = new MediaUtils(this);
         init();
-        requestMultiplePermissions();
     }
 
     private void init() {
@@ -107,20 +110,22 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
         hospital_name_ET=findViewById(R.id.hospital_name_ET);
         hospital_phone_ET=findViewById(R.id.hospital_phone_ET);
         reson_of_hospitalization_ET=findViewById(R.id.reson_of_hospitalization_ET);
-        hospitalization_upload_documents=findViewById(R.id.hospitalization_upload_documents);
         result_ET=findViewById(R.id.result_ET);
-        hospitalization_document_name=findViewById(R.id.hospitalization_document_name);
         hospital_type_spinner=findViewById(R.id.hospital_type_spinner);
         calenderTextView_admission_date=findViewById(R.id.calenderTextView_admission_date);
         calenderTextView_discharge_date_TV=findViewById(R.id.calenderTextView_discharge_date_TV);
         save_BT=findViewById(R.id.save_BT);
         back_arrow_CV=findViewById(R.id.back_arrow_CV);
+        upload_doc_image_progress_bar = findViewById(R.id.upload_doc_image_progress_bar);
         doctorPrescription_headline_TV=findViewById(R.id.doctorPrescription_headline_TV);
-        document_headline_TV=findViewById(R.id.document_headline_TV);
+        upload_doc_image_upload_IV = findViewById(R.id.upload_doc_image_upload_IV);
+        upload_doc_image_delete_IV = findViewById(R.id.upload_doc_image_delete_IV);
+        upload_doc_image_TV = findViewById(R.id.upload_doc_image_TV);
         calenderTextView_admission_date.setOnClickListener(this);
         calenderTextView_discharge_date_TV.setOnClickListener(this);
+        upload_doc_image_upload_IV.setOnClickListener(this);
+        upload_doc_image_delete_IV.setOnClickListener(this);
         save_BT.setOnClickListener(this);
-        hospitalization_upload_documents.setOnClickListener(this);
         back_arrow_CV.setOnClickListener(this);
 
         if (extras != null) {
@@ -167,6 +172,8 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 
 
     }
+
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
 
@@ -181,7 +188,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                calenderTextView_admission_date.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                calenderTextView_admission_date.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year, month, day);
                 picker.show();
@@ -196,17 +203,28 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                calenderTextView_discharge_date_TV.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                calenderTextView_discharge_date_TV.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, yearDis, monthDis, dayDis);
                 picker.show();
                 break;
-            case R.id.hospitalization_upload_documents:
-                showPictureDialog();
-//                Intent intent = new Intent();
-//                intent.setType("application/pdf");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent, "Select PDF"), 1);
+
+            case R.id.upload_doc_image_delete_IV:
+                strDocumentUrl = "";
+                upload_doc_image_progress_bar.setProgress(0);
+                upload_doc_image_upload_IV.setVisibility(View.VISIBLE);
+                upload_doc_image_delete_IV.setVisibility(View.GONE);
+
+                break;
+
+            case R.id.upload_doc_image_upload_IV:
+//                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//                intent1.addCategory(Intent.CATEGORY_OPENABLE);
+//                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+//                intent1.setType("*application/pdf||*application/doc");
+//                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
+                mediaUtils.openGallery();
+
                 break;
             case R.id.save_BT:
                 String strRequstVeterian=veterian_name_ET.getText().toString();
@@ -221,15 +239,52 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                 if(strRequstVeterian.isEmpty()){
                     veterian_name_ET.setError("Enter Veterinarian Name");
                     hospital_name_ET.setError(null);
+                    hospital_phone_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    calenderTextView_admission_date.setError(null);
+                    veterian_phone_ET.setError(null);
+                    calenderTextView_discharge_date_TV.setError(null);
+                }else if (strPhoneNumber.length() != 10){
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
                     reson_of_hospitalization_ET.setError(null);
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
+                    veterian_phone_ET.setError("Invalid phone no !");
+                }else if(hospitalizationStr.equals("Select Hospital Type")) {
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
+                    veterian_phone_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    calenderTextView_admission_date.setError(null);
+                    calenderTextView_discharge_date_TV.setError(null);
+                    hospital_phone_ET.setError(null);
+                    Toast.makeText(this, "Select Hospitalization type ", Toast.LENGTH_SHORT).show();
+                }else if(strHospitalAdmissionDt.isEmpty()) {
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    veterian_phone_ET.setError(null);
+                    hospital_phone_ET.setError(null);
+                    calenderTextView_admission_date.setError("Enter Admission Date");
+                    calenderTextView_discharge_date_TV.setError(null);
+                }
+                else if(strHospitalDischargeDt.isEmpty()) {
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    calenderTextView_admission_date.setError(null);
+                    veterian_phone_ET.setError(null);
+                    hospital_phone_ET.setError(null);
+                    calenderTextView_discharge_date_TV.setError("Enter discharge Date");
                 }
                 else if(strHospitalName.isEmpty())
                 {
                     veterian_name_ET.setError(null);
+                    hospital_phone_ET.setError(null);
                     hospital_name_ET.setError("Enter Hospital Name");
                     reson_of_hospitalization_ET.setError(null);
+                    veterian_phone_ET.setError(null);
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
                 }
@@ -237,38 +292,22 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                 {
                     veterian_name_ET.setError(null);
                     hospital_name_ET.setError(null);
+                    veterian_phone_ET.setError(null);
+                    hospital_phone_ET.setError(null);
                     reson_of_hospitalization_ET.setError("Reason of Hospitalization");
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
-                }
-                else if(strHospitalAdmissionDt.isEmpty())
-                {
-                    veterian_name_ET.setError(null);
-                    hospital_name_ET.setError(null);
-                    reson_of_hospitalization_ET.setError(null);
-                    calenderTextView_admission_date.setError("Enter Admission Date");
-                    calenderTextView_discharge_date_TV.setError(null);
-                }
-                else if(strHospitalDischargeDt.isEmpty())
-                {
-                    veterian_name_ET.setError(null);
-                    hospital_name_ET.setError(null);
-                    reson_of_hospitalization_ET.setError(null);
-                    calenderTextView_admission_date.setError(null);
-                    calenderTextView_discharge_date_TV.setError("Enter discharge Date");
-                }
-                else if(hospitalizationStr.equals("Select Hospital Type"))
-                {
-                    veterian_name_ET.setError(null);
-                    hospital_name_ET.setError(null);
-                    reson_of_hospitalization_ET.setError(null);
-                    calenderTextView_admission_date.setError(null);
-                    calenderTextView_discharge_date_TV.setError(null);
-                    Toast.makeText(this, "Select Hospitalization type ", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    methods.showCustomProgressBarDialog(this);
+                } else if (!strHospitalphoneNumber.equals("")&&strHospitalphoneNumber.length()!=10){
 
+                    veterian_name_ET.setError(null);
+                    hospital_name_ET.setError(null);
+                    veterian_phone_ET.setError(null);
+                    reson_of_hospitalization_ET.setError(null);
+                    calenderTextView_admission_date.setError(null);
+                    calenderTextView_discharge_date_TV.setError(null);
+                    hospital_phone_ET.setError("Invalid phone no!");
+                } else {
+                    methods.showCustomProgressBarDialog(this);
                     if (type.equals("Update Hospitalization")) {
                         UpdateHospitalizationParams updateHospitalizationParams = new UpdateHospitalizationParams();
                         updateHospitalizationParams.setId(report_id);
@@ -338,189 +377,31 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
         Log.e("AddPetHospitalParam","===>"+updateHospitalizationRequest);
 
     }
-
-    private void showPictureDialog() {
-        dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_layout);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        RelativeLayout select_camera = (RelativeLayout) dialog.findViewById(R.id.select_camera);
-        RelativeLayout select_gallery = (RelativeLayout) dialog.findViewById(R.id.select_gallery);
-        RelativeLayout cancel_dialog = (RelativeLayout) dialog.findViewById(R.id.cancel_dialog);
-
-        select_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePhotoFromCamera();
-            }
-        });
-
-        select_gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choosePhotoFromGallary();
-            }
-        });
-
-        cancel_dialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void choosePhotoFromGallary() {
-
-
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
-
-    }
-    public String getPath(Uri uri)
-    {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int column_index =             cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String s=cursor.getString(column_index);
-        cursor.close();
-        return s;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        dialog.dismiss();
-        if (resultCode == RESULT_CANCELED) {
-            return;
-        }
-/*        if (requestCode == 1) {
-            Uri contentURI = data.getData();
-            String path = FilePath.getPath(this, contentURI);
-//            File file = new File(contentURI.getPath());
-            UploadImages(file);
-        }else*/
-        if (requestCode == GALLERY) {
-            dialog.dismiss();
-            if (data != null) {
-                Uri contentURI = data.getData();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentURI);
-                    hospitalization_document_name.setImageBitmap(bitmap);
-                    saveImage(bitmap);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(AddHospitalizationDeatilsActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        }
-        else if (requestCode == CAMERA) {
-            dialog.dismiss();
-            if (data.getData() == null)
-            {
-                thumbnail = (Bitmap) data.getExtras().get("data");
-                Log.e("jghl",""+thumbnail);
-                hospitalization_document_name.setImageBitmap(thumbnail);
-                saveImage(thumbnail);
-                Toast.makeText(AddHospitalizationDeatilsActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-            }
-
-            else{
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(AddHospitalizationDeatilsActivity.this.getContentResolver(), data.getData());
-                    hospitalization_document_name.setImageBitmap(bitmap);
-                    saveImage(bitmap);
-                    Toast.makeText(AddHospitalizationDeatilsActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-
-        return;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    public String saveImage(Bitmap myBitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File wallpaperDirectory = new File(
-                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!wallpaperDirectory.exists()) {
-            wallpaperDirectory.mkdirs();
-        }
-
-        try {
-            file = new File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis() + ".png");
-            file.createNewFile();
-            FileOutputStream fo = new FileOutputStream(file);
-            fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
-                    new String[]{file.getPath()},
-                    new String[]{"image/png"}, null);
-            fo.close();
-            Log.d("TAG", "File Saved::---&gt;" + file.getAbsolutePath());
-            UploadImages(file);
-            return file.getAbsolutePath();
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        return "";
-    }
-
-    private void UploadImages(File absolutePath) {
-        methods.showCustomProgressBarDialog(this);
-        MultipartBody.Part userDpFilePart = null;
-        if (absolutePath != null) {
-            RequestBody userDpFile = RequestBody.create(MediaType.parse("image/*"), absolutePath);
-            userDpFilePart = MultipartBody.Part.createFormData("file", absolutePath.getName(), userDpFile);
-        }
-
-        ApiService<ImageResponse> service = new ApiService<>();
-        service.get( this, ApiClient.getApiInterface().uploadImages(Config.token,userDpFilePart), "UploadDocument");
-        Log.e("DATALOG","check1=> "+service);
-
-    }
-
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
-                        android.Manifest.permission.CAMERA,
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        android.Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Log.d("PERMISSION","All permissions are granted by user!");
-//                            Toast.makeText(AddHospitalizationDeatilsActivity.this, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                            Log.d("STORAGE_DIALOG","All permissions are granted by user!");
+                        }else {
+                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+//                            storagePermissionDialog();
+                            startActivity(new Intent(AddHospitalizationDeatilsActivity.this,PermissionCheckActivity.class));
+                            Toast.makeText(AddHospitalizationDeatilsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
                         }
+
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
-                            //openSettingsDialog();
+                            Toast.makeText(AddHospitalizationDeatilsActivity.this, "Please allow storage permission !", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(AddHospitalizationDeatilsActivity.this,PermissionCheckActivity.class));
                         }
                     }
 
@@ -539,6 +420,64 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                 })
                 .onSameThread()
                 .check();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestMultiplePermissions();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.FROYO)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mediaUtils.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode==DOC_UPLOAD){
+//            Uri uri = data.getData();
+//            String fullPath = Commons.getPath(uri, this);
+//            File file = new File(fullPath);
+//            UploadImages(file);
+//        }
+    }
+
+    private void UploadImages(File absolutePath) {
+        methods.showCustomProgressBarDialog(this);
+        MultipartBody.Part userDpFilePart = null;
+        if (absolutePath != null) {
+            RequestBody userDpFile = RequestBody.create(MediaType.parse("image/*"), absolutePath);
+            userDpFilePart = MultipartBody.Part.createFormData("file", absolutePath.getName(), userDpFile);
+        }
+        front_status = 0;
+        Handler front_handler = new Handler();
+        upload_doc_image_progress_bar.setVisibility(View.VISIBLE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (front_status < 80) {
+
+                    front_status += 1;
+
+                    try {
+                        Thread.sleep(15);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    front_handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            upload_doc_image_progress_bar.setProgress(front_status);
+                        }
+                    });
+                }
+            }
+        }).start();
+        ApiService<ImageResponse> service = new ApiService<>();
+        service.get( this, ApiClient.getApiInterface().uploadImages(Config.token,userDpFilePart), "UploadDocument");
+        Log.e("DATALOG","check1=> "+service);
+
     }
 
     private void addHospitalization(AddHospitalizationRequest addHospitalizationRequest) {
@@ -564,7 +503,6 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                     int responseCode = Integer.parseInt(hospitalAddmissionTypeResponse.getResponse().getResponseCode());
 
                     if (responseCode == 109) {
-                        //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         hospitalTypeArrayList = new ArrayList<>();
                         hospitalTypeArrayList.add("Select Hospital Type");
                         for (int i = 0; i < hospitalAddmissionTypeResponse.getData().size(); i++) {
@@ -585,13 +523,13 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
             case "UploadDocument":
                 try {
                     methods.customProgressDismiss();
-                    Log.d("UploadDocument",arg0.body().toString());
                     ImageResponse imageResponse = (ImageResponse) arg0.body();
                     int responseCode = Integer.parseInt(imageResponse.getResponse().getResponseCode());
                     if (responseCode== 109){
-                        document_headline_TV.setText("Document Uploaded");
-//                        hospitalization_upload_documents.setVisibility(View.GONE);
-                       // Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+                        upload_doc_image_TV.setText("Document Uploaded");
+                        upload_doc_image_progress_bar.setProgress(100);
+                        upload_doc_image_upload_IV.setVisibility(View.GONE);
+                        upload_doc_image_delete_IV.setVisibility(View.VISIBLE);
                         strDocumentUrl=imageResponse.getData().getDocumentUrl();
                     }else if (responseCode==614){
                         Toast.makeText(this, imageResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
@@ -680,5 +618,14 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
     @Override
     public void onError(Throwable t, String key) {
         Log.e("Error",t.getLocalizedMessage());
+    }
+
+    @Override
+    public void imgdata(String imgPath) {
+        Log.d ("imgdata123" , imgPath.toString());
+        Uri selectedImageURI = null;
+        File imgFile = new File(imgPath);
+        Log.d ("imgdata: " , imgFile.toString());
+        UploadImages(imgFile);
     }
 }

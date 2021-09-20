@@ -43,7 +43,7 @@ public class PetProfileActivity extends AppCompatActivity implements ApiResponse
     RelativeLayout edit_profile_RL;
     CardView parent_phone_CV, parent_location_CV;
     Methods methods;
-    String petId = "", imagerl = "";
+    String lastVisitEncryptedId="",petId = "", imagerl = "";
     ImageView pet_profile_image_IV;
     GetPetResponse getPetResponse;
     boolean reloadData = false;
@@ -62,6 +62,7 @@ public class PetProfileActivity extends AppCompatActivity implements ApiResponse
         methods = new Methods(this);
         Bundle extras = getIntent().getExtras();
         petId = extras.getString("pet_id");
+        lastVisitEncryptedId = extras.getString("lastVisitEncryptedId");
 
         init();
 
@@ -174,7 +175,7 @@ public class PetProfileActivity extends AppCompatActivity implements ApiResponse
                 data.putString("pet_DOB", getPetResponse.getData().getDateOfBirth());
                 data.putString("pet_encrypted_id", getPetResponse.getData().getEncryptedId());
                 data.putString("pet_cat_id", getPetResponse.getData().getPetCategoryId());
-                data.putString("lastVisitEncryptedId","");
+                data.putString("lastVisitEncryptedId",lastVisitEncryptedId);
                 data.putString("pet_image_url", getPetResponse.getData().getPetProfileImageUrl());
 
                 petDetailsIntent.putExtras(data);
