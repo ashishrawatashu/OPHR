@@ -197,7 +197,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
     public  static void isConnected(boolean value) {
         if (value) {
             checkNet=true;
-            Log.e("Connected", "Yes ");
+//            Log.e("Connected", "Yes ");
         }
         else {
             checkNet=false;
@@ -220,7 +220,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
+                        // check if all permissionos are granted
                         if (report.areAllPermissionsGranted()) {
                             Log.d("STORAGE_DIALOG","All permissions are granted by user!");
                             try {

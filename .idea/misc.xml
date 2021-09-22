@@ -5,20 +5,11 @@
       <map>
         <entry key="..\:/SDK/platforms/android-29/data/res/layout/simple_spinner_dropdown_item.xml" value="0.1" />
         <entry key="..\:/SDK/platforms/android-29/data/res/layout/simple_spinner_item.xml" value="0.1" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_aadd_update_staff.xml" value="0.20416666666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_add_clinic.xml" value="0.20416666666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_add_hospitalization_deatils.xml" value="0.20416666666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_add_lab_work_deatils.xml" value="0.20416666666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_add_new_pet2.xml" value="0.18" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_add_update_appointment.xml" value="0.20416666666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_permission_check.xml" value="0.22" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_pet_details.xml" value="0.20416666666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/activity_view_full_profile_vet.xml" value="0.20416666666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/check_box_layout.xml" value="0.19010416666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/open_setting_dialog.xml" value="0.2" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/service_type_dialog_layout.xml" value="0.19010416666666666" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/storage_permission_dialog.xml" value="0.18" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/update_new_version_dialog.xml" value="0.18" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/activity_instruction.xml" value="0.17074275362318841" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/activity_permission_check.xml" value="0.18840579710144928" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/dialog_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/open_setting_dialog.xml" value="0.17074275362318841" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/update_new_version_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_thumb.xml" value="0.13240740740740742" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_track.xml" value="0.13240740740740742" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/remarks_texview_shape.xml" value="0.12222222222222222" />
@@ -60,7 +51,7 @@
       <item index="0" class="java.lang.String" itemvalue="retrofit2.http.GET" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
