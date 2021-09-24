@@ -447,7 +447,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 //            getImmunizationHistory();
 //            getVaccinationDetails();
             getVisitTypes();
-            petDetails(pet_id);
+//            petDetails(pet_id);
             searchClinicVisitFieldData();
 //            searchDiagnosisData();
 //            searchDeormerName();
@@ -1290,7 +1290,6 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
 
 
 
