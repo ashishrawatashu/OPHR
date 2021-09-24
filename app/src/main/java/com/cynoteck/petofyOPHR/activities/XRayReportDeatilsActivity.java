@@ -210,21 +210,21 @@ public class XRayReportDeatilsActivity extends AppCompatActivity implements ApiR
                             localUri = Uri.parse(getXRayReportDeatilsResponse.getData().getDocuments());
                             view_file_BT.setVisibility(View.VISIBLE);
                         }
-                        if (getXRayReportDeatilsResponse.getData().getFollowUpDate().equals("")) {
-                            recommended_follow_up_TV.setVisibility(View.GONE);
-                            recommended_follow_up_date_textView.setVisibility(View.GONE);
-                            dot_recommended_follow_up_TV.setVisibility(View.GONE);
-
-                        } else {
-                            recommended_follow_up_date_textView.setText(getXRayReportDeatilsResponse.getData().getFollowUpDate());
-                        }
-                        if (getXRayReportDeatilsResponse.getData().getFollowUp() == null) {
-                            dot_recommended_follow_up_date_TV.setVisibility(View.GONE);
-                            recommended_follow_up_textView.setVisibility(View.GONE);
-                            recommended_follow_up_date_TV.setVisibility(View.GONE);
-                        } else {
-                            recommended_follow_up_textView.setText(getXRayReportDeatilsResponse.getData().getFollowUpDate());
-                        }
+//                        if (getXRayReportDeatilsResponse.getData().getFollowUpDate().equals("")) {
+//                            recommended_follow_up_TV.setVisibility(View.GONE);
+//                            recommended_follow_up_date_textView.setVisibility(View.GONE);
+//                            dot_recommended_follow_up_TV.setVisibility(View.GONE);
+//
+//                        } else {
+//                            recommended_follow_up_date_textView.setText(getXRayReportDeatilsResponse.getData().getFollowUpDate());
+//                        }
+//                        if (getXRayReportDeatilsResponse.getData().getFollowUp() == null) {
+//                            dot_recommended_follow_up_date_TV.setVisibility(View.GONE);
+//                            recommended_follow_up_textView.setVisibility(View.GONE);
+//                            recommended_follow_up_date_TV.setVisibility(View.GONE);
+//                        } else {
+//                            recommended_follow_up_textView.setText(getXRayReportDeatilsResponse.getData().getFollowUpDate());
+//                        }
 
                     }
                 } catch (Exception e) {

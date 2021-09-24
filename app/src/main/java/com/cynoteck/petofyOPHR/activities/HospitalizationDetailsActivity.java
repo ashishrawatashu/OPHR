@@ -197,12 +197,7 @@ public class HospitalizationDetailsActivity extends AppCompatActivity implements
                     int responseCode = Integer.parseInt(getHospitalizationDeatilsResponse.getResponse().getResponseCode());
                     if (responseCode== 109){
                         card_view.setVisibility(View.VISIBLE);
-                        if (getHospitalizationDeatilsResponse.getData().getDocuments().equals("")){
-                            view_file_BT.setVisibility(View.GONE);
-                        }else {
-                            localUri = Uri.parse(getHospitalizationDeatilsResponse.getData().getDocuments());
-                            view_file_BT.setVisibility(View.VISIBLE);
-                        }
+
                         vet_name_textView.setText(getHospitalizationDeatilsResponse.getData().getRequestingVeterinarian());
                         requesting_contact_textView.setText(getHospitalizationDeatilsResponse.getData().getVeterinarianPhone());
                         hospital_type_textView.setText(getHospitalizationDeatilsResponse.getData().getHospitalizationType().getHospitalization());
@@ -212,6 +207,12 @@ public class HospitalizationDetailsActivity extends AppCompatActivity implements
                         hospital_phone_textView.setText(getHospitalizationDeatilsResponse.getData().getHospitalPhone());
                         reson_of_visit_textView.setText(getHospitalizationDeatilsResponse.getData().getReasonForHospitalization());
                         result_textView.setText(getHospitalizationDeatilsResponse.getData().getDiagnosisTreatmentProcedure());
+                        if (getHospitalizationDeatilsResponse.getData().getDocuments().equals("")){
+                            view_file_BT.setVisibility(View.GONE);
+                        }else {
+                            localUri = Uri.parse(getHospitalizationDeatilsResponse.getData().getDocuments());
+                            view_file_BT.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
                 catch(Exception e) {

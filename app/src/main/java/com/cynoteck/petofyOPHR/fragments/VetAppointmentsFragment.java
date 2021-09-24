@@ -427,7 +427,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
             data.putString("dt_of_illness", "");
             data.putString("pet_diognosis", "");
             data.putString("next_dt", "");
-            data.putString("appointment", "join");
+            data.putString("onlineAppointment", "yes");
             data.putString("appoint_link", String.valueOf((Uri.parse(appointmentLists.get(position).getMeetingUrl()))));
             data.putString("toolbar_name", "ADD CLINIC");
             data.putString("pet_cat_id","1");

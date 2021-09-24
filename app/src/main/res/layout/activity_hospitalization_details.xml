@@ -432,7 +432,7 @@
                 android:fontFamily="@font/nunito"
                 android:textSize="14sp"
                 android:textColor="@color/gray_1"
-                android:text="@string/labPhone"
+                android:text="@string/dischargeDate"
                 android:layout_marginRight="200dp"/>
 
 
