@@ -195,7 +195,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/view_file_BT"
@@ -305,7 +305,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito"
-                android:textSize="14sp"         
+                android:textSize="14sp"
                 android:textColor="@color/gray_1"
                 android:text=""/>
 
@@ -350,6 +350,7 @@
 
 
             <TextView
+                android:visibility="gone"
                 android:layout_marginTop="15dp"
                 android:id="@+id/recommended_follow_up_TV"
                 android:layout_width="0dp"
@@ -364,6 +365,7 @@
 
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/dot_recommended_follow_up_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -377,6 +379,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/dot_Result_TV"/>
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/recommended_follow_up_textView"
                 android:layout_width="0dp"
                 android:gravity="end"
@@ -392,6 +395,7 @@
 
 
             <TextView
+                android:visibility="gone"
                 android:layout_marginTop="15dp"
                 android:id="@+id/recommended_follow_up_date_TV"
                 android:layout_width="0dp"
@@ -406,6 +410,7 @@
 
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/dot_recommended_follow_up_date_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -419,6 +424,7 @@
                 app:layout_constraintStart_toEndOf="@+id/recommended_follow_up_date_TV"/>
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/recommended_follow_up_date_textView"
                 android:layout_width="0dp"
                 android:gravity="end"
