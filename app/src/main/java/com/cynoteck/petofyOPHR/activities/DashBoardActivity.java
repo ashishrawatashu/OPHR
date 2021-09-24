@@ -133,6 +133,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         Config.vet_first_name = sharedPreferences.getString("first_name", "");
         Config.vet_last_name = sharedPreferences.getString("last_name", "");
         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
+        requestMultiplePermissions();
 
 
         if (Config.user_type.equals("Veterinarian")) {
@@ -144,8 +145,11 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
+
         if (savedInstanceState == null) {
             ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.content_frame, homeFragment);
+            ft.commit();
 
         }
     }
@@ -197,7 +201,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
     public  static void isConnected(boolean value) {
         if (value) {
             checkNet=true;
-            Log.e("Connected", "Yes ");
+//            Log.e("Connected", "Yes ");
         }
         else {
             checkNet=false;
@@ -215,28 +219,31 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         Dexter.withActivity(this)
                 .withPermissions(
                         android.Manifest.permission.CAMERA,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
+                        // check if all permissionos are granted
                         if (report.areAllPermissionsGranted()) {
                             Log.d("STORAGE_DIALOG","All permissions are granted by user!");
-                            try {
-                                settingDialog.dismiss();
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                settingDialog.dismiss();
+//                            }catch (Exception e){
+//                                e.printStackTrace();
+//                            }
                         }else {
-                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
-                            storagePermissionDialog();
+                            startActivity(new Intent(DashBoardActivity.this,PermissionCheckActivity.class));
+//                            storagePermissionDialog();
                         }
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-                            openSettingsDialog();
+                            startActivity(new Intent(DashBoardActivity.this,PermissionCheckActivity.class));
+
+//                            // show alert dialog navigating to Settings
+//                            openSettingsDialog();
                             Log.d("STORAGE_DIALOG","openSettingsDialog");
 
                         }
@@ -388,8 +395,8 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             case "GetUserDetails":
                 try {
                     methods.customProgressDismiss();
-                    ft.add(R.id.content_frame, homeFragment);
-                    ft.commit();
+//                    ft.add(R.id.content_frame, homeFragment);
+//                    ft.commit();
                     Log.d("GetUserDetails", response.body().toString());
                     UserResponse userResponse = (UserResponse) response.body();
                     int responseCode = Integer.parseInt(userResponse.getResponse().getResponseCode());
@@ -731,6 +738,26 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
 
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        if (Config.user_type.equals("Veterinarian")) {
+//            if (methods.isInternetOn()) {
+//                getUserDetails();
+//            } else {
+//                methods.DialogInternet();
+//
+//            }
+//        }
+//
+//
+//        if (savedInstanceState == null) {
+//            ft = getSupportFragmentManager().beginTransaction();
+//
+//        }
+//        Toast.makeText(this,"this is onpausecalled",Toast.LENGTH_SHORT).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

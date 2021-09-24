@@ -141,6 +141,10 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
         }
         Log.d("TAG", "onCreate: ");
 
+
+//       requestMultiplePermissions();
+
+
     }
 
     private void showPictureDialog() {
@@ -210,7 +214,8 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
-                        android.Manifest.permission.CAMERA,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
@@ -403,6 +408,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                     } else if (responseCode == 614) {
                         Toast.makeText(this, userResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
+                        Log.d("VIEWFULLACTIVITY", "onResponse: "+userResponse);
                         Toast.makeText(this, "Please Try Again GetUserDetails !", Toast.LENGTH_SHORT).show();
                     }
 
@@ -609,7 +615,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     @Override
     protected void onResume() {
         super.onResume();
-        requestMultiplePermissions();
+
 
     }
 
