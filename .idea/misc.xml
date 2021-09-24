@@ -5,10 +5,14 @@
       <map>
         <entry key="..\:/SDK/platforms/android-29/data/res/layout/simple_spinner_dropdown_item.xml" value="0.1" />
         <entry key="..\:/SDK/platforms/android-29/data/res/layout/simple_spinner_item.xml" value="0.1" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/activity_immunization_chart.xml" value="0.10520833333333333" />
         <entry key="..\:/neerajdimri/app/src/main/res/layout/activity_instruction.xml" value="0.17074275362318841" />
         <entry key="..\:/neerajdimri/app/src/main/res/layout/activity_permission_check.xml" value="0.18840579710144928" />
         <entry key="..\:/neerajdimri/app/src/main/res/layout/dialog_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/fragment_pet_register.xml" value="0.20416666666666666" />
         <entry key="..\:/neerajdimri/app/src/main/res/layout/open_setting_dialog.xml" value="0.17074275362318841" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/pet_register_list_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/neerajdimri/app/src/main/res/layout/select_pet_reports_activity.xml" value="0.14739583333333334" />
         <entry key="..\:/neerajdimri/app/src/main/res/layout/update_new_version_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_thumb.xml" value="0.13240740740740742" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_track.xml" value="0.13240740740740742" />
