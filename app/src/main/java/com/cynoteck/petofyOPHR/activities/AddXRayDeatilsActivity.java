@@ -47,6 +47,7 @@ import com.cynoteck.petofyOPHR.response.addTestAndXRayResponse.AddTestXRayRespon
 import com.cynoteck.petofyOPHR.response.clinicVisist.ClinicVisitResponse;
 import com.cynoteck.petofyOPHR.response.testResponse.XrayTestResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
+import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
@@ -73,7 +74,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class AddXRayDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse {
+public class AddXRayDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse , MediaUtils.GetImg{
     TextView upload_doc_image_TV,document_headline_TV, peto_edit_reg_number_dialog,calenderTextViewtestdate,folow_up_dt_view,xray_peto_edit_reg_number_dialog,doctorPrescription_headline_TV;
     AppCompatSpinner nature_of_visit_spinner,clinicNext_visit_spinner;
     EditText description_ET;
@@ -108,6 +109,7 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     private int                 DOC_UPLOAD=105;
     int front_status            = 0;
     Dialog  settingDialog,storageDialog;
+    MediaUtils mediaUtils;
 
 
     @Override
@@ -115,6 +117,7 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_x_ray_deatils);
         methods=new Methods(this);
+        mediaUtils = new MediaUtils(this);
         init();
     }
 
@@ -228,11 +231,12 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                 picker.show();
                 break;
             case R.id.upload_doc_image_upload_IV:
-                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent1.addCategory(Intent.CATEGORY_OPENABLE);
-                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-                intent1.setType("*application/pdf||*application/doc");
-                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
+                mediaUtils.openGallery();
+//                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//                intent1.addCategory(Intent.CATEGORY_OPENABLE);
+//                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+//                intent1.setType("*application/pdf||*application/doc");
+//                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
 
                 break;
             case R.id.save_BT:
@@ -315,12 +319,14 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==DOC_UPLOAD){
-            Uri uri = data.getData();
-            String fullPath = Commons.getPath(uri, this);
-            File file = new File(fullPath);
-            UploadImages(file);
-        }
+        mediaUtils.onActivityResult(requestCode, resultCode, data);
+
+//        if (requestCode==DOC_UPLOAD){
+//            Uri uri = data.getData();
+//            String fullPath = Commons.getPath(uri, this);
+//            File file = new File(fullPath);
+//            UploadImages(file);
+//        }
     }
 
 
@@ -664,5 +670,15 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         methods.customProgressDismiss();
         Toast.makeText(this, "Please try again!", Toast.LENGTH_SHORT).show();
         Log.e("error",t.getLocalizedMessage());
+    }
+
+    @Override
+    public void imgdata(String imgPath) {
+        Log.d ("imgdata123" , imgPath.toString());
+        Uri selectedImageURI = null;
+        File imgFile = new File(imgPath);
+        Log.d ("imgdata: " , imgFile.toString());
+        UploadImages(imgFile);
+
     }
 }
