@@ -164,7 +164,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                                 remarks = "", dtOfOnset = "", flowUpDt = "", weight = "", temparature = "", diagnosis = "", strNextVisitDate = "",
                                 strVacine = "", strDewormerName = "", strDewormerDose = "", strToolbarName = "", PetCategoryId = "", cocatVal = null,
                                 nextVaccineName = "", nextVaccineType = "",
-                                strVaccineType = "", strVaccineName = "", strNextDewormer = "", pet_cat_id = "";
+                                strVaccineType = "", strVaccineName = "", strNextDewormer = "", pet_cat_id = "", zoom_appointment_url_link="",online_appointment="";
     TextView                    add_immunization_data, folow_up_dt_view, ilness_onset, next_visit, Dewormer_name_ET, Dewormer_name_TV, Dewormer_ET,
                                 Dewormer_TV, clinic_head_line, add_immunization_data_added, clinicCalenderTextViewVisitDt, clinicIlness_onset,
                                 date_of_illness_TV, follow_up_dt, nextImmunizationDate, clinic_peto_edit_reg_number_dialog, next_vaccine_TV,
@@ -375,6 +375,10 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
             pet_encrypted_id = extras.getString("pet_encrypted_id");
             strToolbarName = extras.getString("toolbar_name");
             pet_cat_id = extras.getString("pet_cat_id");
+            online_appointment = extras.getString("onlineAppointment");
+            if (online_appointment.equals("yes")){
+
+            }
 
             Log.d("PET_DETAILS", " " + pet_DOB + " " + pet_encrypted_id + " " + descrisption + "" + Remarks + " " + pet_id + "" + pet_cat_id);
 

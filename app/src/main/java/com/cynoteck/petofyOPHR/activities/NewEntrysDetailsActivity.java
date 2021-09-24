@@ -177,7 +177,7 @@ public class NewEntrysDetailsActivity extends AppCompatActivity implements View.
                 data.putString("dt_of_illness","");
                 data.putString("pet_diognosis","");
                 data.putString("next_dt","");
-                data.putString("appointment","");
+                data.putString("onlineAppointment", "no");
                 data.putString("appoint_link", "");
                 data.putString("toolbar_name","ADD CLINIC VISITS");
                 data.putString("pet_cat_id",pet_cat_id);
@@ -207,7 +207,7 @@ public class NewEntrysDetailsActivity extends AppCompatActivity implements View.
             data.putString("dt_of_illness","");
             data.putString("pet_diognosis","");
             data.putString("next_dt","");
-            data.putString("appointment","");
+            data.putString("onlineAppointment", "no");
             data.putString("appoint_link", "");
             data.putString("toolbar_name","ADD CLINIC VISITS");
             data.putString("pet_cat_id",pet_cat_id);

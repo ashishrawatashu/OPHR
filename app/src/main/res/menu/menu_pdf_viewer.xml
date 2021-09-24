@@ -12,4 +12,5 @@
         android:icon="@drawable/ic_share"
         android:title="@string/text_share"
         app:showAsAction="ifRoom" />
+
 </menu>
