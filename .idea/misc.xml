@@ -22,7 +22,7 @@
         <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/open_setting_dialog.xml" value="0.2" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/service_type_dialog_layout.xml" value="0.19010416666666666" />
         <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/storage_permission_dialog.xml" value="0.18" />
-        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/update_new_version_dialog.xml" value="0.16" />
+        <entry key="..\:/WORKSPACE/Petofy_OPHR/PetofyOPHR/app/src/main/res/layout/update_new_version_dialog.xml" value="0.18" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_thumb.xml" value="0.13240740740740742" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/operating_hours_radio_track.xml" value="0.13240740740740742" />
         <entry key="..\:/petofy_ophr/app/src/main/res/drawable/remarks_texview_shape.xml" value="0.12222222222222222" />
@@ -56,6 +56,12 @@
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/immunization_chart_list.xml" value="0.18020833333333333" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/request_pending_list_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/vet_profile_fragment.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_add_clinic.xml" value="0.18297101449275363" />
+        <entry key="app/src/main/res/layout/activity_hospitalization_details.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/layout/activity_permission_check.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/layout/activity_x_ray_report_deatils.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/menu/menu_pdf_editor.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/menu/menu_pdf_viewer.xml" value="0.24010416666666667" />
       </map>
     </option>
   </component>
@@ -64,7 +70,7 @@
       <item index="0" class="java.lang.String" itemvalue="retrofit2.http.GET" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

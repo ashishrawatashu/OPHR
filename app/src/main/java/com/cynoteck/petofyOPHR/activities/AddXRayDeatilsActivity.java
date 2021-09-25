@@ -1,12 +1,9 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
@@ -15,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
@@ -53,7 +49,6 @@ import com.cynoteck.petofyOPHR.response.testResponse.XrayTestResponse;
 import com.cynoteck.petofyOPHR.utils.Config;
 import com.cynoteck.petofyOPHR.utils.MediaUtils;
 import com.cynoteck.petofyOPHR.utils.Methods;
-import com.cynoteck.petofyOPHR.utils.RealPathUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.karumi.dexter.Dexter;
@@ -79,7 +74,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Response;
 
-public class AddXRayDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse ,MediaUtils.GetImg{
+public class AddXRayDeatilsActivity extends AppCompatActivity implements View.OnClickListener, ApiResponse , MediaUtils.GetImg{
     TextView upload_doc_image_TV,document_headline_TV, peto_edit_reg_number_dialog,calenderTextViewtestdate,folow_up_dt_view,xray_peto_edit_reg_number_dialog,doctorPrescription_headline_TV;
     AppCompatSpinner nature_of_visit_spinner,clinicNext_visit_spinner;
     EditText description_ET;
@@ -236,14 +231,12 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                 picker.show();
                 break;
             case R.id.upload_doc_image_upload_IV:
+                mediaUtils.openGallery();
 //                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 //                intent1.addCategory(Intent.CATEGORY_OPENABLE);
 //                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 //                intent1.setType("*application/pdf||*application/doc");
 //                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
-
-                mediaUtils.openGallery();
-
 
                 break;
             case R.id.save_BT:
@@ -322,7 +315,6 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
     }
 
 
-    @SuppressLint("ObsoleteSdkInt")
     @RequiresApi(api = Build.VERSION_CODES.FROYO)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -330,21 +322,13 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         mediaUtils.onActivityResult(requestCode, resultCode, data);
 
 //        if (requestCode==DOC_UPLOAD){
-//            String selectedImagePath = getAbsolutePath(data.getData());
-//            imgUser.setImageBitmap(decodeFile(selectedImagePath));
 //            Uri uri = data.getData();
 //            String fullPath = Commons.getPath(uri, this);
-//            Log.d("fullPath",fullPath);
 //            File file = new File(fullPath);
-//            String uriString = uri.toString();
-//            File myFile = new File(uriString);
-//
-//            String path = getPath(AddXRayDeatilsActivity.this,uri);
-//            File file = new File(selectedImagePath);
-
 //            UploadImages(file);
 //        }
     }
+
 
     private void UploadImages(File absolutePath) {
         methods.showCustomProgressBarDialog(this);
@@ -429,7 +413,6 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                 .onSameThread()
                 .check();
     }
-
 
     private void storagePermissionDialog() {
         storageDialog  = new Dialog(this);
@@ -696,5 +679,6 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         File imgFile = new File(imgPath);
         Log.d ("imgdata: " , imgFile.toString());
         UploadImages(imgFile);
+
     }
 }

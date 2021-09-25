@@ -12,12 +12,12 @@
         android:layout_width="match_parent"
         android:background="@color/whiteColor"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <ImageView

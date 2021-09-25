@@ -1,6 +1,7 @@
 package com.cynoteck.petofyOPHR.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cynoteck.petofyOPHR.R;
+import com.cynoteck.petofyOPHR.fragments.ProfileFragment;
+import com.cynoteck.petofyOPHR.utils.Config;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -30,6 +33,7 @@ import java.util.List;
 public class PermissionCheckActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button allow_BT;
+    private final int                          UPDATE = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,7 @@ public class PermissionCheckActivity extends AppCompatActivity implements View.O
         Dexter.withActivity(this)
                 .withPermissions(
                         android.Manifest.permission.CAMERA,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
@@ -50,11 +55,17 @@ public class PermissionCheckActivity extends AppCompatActivity implements View.O
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            startActivity(new Intent(PermissionCheckActivity.this,DashBoardActivity.class));
+//                            startActivity(new Intent(PermissionCheckActivity.this, ViewFullProfileVetActivity.class));
+                            Intent parentFullProfileIntent = new Intent(getApplicationContext(), DashBoardActivity.class);
+                            startActivityForResult(parentFullProfileIntent, UPDATE);
+
+
+
                             Log.d("STORAGE_DIALOG","All permissions are granted by user!");
-                        }else {
-                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
                         }
+//                        else {
+//                            Log.d("STORAGE_DIALOG","storagePermissionDialog");
+//                        }
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
@@ -99,6 +110,11 @@ public class PermissionCheckActivity extends AppCompatActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         requestMultiplePermissions();
     }
 }
