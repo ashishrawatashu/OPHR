@@ -351,8 +351,6 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        //8583896504(Suresh Das).
-
         if (extras != null) {
             report_id = extras.getString("report_id");
             pet_id = extras.getString("pet_id");
@@ -647,6 +645,8 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+
+
     private void getTreatmentRemaks(SearchRemaksRequest searchRemaksRequest) {
         ApiService<SearchRemaksResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().getSearchTreatmentRemarks(Config.token, searchRemaksRequest), "SearchTreatmentRemarks");
@@ -671,9 +671,9 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
     private void getNextFirstVaccine() {
         NextVaccineParam nextVaccineParam = new NextVaccineParam();
-        nextVaccineParam.setNextVaccinationDate(strNextVisitDate);
-        nextVaccineParam.setVaccineName(strVaccineName);
-        nextVaccineParam.setVaccineType(strVaccineType);
+        nextVaccineParam.setNextVaccinationDate(vaccinationModelArrayList.get(vaccinationModelArrayList.size()-2).getImmunizationDate());
+        nextVaccineParam.setVaccineName(vaccinationModelArrayList.get(vaccinationModelArrayList.size()-2).getVaccine());
+        nextVaccineParam.setVaccineType(vaccinationModelArrayList.get(vaccinationModelArrayList.size()-2).getVaccineType());
         nextVaccineParam.setCategoryId(pet_cat_id);
         nextVaccineParam.setPetId(pet_id.substring(0, pet_id.length() - 2));
         NextVaccineRequest nextVaccineRequest = new NextVaccineRequest();
@@ -1582,6 +1582,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void removeTemporaryVaccine() {
+        methods.showCustomProgressBarDialog(this);
         RemoveParams removeParams = new RemoveParams();
         removeParams.setId(pet_id.substring(0, pet_id.length() - 2));
         RemoveRequest removeRequest = new RemoveRequest();
@@ -2179,19 +2180,17 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                     int responseCode = Integer.parseInt(nextVaccineResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
                         if (getImmuMstStatus.equals("true")) {
+                            Log.d("Check IF ","True");
+                            folow_up_dt_view.setText(nextVaccineResponse.getData().getNextDate());
                             next_vaccine_ET.setEnabled(false);
                             folow_up_dt_view.setText(nextVaccineResponse.getData().getNextDate());
                             nextVaccineName = nextVaccineResponse.getData().getVaccineName();
                             nextVaccineType = nextVaccineResponse.getData().getVaccineType();
                             vaccineNameList.add(nextVaccineName);
-                            Log.d("nextVaccineType222",nextVaccineType);
-                            Log.d("nextVaccineNamee222",nextVaccineName);
-
+                            vaccineTypeList.add(nextVaccineType);
                             setNextVaccineNameSpinner();
                             setVaccineNextTypeSpinner(nextVaccineType);
                         }
-
-                    } else {
 
                     }
                 } catch (Exception e) {
@@ -2271,13 +2270,15 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
             case "RemoveVaccineDetails":
                 try {
+                    methods.customProgressDismiss();
                     Log.d("RemoveVaccineRespo", arg0.body().toString());
                     JsonObject removeResponse = (JsonObject) arg0.body();
                     JsonObject response = removeResponse.getAsJsonObject("response");
                     Log.d("hhshshhs", "" + response);
                     int responseCode = Integer.parseInt(String.valueOf(response.get("responseCode")));
                     if (responseCode == 109) {
-                        Toast.makeText(this, "Removed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Vaccine is Removed !", Toast.LENGTH_SHORT).show();
+//                        getNextFirstVaccine();
                     } else {
                         Toast.makeText(this, "Please Try Again !", Toast.LENGTH_SHORT).show();
                     }
@@ -2636,6 +2637,18 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onItemClick(int position) {
+        if (getImmuMstStatus.equals("true")){
+            folow_up_dt_view.setText(vaccinationModelArrayList.get(position).getImmunizationDate());
+            next_vaccine_ET.setEnabled(false);
+            folow_up_dt_view.setText(vaccinationModelArrayList.get(position).getImmunizationDate());
+            nextVaccineName = vaccinationModelArrayList.get(position).getVaccine();
+            nextVaccineType = vaccinationModelArrayList.get(position).getVaccineType();
+            vaccineNameList.add(nextVaccineName);
+            vaccineTypeList.add(nextVaccineType);
+            setNextVaccineNameSpinner();
+            setVaccineNextTypeSpinner(nextVaccineType);
+        }
+
         vaccinationModelArrayList.remove(position);
         Log.e("vaccinlist_after", "" + vaccinationModelArrayList.size());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddClinicActivity.this);
@@ -2644,6 +2657,8 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
         hospitalizationReportsAdapter = new ImmunazationVaccineAdopter(AddClinicActivity.this, AddClinicActivity.this, vaccinationModelArrayList);
         immunization_data.setAdapter(hospitalizationReportsAdapter);
         hospitalizationReportsAdapter.notifyDataSetChanged();
+        Log.d("Check IF ","True");
+
         removeTemporaryVaccine();
     }
 
