@@ -157,7 +157,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
     Calendar                    cldr = Calendar.getInstance();
     static long                 MinimunDate=0;
     LinearLayout                next_vaccine_LL;
-    String                      report_id = "", visitIdString = "", pet_age = "", strNatureOfVist = "", appointment_ID = "0", pet_DOB = "",
+    String                      appoint_link="",onlineAppointment="",report_id = "", visitIdString = "", pet_age = "", strNatureOfVist = "", appointment_ID = "0", pet_DOB = "",
             pet_encrypted_id = "", strDocumentUrl = "", visitId = "", natureOfVisit = "", pet_id = "",
             pet_name = "", pet_owner_name = "", pet_sex = "", pet_unique_id = "", veterian_name = "", descrisption = "",
             strPetAge = "", getStrVaccineType = "", getStrVaccineName = "", Remarks = "", visitDate = "", history = "",
@@ -178,7 +178,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
     AppCompatSpinner            next_vaccine_ET,clinicNature_of_visit_spinner, clinicNext_visit_spinner, vaccine_type, vaccine_name,
             next_vaccine_type_spinner, next_dewormer_spinner;
     LinearLayout                clinicDocument_layout, treatment_remarks_LL;
-    Button                      clinicSave_clinic_data;
+    Button                      clinicSave_clinic_data,join_meeting_BT;
     WebView                     webview;
 
     Methods                     methods;
@@ -225,7 +225,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
         requestMultiplePermissions();
         getImmunizationMasterStatus();
 
-
+        Log.d("joinmeeting", appoint_link);
     }
 
     private void getImmunizationMasterStatus() {
@@ -302,8 +302,10 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 //        imaunizatioHeader = findViewById(R.id.imaunizatioHeader);
 //        immunizationView = findViewById(R.id.immunizationView);
         view_profile_RL=findViewById(R.id.view_profile_RL);
+        join_meeting_BT=findViewById(R.id.join_meeting_BT);
 
 
+        join_meeting_BT.setOnClickListener(this);
         clinicCalenderTextViewVisitDt.setOnClickListener(this);
         clinicIlness_onset.setOnClickListener(this);
         folow_up_dt_view.setOnClickListener(this);
@@ -373,6 +375,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
             pet_encrypted_id = extras.getString("pet_encrypted_id");
             strToolbarName = extras.getString("toolbar_name");
             pet_cat_id = extras.getString("pet_cat_id");
+            onlineAppointment = extras.getString("onlineAppointment");
 
             Log.d("PET_DETAILS", " " + pet_DOB + " " + pet_encrypted_id + " " + descrisption + "" + Remarks + " " + pet_id + "" + pet_cat_id);
 
@@ -380,6 +383,12 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                 clinicSave_clinic_data.setText("UPDATE");
             else
                 clinicSave_clinic_data.setText("Continue");
+
+            if (onlineAppointment.equals("yes")){
+                appoint_link = extras.getString("appoint_link");
+                join_meeting_BT.setVisibility(View.VISIBLE);
+
+            }
 
 //            clinic_head_line.setText(strToolbarName);
             // clinic_peto_edit_reg_number_dialog.setText(pet_unique_id);
@@ -879,6 +888,14 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.add_immunization_data_LL:
                 showVaccineDialog();
+                break;
+
+            case R.id.join_meeting_BT:
+                Log.d("joinmeeting", appoint_link);
+                Uri uri = Uri.parse(appoint_link); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+
                 break;
 
         }

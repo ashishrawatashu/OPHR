@@ -45,6 +45,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+        <Button
+            android:id="@+id/join_meeting_BT"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="JOIN"
+            android:background="@drawable/blue_border_button"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"
+
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteY="0dp" />
+
         <RelativeLayout
             android:visibility="gone"
             android:id="@+id/view_profile_RL"

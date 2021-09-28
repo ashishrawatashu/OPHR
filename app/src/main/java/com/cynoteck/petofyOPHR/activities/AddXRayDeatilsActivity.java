@@ -231,7 +231,9 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                 picker.show();
                 break;
             case R.id.upload_doc_image_upload_IV:
-                mediaUtils.openGallery();
+//                mediaUtils.openGallery();
+                showPictureDialog();
+
 //                Intent intent1 = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 //                intent1.addCategory(Intent.CATEGORY_OPENABLE);
 //                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
@@ -681,4 +683,44 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
         UploadImages(imgFile);
 
     }
+
+
+
+    private void showPictureDialog() {
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        RelativeLayout select_camera = (RelativeLayout) dialog.findViewById(R.id.select_camera);
+        RelativeLayout select_gallery = (RelativeLayout) dialog.findViewById(R.id.select_gallery);
+        RelativeLayout cancel_dialog = (RelativeLayout) dialog.findViewById(R.id.cancel_dialog);
+
+        select_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                mediaUtils.openCamera();
+            }
+        });
+
+        select_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaUtils.openGallery();
+                dialog.dismiss();
+            }
+        });
+
+        cancel_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+
 }

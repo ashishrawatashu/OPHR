@@ -74,7 +74,8 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
     AppCompatSpinner age_wise, parent_address, add_pet_type, add_pet_age_dialog, add_pet_breed_dialog, add_pet_color_dialog;
     EditText pet_name_ET, age_neumeric;
     Button save_BT;
-    TextView peto_reg_number_dialog, calenderTextView_dialog, ageViewTv,pet_color_TV;
+    ProgressBar addPetProgressBar;
+    TextView pet_breed_TV,peto_reg_number_dialog, calenderTextView_dialog, ageViewTv,pet_color_TV;
     CheckBox convert_yr_to_age;
     EditText pet_parent_name_ET, pet_contact_number_ET;
     LinearLayout day_and_age_layout;
@@ -149,8 +150,10 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
         maleRB = findViewById(R.id.maleRB);
         genderRG = findViewById(R.id.genderRG);
         femaleRB = findViewById(R.id.femaleRB);
-
+        pet_breed_TV=findViewById(R.id.pet_breed_TV);
         pet_color_TV=findViewById(R.id.pet_color_TV);
+
+        addPetProgressBar=findViewById(R.id.addPetProgressBar);
 
         peto_reg_number_dialog = findViewById(R.id.peto_reg_number_dialog);
         calenderTextView_dialog = findViewById(R.id.calenderTextView_dialog);
@@ -589,6 +592,9 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
 //                break;
             case "GetPetTypes":
                 try {
+                    scrollView.setVisibility(View.VISIBLE);
+                    addPetProgressBar.setVisibility(View.GONE);
+                    save_BT.setVisibility(View.VISIBLE);
                     Log.d("GetPetTypes", arg0.body().toString());
                     PetTypeResponse petTypeResponse = (PetTypeResponse) arg0.body();
                     int responseCode = Integer.parseInt(petTypeResponse.getResponse().getResponseCode());
@@ -976,6 +982,10 @@ public class AddNewPetActivity extends AppCompatActivity implements ApiResponse,
                 strSpnerItemPetType = item;
                 getStrSpnerItemPetNmId = petTypeHashMap.get(item);
                 if (!getStrSpnerItemPetNmId.equals("0")) {
+                    pet_color_TV.setVisibility(View.VISIBLE);
+                    pet_breed_TV.setVisibility(View.VISIBLE);
+                    add_pet_breed_dialog.setVisibility(View.VISIBLE);
+                    add_pet_color_dialog.setVisibility(View.VISIBLE);
                     getPetBreed();
                     getPetAge();
                     getPetColor();

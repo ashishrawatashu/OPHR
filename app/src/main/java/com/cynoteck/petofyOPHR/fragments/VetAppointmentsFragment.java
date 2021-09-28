@@ -329,7 +329,13 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
                                 data.putString("dt_of_illness", "");
                                 data.putString("pet_diognosis", "");
                                 data.putString("next_dt", "");
-                                data.putString("appointment", "join");
+                                if (appointmentListsJoin.get(joinPostion).getIsVideoCall().equals("true")){
+                                    data.putString("onlineAppointment","yes");
+
+                                }else {
+                                    data.putString("onlineAppointment","no");
+
+                                }
                                 data.putString("appoint_link", String.valueOf((Uri.parse(appointmentListsJoin.get(joinPostion).getMeetingUrl()))));
                                 data.putString("toolbar_name", "ADD CLINIC");
                                 data.putString("pet_cat_id","1");
@@ -427,7 +433,13 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
             data.putString("dt_of_illness", "");
             data.putString("pet_diognosis", "");
             data.putString("next_dt", "");
-            data.putString("onlineAppointment", "yes");
+            if (appointmentLists.get(position).getIsVideoCall().equals("true")){
+                data.putString("onlineAppointment","yes");
+
+            }else {
+                data.putString("onlineAppointment","no");
+
+            }
             data.putString("appoint_link", String.valueOf((Uri.parse(appointmentLists.get(position).getMeetingUrl()))));
             data.putString("toolbar_name", "ADD CLINIC");
             data.putString("pet_cat_id","1");
