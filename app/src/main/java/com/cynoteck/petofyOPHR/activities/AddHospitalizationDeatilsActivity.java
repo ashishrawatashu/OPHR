@@ -51,6 +51,7 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
     EditText veterian_name_ET,veterian_phone_ET,hospital_name_ET,hospital_phone_ET,reson_of_hospitalization_ET,result_ET;
     Spinner hospital_type_spinner;
     TextView upload_doc_image_TV,  calenderTextView_admission_date,hospitalization_peto_edit_reg_number_dialog,
-            calenderTextView_discharge_date_TV,doctorPrescription_headline_TV;
+            calenderTextView_discharge_date_TV,doctorPrescription_headline_TV,discharge_date_TV;
     Button save_BT;
     ImageView upload_doc_image_upload_IV,upload_doc_image_delete_IV;
     MaterialCardView back_arrow_CV;
@@ -119,6 +120,8 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
         calenderTextView_admission_date=findViewById(R.id.calenderTextView_admission_date);
         calenderTextView_discharge_date_TV=findViewById(R.id.calenderTextView_discharge_date_TV);
         save_BT=findViewById(R.id.save_BT);
+
+        discharge_date_TV=findViewById(R.id.discharge_date_TV);
         back_arrow_CV=findViewById(R.id.back_arrow_CV);
         upload_doc_image_progress_bar = findViewById(R.id.upload_doc_image_progress_bar);
         doctorPrescription_headline_TV=findViewById(R.id.doctorPrescription_headline_TV);
@@ -150,7 +153,9 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 
             hospitalization_peto_edit_reg_number_dialog.setText(pet_unique_id);
             veterian_name_ET.setText(Config.user_Veterian_name);
-            veterian_phone_ET.setText(Config.user_Veterian_phone);
+            Config.user_Veterian_phone.replaceAll("-","");
+            String updated_phone =  Config.user_Veterian_phone.replaceAll("-","");
+            veterian_phone_ET.setText(updated_phone);
         }
 
         methods=new Methods(this);
@@ -193,11 +198,16 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 calenderTextView_admission_date.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
+                                Config.day= dayOfMonth;
+                                Config.month=monthOfYear;
+                              discharge_date_TV.setVisibility(View.VISIBLE);
+                              calenderTextView_discharge_date_TV.setVisibility(View.VISIBLE);
+
                             }
                         }, year, month, day);
 
-                Config.day= day;
-                Config.month=month;
+//                Config.day= day;
+//                Config.month=month;
                 picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
                 picker.show();
                 break;
@@ -214,8 +224,10 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                                 calenderTextView_discharge_date_TV.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, yearDis, monthDis, dayDis);
-//                picker.updateDate(Config.day,Config.month,yearDis);
-//                cldr.updateDate(yearDis,Config.month,Config.day);
+
+
+                picker.getDatePicker().updateDate(yearDis,Config.month,Config.day+1);
+                picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
 
                 picker.show();
                 break;
@@ -250,6 +262,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 
                 if(strRequstVeterian.isEmpty()){
                     veterian_name_ET.setError("Enter Veterinarian Name");
+                    Toast.makeText(this, "Enter Veterinarian Name", Toast.LENGTH_SHORT).show();
                     hospital_name_ET.setError(null);
                     hospital_phone_ET.setError(null);
                     reson_of_hospitalization_ET.setError(null);
@@ -263,6 +276,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
                     veterian_phone_ET.setError("Invalid phone no !");
+                    Toast.makeText(this, "Invalid phone no !", Toast.LENGTH_SHORT).show();
                 }else if(hospitalizationStr.equals("Select Hospital Type")) {
                     veterian_name_ET.setError(null);
                     hospital_name_ET.setError(null);
@@ -279,6 +293,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                     veterian_phone_ET.setError(null);
                     hospital_phone_ET.setError(null);
                     calenderTextView_admission_date.setError("Enter Admission Date");
+                    Toast.makeText(this, "Enter Admission Date", Toast.LENGTH_SHORT).show();
                     calenderTextView_discharge_date_TV.setError(null);
                 }
                 else if(strHospitalDischargeDt.isEmpty()) {
@@ -288,12 +303,14 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                     calenderTextView_admission_date.setError(null);
                     veterian_phone_ET.setError(null);
                     hospital_phone_ET.setError(null);
+                    Toast.makeText(this, "Enter discharge Date", Toast.LENGTH_SHORT).show();
                     calenderTextView_discharge_date_TV.setError("Enter discharge Date");
                 }
                 else if(strHospitalName.isEmpty())
                 {
                     veterian_name_ET.setError(null);
                     hospital_phone_ET.setError(null);
+                    Toast.makeText(this, "Enter Hospital Name", Toast.LENGTH_SHORT).show();
                     hospital_name_ET.setError("Enter Hospital Name");
                     reson_of_hospitalization_ET.setError(null);
                     veterian_phone_ET.setError(null);
@@ -306,6 +323,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                     hospital_name_ET.setError(null);
                     veterian_phone_ET.setError(null);
                     hospital_phone_ET.setError(null);
+                    Toast.makeText(this, "Reason of Hospitalization", Toast.LENGTH_SHORT).show();
                     reson_of_hospitalization_ET.setError("Reason of Hospitalization");
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
@@ -317,6 +335,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                     reson_of_hospitalization_ET.setError(null);
                     calenderTextView_admission_date.setError(null);
                     calenderTextView_discharge_date_TV.setError(null);
+                    Toast.makeText(this, "Invalid phone no !", Toast.LENGTH_SHORT).show();
                     hospital_phone_ET.setError("Invalid phone no!");
                 } else {
                     methods.showCustomProgressBarDialog(this);
@@ -676,6 +695,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 
         dialog.show();
     }
+
 
 
 
