@@ -150,7 +150,7 @@ public class AppointementFragment extends Fragment implements ApiResponse ,View.
                                     intent.putExtra("type","update");
                                     intent.putExtra("id",appointmentLists.get(position).getId());
                                     intent.putExtra("pet_id",appointmentLists.get(position).getPetId());
-                                    intent.putExtra("petParent",appointmentLists.get(position).getPetUniqueId());
+                                    intent.putExtra("petParent",appointmentLists.get(position).getPetUniqueId()+"("+appointmentLists.get(position).getPetParentName()+")");
                                     if(appointmentLists.get(position).getPaymentStatus().equals("false")) {
                                         startActivity(intent);
                                     }
@@ -160,6 +160,7 @@ public class AppointementFragment extends Fragment implements ApiResponse ,View.
                             @Override
                             public void onJoinClick(int position, ArrayList<AppointmentList> appointmentLists, Button button) {
                                 joinPostion =position;
+                                Toast.makeText(getContext(), "hii", Toast.LENGTH_SHORT).show();
                                 appointmentListsJoin = appointmentLists;
                                 String userTYpe = sharedPreferences.getString("user_type", "");
                                 if (userTYpe.equals("Vet Staff")){
@@ -194,7 +195,14 @@ public class AppointementFragment extends Fragment implements ApiResponse ,View.
                                     data.putString("dt_of_illness","");
                                     data.putString("pet_diognosis","");
                                     data.putString("next_dt","");
-                                    data.putString("appointment","join");
+                                    Toast.makeText(getContext(), appointmentLists.get(position).getIsVideoCall(), Toast.LENGTH_SHORT).show();
+                                    if (appointmentLists.get(position).getIsVideoCall().equals("true")){
+                                        data.putString("onlineAppointment","yes");
+
+                                    }else {
+                                        data.putString("onlineAppointment","no");
+
+                                    }
                                     data.putString("appoint_link", String.valueOf((Uri.parse(appointmentLists.get(position).getMeetingUrl()))));
                                     data.putString("toolbar_name","ADD CLINIC");
                                     petDetailsIntent.putExtras(data);
@@ -300,9 +308,14 @@ public class AppointementFragment extends Fragment implements ApiResponse ,View.
                                 data.putString("dt_of_illness","");
                                 data.putString("pet_diognosis","");
                                 data.putString("next_dt","");
-                                data.putString("appointment","join");
+                                if (appointmentListsJoin.get(joinPostion).getIsVideoCall().equals("true")){
+                                    data.putString("onlineAppointment","yes");
+                                }else {
+                                    data.putString("onlineAppointment","no");
+                                }
+                                data.putString("onlineAppointment","yes");
                                 data.putString("appoint_link", String.valueOf((Uri.parse(appointmentListsJoin.get(joinPostion).getMeetingUrl()))));
-                                data.putString("toolbar_name","ADD CLINIC");
+                                data.putString("toolbar_name","ADD CLINIC VISIT");
                                 petDetailsIntent.putExtras(data);
                                 startActivity(petDetailsIntent);
                             }else if (permissionId.equals("12")){

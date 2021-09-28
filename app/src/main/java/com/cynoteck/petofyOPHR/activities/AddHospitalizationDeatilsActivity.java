@@ -6,12 +6,14 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +80,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 
     DatePickerDialog picker;
     ProgressBar upload_doc_image_progress_bar;
+    final Calendar cldr = Calendar.getInstance();
 
     String report_id="",hospitalizationStr="",hospitalizationId="",pet_id="",pet_name="",pet_owner_name="",pet_sex="",pet_unique_id="",strDocumentUrl="",hospital_type,hospital_name,hospital_phone,admission,discharge,result,reason,type;
 
@@ -179,7 +183,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 
         switch (view.getId()){
             case R.id.calenderTextView_admission_date:
-                final Calendar cldr = Calendar.getInstance();
+//                final Calendar cldr = Calendar.getInstance();
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
                 int month = cldr.get(Calendar.MONTH);
                 int year = cldr.get(Calendar.YEAR);
@@ -191,13 +195,17 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                                 calenderTextView_admission_date.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year, month, day);
+
+                Config.day= day;
+                Config.month=month;
+                picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
                 picker.show();
                 break;
             case R.id.calenderTextView_discharge_date_TV:
-                final Calendar cldrDis = Calendar.getInstance();
-                int dayDis = cldrDis.get(Calendar.DAY_OF_MONTH);
-                int monthDis = cldrDis.get(Calendar.MONTH);
-                int yearDis = cldrDis.get(Calendar.YEAR);
+//                final Calendar cldr = Calendar.getInstance();
+                int dayDis = cldr.get(Calendar.DAY_OF_MONTH);
+                int monthDis = cldr.get(Calendar.MONTH);
+                int yearDis = cldr.get(Calendar.YEAR);
                 // date picker dialog
                 picker = new DatePickerDialog(this,
                         new DatePickerDialog.OnDateSetListener() {
@@ -206,6 +214,9 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                                 calenderTextView_discharge_date_TV.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, yearDis, monthDis, dayDis);
+//                picker.updateDate(Config.day,Config.month,yearDis);
+//                cldr.updateDate(yearDis,Config.month,Config.day);
+
                 picker.show();
                 break;
 
@@ -223,7 +234,8 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 //                intent1.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 //                intent1.setType("*application/pdf||*application/doc");
 //                startActivityForResult(Intent.createChooser(intent1, "Select a file"), DOC_UPLOAD);
-                mediaUtils.openGallery();
+//                mediaUtils.openGallery();
+                showPictureDialog();
 
                 break;
             case R.id.save_BT:
@@ -628,4 +640,47 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
         Log.d ("imgdata: " , imgFile.toString());
         UploadImages(imgFile);
     }
+
+    private void showPictureDialog() {
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        RelativeLayout select_camera = (RelativeLayout) dialog.findViewById(R.id.select_camera);
+        RelativeLayout select_gallery = (RelativeLayout) dialog.findViewById(R.id.select_gallery);
+        RelativeLayout cancel_dialog = (RelativeLayout) dialog.findViewById(R.id.cancel_dialog);
+
+        select_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                mediaUtils.openCamera();
+            }
+        });
+
+        select_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaUtils.openGallery();
+                dialog.dismiss();
+            }
+        });
+
+        cancel_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+
+
+
+
+
+
 }

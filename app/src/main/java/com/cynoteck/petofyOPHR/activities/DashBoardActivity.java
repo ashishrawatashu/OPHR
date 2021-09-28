@@ -133,6 +133,8 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         Config.vet_first_name = sharedPreferences.getString("first_name", "");
         Config.vet_last_name = sharedPreferences.getString("last_name", "");
         Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
+        Log.d("TOKEN",Config.token);
+
         requestMultiplePermissions();
 
 

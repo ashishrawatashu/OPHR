@@ -1150,8 +1150,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
 //----------------------------------------------------------------------------------------------------------------
             case "UpdateVeterinarian":
                 try {
-                    Log.d("UpdateVeterinarian", String.valueOf(response.code()));
                     UpdateVetResponse userResponse = (UpdateVetResponse) response.body();
+                    Log.d("UPDATEVET", methods.getRequestJson(userResponse));
                     int responseCode = Integer.parseInt(userResponse.getResponse().getResponseCode());
                     if (responseCode == 109) {
                         Toast.makeText(UpdateProfileActivity.this, "Updated", Toast.LENGTH_SHORT).show();
@@ -1163,8 +1163,12 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                             finish();
                         }
                     } else if (responseCode == 614) {
+                        Log.d("UPDATE", String.valueOf(response.code()));
+
                         Toast.makeText(UpdateProfileActivity.this, userResponse.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
                     } else {
+                        Log.d("UPDATE", String.valueOf(response.code()));
+
                         Toast.makeText(UpdateProfileActivity.this, "Please Try Again  UpdateVeterinarian!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -1228,7 +1232,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onError(Throwable t, String key) {
         methods.customProgressDismiss();
-        Log.e("error", t.getMessage());
+        Log.e("UPDATEERROR", t.getMessage());
         Toast.makeText(this, "Please try again Error function! "+key, Toast.LENGTH_SHORT).show();
     }
 

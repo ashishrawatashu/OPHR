@@ -561,7 +561,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
                 intent.putExtra("petService", petServiceText.stream().collect(Collectors.joining(",")));
                 intent.putExtra("petServiceValue", petServiceValue.stream().collect(Collectors.joining(",")));
                 intent.putExtra("petType", petTypeText.stream().collect(Collectors.joining(",")));
-                intent.putExtra("petTypeValue", petTypeValue.stream().collect(Collectors.joining(",")));
+                intent.putExtra("petTypeValue", ","+petTypeValue.stream().collect(Collectors.joining(",")));
                 startActivityForResult(intent, USERUPDATION);
                 break;
 

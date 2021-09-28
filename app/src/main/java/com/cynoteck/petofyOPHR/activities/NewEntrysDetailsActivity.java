@@ -209,7 +209,7 @@ public class NewEntrysDetailsActivity extends AppCompatActivity implements View.
             data.putString("next_dt","");
             data.putString("onlineAppointment", "no");
             data.putString("appoint_link", "");
-            data.putString("toolbar_name","ADD CLINIC VISITS");
+            data.putString("toolbar_name","ADD CLINIC VISIT");
             data.putString("pet_cat_id",pet_cat_id);
             petDetailsIntent.putExtras(data);
             startActivityForResult(petDetailsIntent,ADD_CLINIC_VISIT);

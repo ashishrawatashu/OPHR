@@ -166,6 +166,7 @@ public class AddUpdateAppointmentActivity extends AppCompatActivity implements A
             duration_TV.setFocusable(false);
             appointment_headline.setText("EDIT APPOINTMENT");
             create_appointment_BT.setText("Update Appointment");
+            pet_parent_ET.setEnabled(false);
             GetPetListParams getPetListParams = new GetPetListParams();
             getPetListParams.setId(id);
             GetPetListRequest getPetListRequest = new GetPetListRequest();
