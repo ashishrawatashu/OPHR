@@ -14,6 +14,14 @@ import okhttp3.RequestBody;
 
 public class Config {
 
+//----------------------------TESTING-----------------
+    public  static  String BASE_URL= "http://api.petofy.com/api/";//testing
+    public  static  String URL= "https://testing.petofy.com/";//testing
+
+    //---------------------LIVE----------------------
+    /*public  static  String URL= "https://www.petofy.com/";//live
+    public  static  String BASE_URL= "https://petofyapi.azurewebsites.net/api/";//live*/
+
     public  static  int count =1;
     public  static  int tabPosition =1;
     public static String total_pets="";
