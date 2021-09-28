@@ -192,15 +192,19 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
                 int month = cldr.get(Calendar.MONTH);
                 int year = cldr.get(Calendar.YEAR);
+                Log.d("YEAR",""+Calendar.DAY_OF_MONTH+","+""+Calendar.MONTH+""+Calendar.YEAR);
                 // date picker dialog
                 picker = new DatePickerDialog(this,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 calenderTextView_admission_date.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
+                                calenderTextView_discharge_date_TV.setText("");
+                                calenderTextView_discharge_date_TV.setHint("DD/MM/YYY");
                                 Config.day= dayOfMonth;
                                 Config.month=monthOfYear;
-                              discharge_date_TV.setVisibility(View.VISIBLE);
+                                Config.year=year;
+                                discharge_date_TV.setVisibility(View.VISIBLE);
                               calenderTextView_discharge_date_TV.setVisibility(View.VISIBLE);
 
                             }
@@ -212,7 +216,8 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                 picker.show();
                 break;
             case R.id.calenderTextView_discharge_date_TV:
-//                final Calendar cldr = Calendar.getInstance();
+                final Calendar cldr1 = Calendar.getInstance();
+                cldr1.set(Config.year,Config.month,Config.day);
                 int dayDis = cldr.get(Calendar.DAY_OF_MONTH);
                 int monthDis = cldr.get(Calendar.MONTH);
                 int yearDis = cldr.get(Calendar.YEAR);
@@ -225,10 +230,9 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                             }
                         }, yearDis, monthDis, dayDis);
 
-
-                picker.getDatePicker().updateDate(yearDis,Config.month,Config.day+1);
-                picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
-
+                picker.getDatePicker().updateDate(yearDis,Config.month,Config.day);
+//                picker.getDatePicker().setMinDate(cldr1.getTimeInMillis());
+                picker.getDatePicker().setMinDate(cldr1.getTimeInMillis());
                 picker.show();
                 break;
 

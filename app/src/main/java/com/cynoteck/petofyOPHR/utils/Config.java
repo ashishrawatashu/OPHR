@@ -49,8 +49,9 @@ public class Config {
     public static String user_type="";
     public static String user_verterian_reg_no="";
     public static  boolean checkAPIhit=true;
-    public static Integer day;
-    public static Integer month;
+    public static int day;
+    public static int month;
+    public static int year;
 
     public static String type="";
     public static String backCall="";

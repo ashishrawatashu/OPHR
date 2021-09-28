@@ -182,7 +182,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:hint="12/05/2020"
+                android:hint="DD/MM/YYYY"
                 android:background="@drawable/cal_background"/>
 
             <TextView

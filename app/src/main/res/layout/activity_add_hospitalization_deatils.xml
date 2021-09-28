@@ -235,7 +235,7 @@
                 android:background="@drawable/cal_background"
                 android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
-                android:hint="12/05/2020"
+                android:hint="DD/MM/YYYY"
                 android:paddingLeft="25dp"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
@@ -271,7 +271,7 @@
 
                 android:fontFamily="@font/nunito"
                 android:gravity="center_vertical"
-                android:hint="12/05/2020"
+                android:hint="DD/MM/YYYY"
                 android:paddingLeft="25dp"
                 android:textColor="@color/gray_1"
                 android:textSize="18sp"
