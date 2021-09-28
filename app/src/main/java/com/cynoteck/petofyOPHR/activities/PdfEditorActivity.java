@@ -22,6 +22,7 @@ import androidx.core.content.FileProvider;
 
 
 import com.cynoteck.petofyOPHR.R;
+import com.cynoteck.petofyOPHR.utils.Config;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tejpratapsingh.pdfcreator.utils.FileManager;
 import com.tejpratapsingh.pdfcreator.utils.PDFUtil;
@@ -111,8 +112,12 @@ public class PdfEditorActivity extends AppCompatActivity{
                 });
             }
         }));
-        Log.e("URL","https://www.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
-        webView.loadUrl("https://www.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
+        //----------------------TESTING-------------------------------------------
+        Log.e("URL",Config.URL+"PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
+        webView.loadUrl(Config.URL+"PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
+
+//        Log.e("URL","https://www.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
+//        webView.loadUrl("https://www.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
 
     }
 

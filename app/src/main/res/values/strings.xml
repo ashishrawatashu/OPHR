@@ -128,7 +128,7 @@
     <string name="manage_pet_lab_work">Manage pet-Lab work</string>
     <string name="addhospitalization">Hospitalizations/Surgeries</string>
     <string name="labname">Lab Name</string>
-    <string name="dischargeDate">Discharge Date*</string>
+    <string name="dischargeDate">Discharge Date</string>
     <string name="hospitalphone">Hospital Phone</string>
 
 
