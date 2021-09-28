@@ -111,8 +111,11 @@ public class PdfEditorActivity extends AppCompatActivity{
                 });
             }
         }));
-        Log.e("URL","https://www.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
-        webView.loadUrl("https://www.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
+        Log.e("URL","https://testing.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
+        webView.loadUrl("https://testing.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
+
+//        Log.e("URL","https://www.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
+//        webView.loadUrl("https://www.petofy.com/PetHealthRecord/DoctorsPrescription?encryptedId="+encyptId+"&&status=1");
 
     }
 

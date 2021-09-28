@@ -9,9 +9,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-   private static final String BASE_URL = "https://petofyapi.azurewebsites.net/api/";
+//       private static final String BASE_URL = "https://petofyapi.azurewebsites.net/api/"; //live
+    private static final String BASE_URL = "http://api.petofy.com/api/"; //testing
 
     private ApiClient() {
+
     }
 
     private static ApiInterface mApiInterface;

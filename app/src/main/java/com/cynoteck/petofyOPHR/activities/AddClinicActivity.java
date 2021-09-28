@@ -181,6 +181,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
     Button                      clinicSave_clinic_data;
     WebView                     webview;
 
+
     Methods                     methods;
     RecyclerView                immunization_data;
     ArrayList<String> nextVisitList;
