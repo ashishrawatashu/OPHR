@@ -252,9 +252,15 @@ public class PetProfileActivity extends AppCompatActivity implements ApiResponse
                             parent_location_CV.setVisibility(View.GONE);
                             parent_address_TV.setVisibility(View.GONE);
                         } else {
-                            parent_location_CV.setVisibility(View.VISIBLE);
-                            parent_address_TV.setVisibility(View.VISIBLE);
-                            parent_address_TV.setText(getPetResponse.getData().getAddress());
+                            if (getPetResponse.getData().getAddress().equals("")){
+                                parent_location_CV.setVisibility(View.GONE);
+                                parent_address_TV.setVisibility(View.GONE);
+                            }else {
+                                parent_location_CV.setVisibility(View.VISIBLE);
+                                parent_address_TV.setVisibility(View.VISIBLE);
+                                parent_address_TV.setText(getPetResponse.getData().getAddress());
+                            }
+
                         }
                         setImages();
 
@@ -302,6 +308,7 @@ public class PetProfileActivity extends AppCompatActivity implements ApiResponse
     @Override
     public void onError(Throwable t, String key) {
 
+        Log.d("ERROR",t.getLocalizedMessage());
     }
 
     @Override

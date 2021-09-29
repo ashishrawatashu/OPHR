@@ -212,7 +212,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
 
 //                Config.day= day;
 //                Config.month=month;
-                picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
+//                picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
                 picker.show();
                 break;
             case R.id.calenderTextView_discharge_date_TV:

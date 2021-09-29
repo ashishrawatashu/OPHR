@@ -107,33 +107,16 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_dash_board);
         init();
         settingDialogInit();
+        getDataFromSharedPreferences();
 //        storagePermissionDialogInit();
 //        requestMultiplePermissions();
         Log.d("CHECK","ONCREATE");
         methods = new Methods(this);
         broadcastReceiver =new checkIntetnetConnectivity();
         registerBroadcast();
-        getCurrentVersion();
+//        getCurrentVersion();
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        Config.tabPosition = 1;
-        sharedPreferences = getSharedPreferences("userdetails", 0);
-        Config.user_Veterian_url = sharedPreferences.getString("profilePic", "");
-        Config.token = sharedPreferences.getString("token", "");
-        Config.user_id = sharedPreferences.getString("userId", "");
-        Config.user_Veterian_phone = sharedPreferences.getString("phoneNumber", "");
-        Config.user_Veterian_emial = sharedPreferences.getString("email", "");
-        Config.user_Veterian_name = sharedPreferences.getString("firstName", "") + " " + sharedPreferences.getString("lastName", "");
-        Config.user_Veterian_address = sharedPreferences.getString("address", "");
-        Config.user_Veterian_online = sharedPreferences.getString("onlineAppoint", "");
-        Config.user_Veterian_id = sharedPreferences.getString("vetid", "");
-        Config.user_Veterian_study = sharedPreferences.getString("study", "");
-        Config.two_fact_auth_status = sharedPreferences.getString("twoFactAuth", "");
-        Config.user_type = sharedPreferences.getString("user_type", "");
-        Config.user_verterian_reg_no = sharedPreferences.getString("vetid", "");
-        Config.vet_first_name = sharedPreferences.getString("first_name", "");
-        Config.vet_last_name = sharedPreferences.getString("last_name", "");
-        Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
-        Log.d("TOKEN",Config.token);
+
 
         requestMultiplePermissions();
 
@@ -154,6 +137,28 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
             ft.commit();
 
         }
+    }
+
+    private void getDataFromSharedPreferences() {
+        Config.tabPosition = 1;
+        sharedPreferences = getSharedPreferences("userdetails", 0);
+        Config.user_Veterian_url = sharedPreferences.getString("profilePic", "");
+        Config.token = sharedPreferences.getString("token", "");
+        Config.user_id = sharedPreferences.getString("userId", "");
+        Config.user_Veterian_phone = sharedPreferences.getString("phoneNumber", "");
+        Config.user_Veterian_emial = sharedPreferences.getString("email", "");
+        Config.user_Veterian_name = sharedPreferences.getString("firstName", "") + " " + sharedPreferences.getString("lastName", "");
+        Config.user_Veterian_address = sharedPreferences.getString("address", "");
+        Config.user_Veterian_online = sharedPreferences.getString("onlineAppoint", "");
+        Config.user_Veterian_id = sharedPreferences.getString("vetid", "");
+        Config.user_Veterian_study = sharedPreferences.getString("study", "");
+        Config.two_fact_auth_status = sharedPreferences.getString("twoFactAuth", "");
+        Config.user_type = sharedPreferences.getString("user_type", "");
+        Config.user_verterian_reg_no = sharedPreferences.getString("vetid", "");
+        Config.vet_first_name = sharedPreferences.getString("first_name", "");
+        Config.vet_last_name = sharedPreferences.getString("last_name", "");
+        Config.onlineConsultationCharges = sharedPreferences.getString("vet_charges", "");
+        Log.d("TOKEN",Config.token);
     }
 
     private void settingDialogInit() {
@@ -350,7 +355,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                 } catch (android.content.ActivityNotFoundException anfe) {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.cynoteck.petofyOPHR")));
                 }
-                updateDialog.dismiss();
             }
         });
 

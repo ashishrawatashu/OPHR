@@ -313,13 +313,13 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
         email_updt.setText(strEmlUpdt);
         first_name_updt.setText(strFirstNm);
         last_name_updt.setText(strLstNm);
-        phone_updt.setText(strPhUpdt);
         address_updt.setText(strAddrsUpdt);
         vet_qualification_updt.setText(strVetQulafctnUpdt);
         registration_num_updt.setText(strRegistNumUpdt);
         description_updt.setText(strVetDese);
         clinic_name_updt.setText(strClinicName);
-
+        String updated_phn = strPhUpdt.replaceAll("-","");
+        phone_updt.setText(updated_phn);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -670,7 +670,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                     data.setStateId(strStateId);
                     data.setCountryId(strCountryId);
                     data.setPostalCode(strPostlUpdt);
-                    data.setSelectedPetTypeIds(strCatId);
+                    Log.d("strCatId",strCatId);
+                    data.setSelectedPetTypeIds(strCatId.substring(1));
                     Log.d("strSrvsCatId",strSrvsCatId);
                     data.setSelectedServiceTypeIds(strSrvsCatId.substring(1));
                     data.setProfileImageUrl(Config.user_Veterian_url);
@@ -789,7 +790,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements View.OnC
                                 strCatId = strCatId + ",";
                             }
                         }
-                        strCatId = methods.removeLastElement(strCatId);
+                        strCatId = ","+methods.removeLastElement(strCatId);
+
                         Log.e("hhhhhh", strCatId);
                         //Log.d("Selected_item_category",""+item);
                         if (item.equals("")) {

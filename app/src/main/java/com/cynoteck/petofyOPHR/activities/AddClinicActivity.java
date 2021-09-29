@@ -1506,6 +1506,19 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
         Log.e("IMMU_DATALOG==>", methods.getRequestJson(immunizationRequestt));
     }
 
+    private void getVaccineTypeAndName() {
+        ImmunizationParameter immunizationParameter = new ImmunizationParameter();
+        immunizationParameter.setCategoryId(pet_cat_id);
+        immunizationParameter.setPetDOB(pet_DOB);
+        immunizationParameter.setEncryptedId(pet_encrypted_id);
+        ImmunizationRequestt immunizationRequestt = new ImmunizationRequestt();
+        immunizationRequestt.setImmunizationData(immunizationParameter);
+        ApiService<ImmunizationVaccineResponse> service = new ApiService<>();
+        Log.d("pet_cat_id",pet_cat_id);
+        service.get(this, ApiClient.getApiInterface().getRecommendedVaccine(Config.token, immunizationRequestt), "GetRecommendedVaccineTypeAndName");
+        Log.e("IMMU_DATALOG==>", methods.getRequestJson(immunizationRequestt));
+    }
+
     private void getVisitTypes() {
         ApiService<GetReportsTypeResponse> service = new ApiService<>();
         service.get(this, ApiClient.getApiInterface().getReportsType(Config.token), "GetReportsType");
@@ -1671,6 +1684,53 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                     Log.d("vaccineNameList",methods.getRequestJson(vaccineNameList));
                     Log.d("vaccineTypeList111",methods.getRequestJson(vaccineTypeList));
                     showVaccineDialog();
+                    setVaccineTypeSpinner(getStrVaccineType);
+                    setVaccineNameSpinner();
+                    setNextVaccineNameSpinner();
+                    setVaccineNextTypeSpinner(nextVaccineName);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+
+            case "GetRecommendedVaccineTypeAndName":
+                try {
+                    Log.d("GetRecommendedVaccine", methods.getRequestJson(arg0.body()));
+                    ImmunizationVaccineResponse immunizationVaccineResponse = (ImmunizationVaccineResponse) arg0.body();
+                    int responseCode = Integer.parseInt(immunizationVaccineResponse.getResponse().getResponseCode());
+                    vaccineTypeList = new ArrayList<>();
+                    vaccineTypeList.add("Select Vaccine Type");
+                    nextVaccineTypeList = new ArrayList<>();
+                    vaccineNameList = new ArrayList<>();
+                    vaccineNameList.add("Select Vaccine Name");
+                    if (responseCode == 109) {
+                        strNextVisitDate = immunizationVaccineResponse.getData().getNextVisitDate();
+                        strPetAge = immunizationVaccineResponse.getData().getAge();
+                        if (immunizationVaccineResponse.getData().getPrimaryVaccine().size() > 0) {
+                            for (int j = 0; j < immunizationVaccineResponse.getData().getPrimaryVaccine().size(); j++) {
+                                vaccineNameList.add(immunizationVaccineResponse.getData().getPrimaryVaccine().get(j));
+
+                            }
+
+                        }
+                        if (immunizationVaccineResponse.getData().getVaccineTypeList().size() > 0) {
+                            for (int i = 0; i < immunizationVaccineResponse.getData().getVaccineTypeList().size(); i++) {
+                                vaccineTypeList.add(immunizationVaccineResponse.getData().getVaccineTypeList().get(i).getValue());
+                                nextVaccineTypeList.add(immunizationVaccineResponse.getData().getVaccineTypeList().get(i).getValue());
+                            }
+
+                        }
+//                        if (!immunizationVaccineResponse.getData().getNextVaccination().getNextVaccinationDate().equals("null")) {
+//                            next_vaccine_ET.setText(immunizationVaccineResponse.getData().getNextVaccination().getVaccineName());
+//                        } else if (!immunizationVaccineResponse.getData().getNextVaccination().getVaccineName().equals("null")) {
+//                            next_vaccine_ET.setText(immunizationVaccineResponse.getData().getNextVaccination().getVaccineName());
+//                        }
+                    }
+//                    Log.d("vaccineNameList",methods.getRequestJson(vaccineNameList));
+//                    Log.d("vaccineTypeList111",methods.getRequestJson(vaccineTypeList));
+//                    showVaccineDialog();
                     setVaccineTypeSpinner(getStrVaccineType);
                     setVaccineNameSpinner();
                     setNextVaccineNameSpinner();
@@ -2249,6 +2309,10 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                         setVaccineNextTypeSpinner(nextVaccineType);
                     } else if (responseCode == 113) {
                         Toast.makeText(this, saveResponseData.getResponse().getResponseMessage(), Toast.LENGTH_SHORT).show();
+                        vaccinationModelArrayList.remove(vaccinationModelArrayList.size()-1);
+                        hospitalizationReportsAdapter.notifyDataSetChanged();
+
+                        Log.e("vaccinlist_after", "" + vaccinationModelArrayList.size());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2257,6 +2321,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
             case "SavePreviousVaccinationDetails":
                 try {
+                    getVaccineTypeAndName();
                     methods.customProgressDismiss();
                     SaveResponseData saveResponseData = (SaveResponseData) arg0.body();
                     Log.e("SaveResponseData", methods.getRequestJson(saveResponseData));
