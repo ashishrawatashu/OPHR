@@ -205,7 +205,7 @@ public class AddHospitalizationDeatilsActivity extends AppCompatActivity impleme
                                 Config.month=monthOfYear;
                                 Config.year=year;
                                 discharge_date_TV.setVisibility(View.VISIBLE);
-                              calenderTextView_discharge_date_TV.setVisibility(View.VISIBLE);
+                                calenderTextView_discharge_date_TV.setVisibility(View.VISIBLE);
 
                             }
                         }, year, month, day);
