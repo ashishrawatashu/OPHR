@@ -117,7 +117,6 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         getCurrentVersion();
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-
         requestMultiplePermissions();
 
 
