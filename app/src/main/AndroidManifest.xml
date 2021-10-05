@@ -36,6 +36,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.ConnectWithUs"
+            android:exported="true" />
+        <activity
             android:name=".activities.PermissionCheckActivity"
             android:exported="true" />
         <activity android:name=".activities.VetOperatingHoursActivity" />
@@ -86,9 +89,9 @@
         <activity android:name=".activities.PetDetailsActivity" />
         <activity android:name=".activities.NewEntrysDetailsActivity" />
         <activity android:name=".activities.AddClinicActivity" />
-        <activity android:name=".activities.SearchActivity"
-            android:windowSoftInputMode="stateVisible"
-            />
+        <activity
+            android:name=".activities.SearchActivity"
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".activities.ReportsCommonActivity"
             android:screenOrientation="portrait"
@@ -96,11 +99,10 @@
         <activity
             android:name=".activities.CommonActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-<!--        <activity-->
-<!--            android:name=".activities.AddPetRegister"-->
-<!--            android:screenOrientation="portrait"-->
-<!--            tools:ignore="LockedOrientationActivity" />-->
+            tools:ignore="LockedOrientationActivity" /> <!-- <activity -->
+        <!-- android:name=".activities.AddPetRegister" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- tools:ignore="LockedOrientationActivity" /> -->
         <activity
             android:name=".activities.UpdateProfileActivity"
             android:screenOrientation="portrait"

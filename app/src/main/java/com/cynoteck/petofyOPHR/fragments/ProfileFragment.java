@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cynoteck.petofyOPHR.R;
 import com.cynoteck.petofyOPHR.activities.ChangePasswordActivity;
+import com.cynoteck.petofyOPHR.activities.ConnectWithUs;
 import com.cynoteck.petofyOPHR.activities.GetAllBankAccountsActivity;
 import com.cynoteck.petofyOPHR.activities.ImmunizationChartActivity;
 import com.cynoteck.petofyOPHR.activities.LoginActivity;
@@ -75,7 +76,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     String permissionId="";
     Methods methods;
     Context context;
-    ConstraintLayout general_details_CL,operating_hours_CL,change_password_CL,immunization_master_CL,bank_account_CL,privacy_CL,logout_CL;
+    ConstraintLayout general_details_CL,operating_hours_CL,change_password_CL,immunization_master_CL,bank_account_CL,privacy_CL,logout_CL,ConnectWithUs_CL;
     private final int                          UPDATE = 3;
 
     public ProfileFragment() {
@@ -148,6 +149,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         privacy_CL=view.findViewById(R.id.privacy_CL);
         logout_CL=view.findViewById(R.id.logout_CL);
         change_password_CL=view.findViewById(R.id.change_password_CL);
+        ConnectWithUs_CL=view.findViewById(R.id.ConnectWithUs_CL);
 
 
         general_details_CL.setOnClickListener(this);
@@ -157,6 +159,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         logout_CL.setOnClickListener(this);
         privacy_CL.setOnClickListener(this);
         change_password_CL.setOnClickListener(this);
+        ConnectWithUs_CL.setOnClickListener(this);
     }
 
     @Override
@@ -202,6 +205,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             case R.id.operating_hours_CL:
                 startActivity(new Intent(getActivity(), VetOperatingHoursActivity.class));
                 break;
+
+            case R.id.ConnectWithUs_CL:
+                startActivity(new Intent(getActivity(), ConnectWithUs.class));
+                break;
+
 
             case R.id.privacy_CL:
                 Intent setting = new Intent(getContext(), SettingActivity.class);
