@@ -80,7 +80,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
     int joinPostion;
     ArrayList<UpcomingAppointmentData> appointmentListsJoin;
     String mettingId = "", approve_reject = "";
-
+    String dateString;
     public VetAppointmentsFragment() {
         // Required empty public constructor
     }
@@ -149,7 +149,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
     public void newDateSelected(DayDateMonthYearModel selectedDate) {
         String month = "" + (selectedDate.day) + ". " + selectedDate.date + " " + selectedDate.month + " " + selectedDate.year;
         cal_date_TV.setText(month);
-        String dateString = selectedDate.date + "/" + selectedDate.monthNumeric + "/" + selectedDate.year;
+        dateString = selectedDate.date + "/" + selectedDate.monthNumeric + "/" + selectedDate.year;
         upcoming_visit_empty_TV.setVisibility(View.GONE);
         upcoming_visit_RV.setVisibility(View.INVISIBLE);
         upcoming_visit_SFL.setVisibility(View.VISIBLE);
@@ -601,6 +601,7 @@ public class VetAppointmentsFragment extends Fragment implements HorizontalCalen
         if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
                 pendingAppointment();
+                getUpcomingAppointments(dateString);
             }
 
         }

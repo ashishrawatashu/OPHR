@@ -114,9 +114,8 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         methods = new Methods(this);
         broadcastReceiver =new checkIntetnetConnectivity();
         registerBroadcast();
-//        getCurrentVersion();
+        getCurrentVersion();
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
 
         requestMultiplePermissions();
 
