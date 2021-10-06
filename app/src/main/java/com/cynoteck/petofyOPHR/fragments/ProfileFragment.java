@@ -36,6 +36,7 @@ import com.cynoteck.petofyOPHR.activities.ConnectWithUs;
 import com.cynoteck.petofyOPHR.activities.GetAllBankAccountsActivity;
 import com.cynoteck.petofyOPHR.activities.ImmunizationChartActivity;
 import com.cynoteck.petofyOPHR.activities.LoginActivity;
+import com.cynoteck.petofyOPHR.activities.PrivacyPolicy;
 import com.cynoteck.petofyOPHR.activities.SettingActivity;
 import com.cynoteck.petofyOPHR.activities.VetOperatingHoursActivity;
 import com.cynoteck.petofyOPHR.activities.ViewFullProfileVetActivity;
@@ -212,7 +213,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
 
             case R.id.privacy_CL:
-                Intent setting = new Intent(getContext(), SettingActivity.class);
+                Intent setting = new Intent(getContext(), PrivacyPolicy.class);
                 startActivity(setting);
 
                 break;

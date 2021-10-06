@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.PrivacyPolicy">
+
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/privacy_policy_TV"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="@font/nunito"
+            android:gravity="center"
+            android:text="PRIVACY POLICY"
+            android:textAllCaps="true"
+            android:textColor="@color/gray_2"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/back_arrow_CV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/back_arrow_CV" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/back_arrow_CV"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/light_grey_bg"
+                android:visibility="visible" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:src="@drawable/back_arrow"
+                android:visibility="visible" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <ScrollView
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:id="@+id/PrivacyscrollView"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="18dp"   >
+
+
+            <TextView
+                android:id="@+id/first_paragraph"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/nunito"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/PrivacyscrollView"
+                app:layout_constraintStart_toStartOf="@+id/PrivacyscrollView"
+                app:layout_constraintEnd_toEndOf="@+id/PrivacyscrollView"
+                android:text="@string/firstparagraph"
+                android:textColor="@color/gray_1"
+                android:textAlignment="textStart"
+
+                />
+
+
+            <TextView
+                android:id="@+id/second_paragraph"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/nunito"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/first_paragraph"
+                app:layout_constraintStart_toStartOf="@+id/first_paragraph"
+                app:layout_constraintEnd_toEndOf="@+id/first_paragraph"
+                android:text="@string/Secondparagraph"
+                android:textColor="@color/gray_1"
+                android:textAlignment="textStart"
+
+                />
+
+            <TextView
+                android:id="@+id/third_paragraph"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/nunito"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/Thirdparagraph"
+                android:textColor="@color/gray_1"
+                android:textAlignment="textStart"
+
+                />
+
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/fourth_paragraph"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/nunito"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+
+                android:text="@string/fourthparagraph"
+                android:textColor="@color/gray_1"
+                android:textAlignment="textStart"
+
+                />
+            <TextView
+                android:id="@+id/fifth_paragraph"
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:fontFamily="@font/nunito"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+
+                android:text="@string/fifthparagraph"
+                android:textColor="@color/gray_1"
+                android:textAlignment="textStart"
+
+                />
+            <TextView
+                android:id="@+id/sixth_paragraph"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/nunito"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+
+                android:text="@string/sixthparagraph"
+                android:textColor="@color/gray_1"
+                android:textAlignment="textStart"
+
+                />
+            <TextView
+                android:id="@+id/seventh_paragraph"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/nunito"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+
+                android:text="@string/seventhparagraph"
+                android:textColor="@color/gray_1"
+                android:textAlignment="textStart"
+
+                />
+
+            <TextView
+                android:id="@+id/eight_paragraph"
+                android:layout_width="match_parent"
+                android:fontFamily="@font/nunito"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+
+                android:text="@string/eightparagraph"
+                android:textColor="@color/gray_1"
+                android:textAlignment="textStart"
+                android:layout_marginBottom="10dp"
+
+                />
+
+
+
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -134,7 +134,6 @@
     <string name="Heading">Connect &amp; Like us</string>
 
 
-
     <string name="sharing_text">Id Card</string>
     <string name="share_title">Petofy</string>
     <string name="screenshot_take_failed">Failed to take screenshot!!</string>
@@ -248,4 +247,22 @@
     <string name="grant">Allow</string>
     <string name="openSetting">Open Setting</string>
     <string name="allow">Allow</string>
+    <string name="firstparagraph">Petofy and its subsidiaries (collectively “Company” “we” or “us”) respects the privacy of its users (“User(s)” or “you”) and is committed to protect the personal information that its Users share with it. This Privacy Policy is to inform you what information we collect when you use our cloud-native security platform service (collectively, the “Service”). We believe that you have a right to know our practices regarding the information we may collect and use when you use our products. Capitalized terms which are not defined herein, shall have the meaning ascribed to them in our Terms of Use which this Privacy Policy is incorporated thereto by reference (together, the “Terms”).</string>
+    <string name="Secondparagraph">1. Your Consent BY USING THE SERVICE, YOU AGREE TO THE TERMS AND CONDITIONS SET FORTH IN THIS PRIVACY POLICY (THE “PRIVACY POLICY”), INCLUDING TO THE COLLECTION AND PROCESSING OF YOUR PERSONAL INFORMATION (AS DEFINED BELOW). IF YOU DISAGREE TO ANY TERM PROVIDED HEREIN, YOU MAY NOT USE THE SERVICE.</string>
+    <string name="Thirdparagraph">2. Which information may we collect on our users? We may collect two types of data and information from our Users:</string>
+    <string name="fourthparagraph"> a. First type of information is non-identifiable and anonymous information (“Non-personal Information”). We are not aware of the identity of the User from which we have collected the Non-personal Information. Non-Personal Information is any unconcealed information which is available to us while Users are using the Service. Non-personal Information, which is being gathered, consists of technical information and behavioral information, such as:           </string>
+    <string name="fifthparagraph">(i) network connection such as IPs and ports; \n(ii) instance meta-data from your cloud provider, or \n(iii) data from orchestration platforms.</string>
+    <string name="sixthparagraph">b. Second type of information is individually identifiable information (“Personal Information”). This information may in itself or taken together with additional information available to us identify an individual or may be of a private and/or sensitive nature. We do not collect any Personal Information from you or related to you without your approval, which is obtained, inter alia, through your active acceptance of the Terms and the Privacy Policy. TO THE EXTENT THAT YOU PROVIDE TO US ANY PERSONAL INFORMATION IN CONNECTION WITH ANY THIRD PARTY, INCLUDING ANY OF YOUR PERSONNEL YOU ARE SOLELY RESPONSIBLE TO RECEIVE AND HEREBY REPRESENT AND UNDERTAKE TO HAVE RECEIVED THE CONSENT, AUTHORITY, PERMISSION AND APPROVAL OF SUCH PERSON AND PROVIDED THEM WITH SUFFICIENT DISCLOSURES, TO ALLOW THE USE OF SUCH PERSONAL INFORMATION, AND TO ALLOW US TO ACCESS, STORE, COLLECT, ANALYZE AND PROCESS SUCH PERSONAL INFORMATION AS DETAILED HEREIN</string>
+    <string name="seventhparagraph">3. What are the Purposes of the Collection of Information? Non-personal Information is collected in order to: Provide the Service; Track the usage of users in the system; Provide our User with a better user experience. Personal Information is collected in order to: Be able to provide the Demo; Be able to contact Users who requested such contact to be made, for the purpose of providing them with further information; Be able to provide the Users updates about the Company’s developments.</string>
+    <string name="eightparagraph">"4. Deletion of Personal Information. If for any reason you wish to modify or delete your Personal Information please send us an email to support@Petofy.com, and we will make reasonable efforts to modify or delete any such Personal Information pursuant to any applicable privacy laws. Note that unless you instruct us otherwise, we may retain your Personal Information for as legally required. "</string>
+
+
+
+
+
+
+
+
+
+
 </resources>
