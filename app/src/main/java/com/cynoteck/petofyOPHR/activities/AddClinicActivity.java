@@ -216,6 +216,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
     ImageView dialog_cross_IV,dialog_pet_profile_image_IV;
     TextView dialog_pet_name_TV,dialog_pet_breed_TV ,dialog_pet_age_TV,dialog_pet_gender_TV,dialog_pet_id_TV,dialog_pet_parent_name_TV,dialog_parent_phone_TV,dialog_parent_address_TV;
     String getImmuMstStatus;
+    boolean isVisitDateClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -732,7 +733,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                                 Calendar minDate=Calendar.getInstance();
-                                clinicCalenderTextViewVisitDt.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                clinicCalenderTextViewVisitDt.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                                 if (natureOfVisit.equals("Immunization")){
                                     if (getImmuMstStatus.equals("true")){
                                         Log.d("natureOfVisit",natureOfVisit+" getImmuMstStatus"+getImmuMstStatus);
@@ -746,11 +747,14 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                                 Config.day= dayOfMonth;
                                 Config.month=monthOfYear;
                                 Config.year=year;
+                                isVisitDateClicked  = true;
+
+
 
                             }
                         }, year, month, day);
                 Log.d("DAYOFMONTH", "onClick: " + Config.day);
-//                picker.getDatePicker().setMinDate(cldr.getTimeInMillis());
+                picker.getDatePicker().setMaxDate(cldr.getTimeInMillis());
                 picker.show();
 
 
@@ -758,7 +762,9 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.ilness_onset:
                 final Calendar cldrIll = Calendar.getInstance();
-                cldrIll.set(Config.year,Config.month,Config.day);
+                if (isVisitDateClicked){
+                    cldrIll.set(Config.year,Config.month,Config.day);
+                }
                 int dayIll = cldrIll.get(Calendar.DAY_OF_MONTH);
                 int monthIll = cldrIll.get(Calendar.MONTH);
                 int yearIll = cldrIll.get(Calendar.YEAR);
@@ -771,15 +777,22 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                                 clinicIlness_onset.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, yearIll, monthIll, dayIll);
-                picker.getDatePicker().updateDate(yearIll,Config.month,Config.day);
-                picker.getDatePicker().setMaxDate(System.currentTimeMillis());
+                if (isVisitDateClicked){
+                    picker.getDatePicker().updateDate(yearIll,Config.month,Config.day);
+                    picker.getDatePicker().setMaxDate(cldrIll.getTimeInMillis());
+                }else {
+                    picker.getDatePicker().setMaxDate(cldrIll.getTimeInMillis());
+                }
+
                 picker.show();
                 break;
 
 
             case R.id.folow_up_dt_view:
                 final Calendar cldr1 = Calendar.getInstance();
-                cldr1.set(Config.year,Config.month,Config.day);
+                if (isVisitDateClicked){
+                    cldr1.set(Config.year,Config.month,Config.day);
+                }
                 int dayNext = cldr1.get(Calendar.DAY_OF_MONTH);
                 int monthNext = cldr1.get(Calendar.MONTH);
                 int yearNext = cldr1.get(Calendar.YEAR);
@@ -791,8 +804,15 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
 
                             }
                         }, yearNext, monthNext, dayNext);
-                picker.getDatePicker().updateDate(yearNext,Config.month,Config.day);
-                picker.getDatePicker().setMinDate(cldr1.getTimeInMillis());
+                if (isVisitDateClicked){
+                    picker.getDatePicker().updateDate(yearNext,Config.month,Config.day);
+                    picker.getDatePicker().setMinDate(cldr1.getTimeInMillis());
+                }else {
+                    picker.getDatePicker().setMinDate(cldr1.getTimeInMillis());
+
+                }
+
+
 
                 picker.show();
                 break;
@@ -1006,12 +1026,18 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
             vaccine_type.setVisibility(View.VISIBLE);
         }
 
-
-        nextImmunizationDate.setText(Config.currentDate());
+        if (isVisitDateClicked){
+            nextImmunizationDate.setText(clinicCalenderTextViewVisitDt.getText().toString());
+        }else {
+            nextImmunizationDate.setText(Config.currentDate());
+        }
         nextImmunizationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Calendar cldr = Calendar.getInstance();
+                if (isVisitDateClicked){
+                    cldr.set(Config.year,Config.month,Config.day);
+                }
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
                 int month = cldr.get(Calendar.MONTH);
                 int year = cldr.get(Calendar.YEAR);
@@ -1020,10 +1046,15 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                nextImmunizationDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                nextImmunizationDate.setText(Config.changeDateFormat(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year));
                             }
                         }, year, month, day);
-                dialogPicker.getDatePicker().setMaxDate(System.currentTimeMillis());
+                if (isVisitDateClicked){
+                    dialogPicker.getDatePicker().updateDate(year,Config.month,Config.day);
+                    dialogPicker.getDatePicker().setMaxDate(cldr.getTimeInMillis());
+                }else {
+                    dialogPicker.getDatePicker().setMaxDate(System.currentTimeMillis());
+                }
                 dialogPicker.show();
             }
         });
@@ -1600,7 +1631,7 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
         SaveVaccineModel saveVaccineModel = new SaveVaccineModel();
         saveVaccineModel.setVaccineName(strVaccineName);
         saveVaccineModel.setVaccineType(strVaccineType);
-        saveVaccineModel.setVaccinationDate(Config.currentDate());
+        saveVaccineModel.setVaccinationDate(nextImmunizationDate.getText().toString());
         saveVaccineModel.setPetId(pet_id.substring(0, pet_id.length() - 2));
         saveVaccineModel.setPetClinicVisitId("0");
         SaveRequest saveRequest = new SaveRequest();
