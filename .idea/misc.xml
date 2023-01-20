@@ -60,10 +60,60 @@
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/immunization_chart_list.xml" value="0.18020833333333333" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/request_pending_list_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/petofy_ophr/app/src/main/res/layout/vet_profile_fragment.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/background_grey.xml" value="0.2985" />
+        <entry key="app/src/main/res/drawable/days_blue_bg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/days_white_bg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/deactivate_status.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/edit_text_background.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/empty_profile.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/ic_baseline_add.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/ic_baseline_add_white.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/ic_baseline_warning.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/join_bt_bg.xml" value="0.2015" />
         <entry key="app/src/main/res/drawable/like_us.xml" value="0.23333333333333334" />
+        <entry key="app/src/main/res/drawable/login_bt_bg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/mail_24dp.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/operating_hours_radio_thumb.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/operating_hours_radio_track.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/oval.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/payment_pending_bg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/pet_details_bg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/pet_id_bgg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/print.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/remarks_texview_shape.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/round_outline.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/save_changes_back.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/share.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/thumb.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/time_bg.xml" value="0.1935" />
+        <entry key="app/src/main/res/drawable/un_select_date_bg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/user_24dp.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/vet_info_bg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/view_details_bg.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/white_round.xml" value="0.2015" />
+        <entry key="app/src/main/res/drawable/whitereccround.xml" value="0.2015" />
         <entry key="app/src/main/res/layout/activity_add_clinic.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/layout/activity_add_new_pet2.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/layout/activity_add_update_appointment.xml" value="0.23796296296296296" />
         <entry key="app/src/main/res/layout/activity_connect_with_us.xml" value="0.12083333333333333" />
-        <entry key="app/src/main/res/layout/vet_profile_fragment.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_dash_board.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/activity_instruction.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/activity_lab_test_report_deatils.xml" value="0.27760416666666665" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.27760416666666665" />
+        <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.2740740740740741" />
+        <entry key="app/src/main/res/layout/activity_view_full_profile_vet.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/appoint_date_list.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/custom_calender_layout.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/custom_day_layout.xml" value="0.4871653238932292" />
+        <entry key="app/src/main/res/layout/dialog_layout.xml" value="0.24010416666666667" />
+        <entry key="app/src/main/res/layout/fragment_appointement.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_pet_register.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/fragment_vet_appointments.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/service_type_dialog_layout.xml" value="0.2947916666666667" />
+        <entry key="app/src/main/res/layout/update_new_version_dialog.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/vet_profile_fragment.xml" value="0.43354492187500004" />
       </map>
     </option>
   </component>

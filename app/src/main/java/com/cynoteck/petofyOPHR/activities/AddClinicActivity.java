@@ -1784,7 +1784,6 @@ public class AddClinicActivity extends AppCompatActivity implements View.OnClick
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 break;
 
             case "VaccinationTypeByVaccineName":

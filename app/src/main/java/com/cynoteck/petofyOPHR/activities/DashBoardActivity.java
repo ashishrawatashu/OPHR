@@ -114,7 +114,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
         methods = new Methods(this);
         broadcastReceiver =new checkIntetnetConnectivity();
         registerBroadcast();
-        getCurrentVersion();
+//        getCurrentVersion();
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         requestMultiplePermissions();
@@ -615,6 +615,7 @@ public class DashBoardActivity extends AppCompatActivity implements View.OnClick
                     Log.e("URL", url);
                     ApiService<CheckStaffPermissionResponse> service = new ApiService<>();
                     service.get(this, ApiClient.getApiInterface().getCheckStaffPermission(Config.token, url), "CheckPermission");
+
                 } else if (userTYpe.equals("Veterinarian")) {
                     icHome.setImageResource(R.drawable.home_inactive);
                     icProfile.setImageResource(R.drawable.profile_inactive);

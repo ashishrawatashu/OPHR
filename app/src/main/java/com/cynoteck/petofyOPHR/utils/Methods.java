@@ -699,6 +699,7 @@ public class Methods {
         Gson gson = new Gson();
         return gson.toJson(object);
     }
+
     public float getDays(String DoB, String currentDate )
     {
         SimpleDateFormat myFormat = new SimpleDateFormat("dd MM yyyy");

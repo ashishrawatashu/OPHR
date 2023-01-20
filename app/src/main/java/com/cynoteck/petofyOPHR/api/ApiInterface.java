@@ -165,6 +165,7 @@ public interface ApiInterface {
 
     @POST("User/Login")
     Call<LoginRegisterResponse> loginApi(@Body Loginparams loginparams);
+
     @POST("User/Registration")
     Call<LoginRegisterResponse> registerApi(@Body Registerparams registerparams);
     @GET("common/GetState")

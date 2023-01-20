@@ -329,7 +329,6 @@ public class LoginActivity extends FragmentActivity implements View.OnClickListe
         methods.customProgressDismiss();
         switch (key) {
             case "Login":
-
                 try {
                     Log.d("DATALOG", response.body().toString());
                     responseLogin = (LoginRegisterResponse) response.body();
@@ -379,8 +378,6 @@ public class LoginActivity extends FragmentActivity implements View.OnClickListe
                     }
 
                 } catch (Exception e) {
-
-
                     e.printStackTrace();
                 }
                 break;

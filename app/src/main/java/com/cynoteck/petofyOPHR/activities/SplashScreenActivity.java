@@ -148,13 +148,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         return null;
     }
 
-    void updateMethod() {
-        new Handler().postDelayed(new Runnable() {
+    void updateMethod() { new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 requestMultiplePermissions();
-
-
             }
         },2500);
     }

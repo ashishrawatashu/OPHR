@@ -504,8 +504,7 @@ public class AddXRayDeatilsActivity extends AppCompatActivity implements View.On
                         //Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
                         nextVisitList=new ArrayList<>();
                         nextVisitList.add("Select Visit");
-                        for(int i=0;i<clinicVisitResponse.getData().size();i++)
-                        {
+                        for(int i=0;i<clinicVisitResponse.getData().size();i++) {
                             nextVisitList.add(clinicVisitResponse.getData().get(i).getFollowUpTitle());
                             nextVisitHas.put(clinicVisitResponse.getData().get(i).getFollowUpTitle(),clinicVisitResponse.getData().get(i).getId());
                         }

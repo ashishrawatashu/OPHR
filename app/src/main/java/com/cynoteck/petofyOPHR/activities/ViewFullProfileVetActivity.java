@@ -187,7 +187,7 @@ public class ViewFullProfileVetActivity extends AppCompatActivity implements Api
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode ==USERUPDATION){
+        if (requestCode == USERUPDATION){
             if (resultCode == RESULT_OK){
                 getUserDetails();
             }

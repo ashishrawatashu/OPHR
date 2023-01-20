@@ -46,7 +46,6 @@ public class HorizontalCalendarView extends LinearLayout {
         mainBackground =  findViewById(R.id.main_background);
         loadNextPage( );
 
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
